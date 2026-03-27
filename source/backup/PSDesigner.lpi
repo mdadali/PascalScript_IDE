@@ -26,7 +26,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="designer;editor\Imports;editor"/>
+            <OtherUnitFiles Value="designer;editor\Imports;editor;common"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS).release"/>
           </SearchPaths>
           <CodeGeneration>
@@ -49,7 +49,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="designer;editor\Imports;editor"/>
+            <OtherUnitFiles Value="designer;editor\Imports;editor;common"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)-debug"/>
           </SearchPaths>
           <CodeGeneration>
@@ -72,7 +72,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="designer;editor\Imports;editor"/>
+            <OtherUnitFiles Value="designer;editor\Imports;editor;common"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)-release"/>
           </SearchPaths>
           <CodeGeneration>
@@ -95,7 +95,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="designer;editor\Imports;editor"/>
+            <OtherUnitFiles Value="designer;editor\Imports;editor;common"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)-debug"/>
           </SearchPaths>
           <CodeGeneration>
@@ -123,7 +123,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="designer;editor\Imports;editor"/>
+            <OtherUnitFiles Value="designer;editor\Imports;editor;common"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)-release"/>
           </SearchPaths>
           <CodeGeneration>
@@ -151,7 +151,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="designer;editor\Imports;editor"/>
+            <OtherUnitFiles Value="designer;editor\Imports;editor;common"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)-debug"/>
           </SearchPaths>
           <CodeGeneration>
@@ -179,7 +179,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="designer;editor\Imports;editor"/>
+            <OtherUnitFiles Value="designer;editor\Imports;editor;common"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)-release"/>
           </SearchPaths>
           <CodeGeneration>
@@ -238,12 +238,13 @@
         <PackageName Value="LCL"/>
       </Item9>
     </RequiredPackages>
-    <Units Count="45">
+    <Units Count="46">
       <Unit0>
         <Filename Value="PSDesigner.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="14" Y="9"/>
-        <UsageCount Value="105"/>
+        <IsVisibleTab Value="True"/>
+        <CursorPos X="57" Y="11"/>
+        <UsageCount Value="106"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -252,11 +253,10 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="881"/>
-        <CursorPos Y="914"/>
-        <UsageCount Value="105"/>
+        <TopLine Value="496"/>
+        <CursorPos X="20" Y="507"/>
+        <UsageCount Value="106"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -454,10 +454,10 @@
         <ComponentName Value="IDE"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="869"/>
         <CursorPos X="22" Y="876"/>
-        <UsageCount Value="60"/>
+        <UsageCount Value="61"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit28>
@@ -577,8 +577,35 @@
         <CursorPos X="24" Y="13560"/>
         <UsageCount Value="11"/>
       </Unit44>
+      <Unit45>
+        <Filename Value="common\ucodegenerator.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uCodeGenerator"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="64"/>
+        <CursorPos X="30" Y="99"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+      </Unit45>
     </Units>
-    <JumpHistory HistoryIndex="-1"/>
+    <JumpHistory Count="4" HistoryIndex="3">
+      <Position1>
+        <Filename Value="designer\designer.pas"/>
+        <Caret Line="715" Column="6" TopLine="700"/>
+      </Position1>
+      <Position2>
+        <Filename Value="common\ucodegenerator.pas"/>
+        <Caret Line="8" Column="84"/>
+      </Position2>
+      <Position3>
+        <Filename Value="designer\designer.pas"/>
+        <Caret Line="347" Column="27" TopLine="320"/>
+      </Position3>
+      <Position4>
+        <Filename Value="designer\designer.pas"/>
+        <Caret Line="507" Column="20" TopLine="496"/>
+      </Position4>
+    </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
@@ -588,7 +615,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="designer;editor\Imports;editor"/>
+      <OtherUnitFiles Value="designer;editor\Imports;editor;common"/>
       <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)-debug"/>
     </SearchPaths>
     <CodeGeneration>
