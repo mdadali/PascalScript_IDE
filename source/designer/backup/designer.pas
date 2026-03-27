@@ -721,25 +721,16 @@ var
   Ctrl: TControl;
   UserCode, MainCode, UserGlobalVars, UserProps: TStringList;
 
-  // -----------------------------
-  // Hilfsprozedur: Zeile hinzufügen
-  // -----------------------------
   procedure Add(const S: string);
   begin
     AStringList.Add(S);
   end;
 
-  // -----------------------------
-  // Hilfsfunktion: String escapen
-  // -----------------------------
   function Escape(const s: string): string;
   begin
     Result := StringReplace(s, '''', '''''', [rfReplaceAll]);
   end;
 
-  // -----------------------------
-  // Hilfsfunktion: Block extrahieren
-  // -----------------------------
   function ExtractBlock(const SL: TStringList; const StartTag, EndTag: string): TStringList;
   var
     i: Integer;
@@ -761,9 +752,6 @@ var
     end;
   end;
 
-  // -----------------------------
-  // Hilfsfunktion: Prüfen ob Event existiert
-  // -----------------------------
   function HasEvent(const SL: TStringList; const EventName: string): Boolean;
   var
     i: Integer;
@@ -774,9 +762,6 @@ var
         Exit(True);
   end;
 
-  // -----------------------------
-  // Hilfsfunktion: Eigenschaften generieren
-  // -----------------------------
   procedure AddProps(Ctrl: TControl);
   begin
     Add('  ' + Ctrl.Name + '.Left := ' + IntToStr(Ctrl.Left) + ';');
@@ -786,27 +771,20 @@ var
 
     if Ctrl is TButton then
       Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TButton(Ctrl).Caption) + ''';');
-
     if Ctrl is TLabel then
       Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TLabel(Ctrl).Caption) + ''';');
-
     if Ctrl is TEdit then
       Add('  ' + Ctrl.Name + '.Text := ''' + Escape(TEdit(Ctrl).Text) + ''';');
   end;
 
 begin
-  // -----------------------------
-  // 1. Bestehenden Code sichern
-  // -----------------------------
+  // 1. Alte Blöcke sichern
   UserCode := ExtractBlock(AStringList, '//<USERCODE-BEGIN>', '//<USERCODE-END>');
   MainCode := ExtractBlock(AStringList, '//<MAIN-BEGIN>', '//<MAIN-END>');
   UserGlobalVars := ExtractBlock(AStringList, '//<USER-GLOBAL-VARS-BEGIN>', '//<USER-GLOBAL-VARS-END>');
   UserProps := ExtractBlock(AStringList, '//<USER-PROPS-BEGIN>', '//<USER-PROPS-END>');
 
   try
-    // -----------------------------
-    // 2. Liste neu aufbauen
-    // -----------------------------
     AStringList.Clear;
 
     // =====================================================
@@ -833,12 +811,12 @@ begin
     Add('');
 
     // =====================================================
-    // USER-CODE (vor Designer-Code, damit Events gefunden werden)
+    // USER-CODE
     // =====================================================
     Add('//<USERCODE-BEGIN>');
     AStringList.AddStrings(UserCode);
 
-    // fehlende Events automatisch ergänzen
+    // Events ergänzen
     for i := 0 to AJvDesignPanel.ComponentCount - 1 do
     begin
       if not (AJvDesignPanel.Components[i] is TControl) then Continue;
@@ -864,12 +842,11 @@ begin
           Add('');
         end;
     end;
-
     Add('//<USERCODE-END>');
     Add('');
 
     // =====================================================
-    // DESIGNER-CODE (nur Create + Parent)
+    // DESIGNER-CODE + USER-PROPS (innerhalb der Prozedur)
     // =====================================================
     Add('//<DESIGNER-BEGIN>');
     Add('procedure CreateNewForm;');
@@ -888,7 +865,6 @@ begin
       Add('  ' + Ctrl.Name + ' := ' + Ctrl.ClassName + '.Create(' + AFormName + ');');
       Add('  ' + Ctrl.Name + '.Parent := ' + AFormName + ';');
 
-      // Events zuweisen
       if Ctrl is TButton then
         Add('  ' + Ctrl.Name + '.OnClick := @' + Ctrl.Name + '_OnClick;');
       if Ctrl is TEdit then
@@ -897,29 +873,25 @@ begin
       Add('');
     end;
 
-    Add('//<DESIGNER-END>');
-    Add('');
-
-    // =====================================================
-    // USER-PROPS (Nutzer änderbare Eigenschaften)
-    // =====================================================
-    Add('//<USER-PROPS-BEGIN>');
+    // USER-PROPS innerhalb CreateNewForm einfügen
+    Add('  //<USER-PROPS-BEGIN>');
     if UserProps.Count > 0 then
       AStringList.AddStrings(UserProps)
     else
-    begin
       for i := 0 to AJvDesignPanel.ComponentCount - 1 do
       begin
         if not (AJvDesignPanel.Components[i] is TControl) then Continue;
         Ctrl := TControl(AJvDesignPanel.Components[i]);
         AddProps(Ctrl);
       end;
-    end;
-    Add('//<USER-PROPS-END>');
+    Add('  //<USER-PROPS-END>');
+
+    Add('end;'); // Ende CreateNewForm
+    Add('//<DESIGNER-END>');
     Add('');
 
     // =====================================================
-    // MAIN-BLOCK am Ende
+    // MAIN-BLOCK
     // =====================================================
     Add('//<MAIN-BEGIN>');
     if MainCode.Count > 0 then
