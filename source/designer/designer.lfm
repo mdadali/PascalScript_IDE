@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 808
+  Left = 397
   Height = 570
-  Top = 238
+  Top = 178
   Width = 965
   Caption = 'jvDesigner Demo'
   ClientHeight = 544

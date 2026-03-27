@@ -15,7 +15,7 @@ uses
 ComCtrls, ActnList, SynEdit, SynEditTypes, SynHighlighterPas, SynEditSearch,
 SynEditMiscClasses, SynEditHighlighter, SynGutterBase, SynGutterMarks,
 SynGutterLineNumber, SynGutterChanges, SynGutter, SynGutterCodeFolding,
-SynEditMarkupSpecialLine, SynEditRegexSearch, SynEditMarks, PrintersDlgs, BCButtonFocus,
+SynEditMarkupSpecialLine, SynEditRegexSearch, SynEditMarks, PrintersDlgs,
 
   ide_editor;
 type
@@ -513,7 +513,7 @@ begin
   GenCodeFromDesigner(JvDesignPanel1, TStringList(IDE.ed.Lines), Trim(edtFormName.Text));
 end;
 
-procedure TMainForm.GenCodeFromDesigner(AJvDesignPanel: TJvDesignPanel; AStringList: TStringList; AFormName: string);
+{procedure TMainForm.GenCodeFromDesigner(AJvDesignPanel: TJvDesignPanel; AStringList: TStringList; AFormName: string);
 var
   i: Integer;
   Ctrl: TControl;
@@ -712,6 +712,231 @@ begin
     UserCode.Free;
     MainCode.Free;
     UserGlobalVars.Free;
+  end;
+end;}
+
+procedure TMainForm.GenCodeFromDesigner(AJvDesignPanel: TJvDesignPanel; AStringList: TStringList; AFormName: string);
+var
+  i: Integer;
+  Ctrl: TControl;
+  UserCode, MainCode, UserGlobalVars, UserProps: TStringList;
+
+  // -----------------------------
+  // Hilfsprozedur: Zeile hinzufügen
+  // -----------------------------
+  procedure Add(const S: string);
+  begin
+    AStringList.Add(S);
+  end;
+
+  // -----------------------------
+  // Hilfsfunktion: String escapen
+  // -----------------------------
+  function Escape(const s: string): string;
+  begin
+    Result := StringReplace(s, '''', '''''', [rfReplaceAll]);
+  end;
+
+  // -----------------------------
+  // Hilfsfunktion: Block extrahieren
+  // -----------------------------
+  function ExtractBlock(const SL: TStringList; const StartTag, EndTag: string): TStringList;
+  var
+    i: Integer;
+    InBlock: Boolean;
+  begin
+    Result := TStringList.Create;
+    InBlock := False;
+    for i := 0 to SL.Count - 1 do
+    begin
+      if Pos(StartTag, SL[i]) > 0 then
+      begin
+        InBlock := True;
+        Continue;
+      end;
+      if Pos(EndTag, SL[i]) > 0 then
+        Break;
+      if InBlock then
+        Result.Add(SL[i]);
+    end;
+  end;
+
+  // -----------------------------
+  // Hilfsfunktion: Prüfen ob Event existiert
+  // -----------------------------
+  function HasEvent(const SL: TStringList; const EventName: string): Boolean;
+  var
+    i: Integer;
+  begin
+    Result := False;
+    for i := 0 to SL.Count - 1 do
+      if Pos('procedure ' + EventName, SL[i]) > 0 then
+        Exit(True);
+  end;
+
+  // -----------------------------
+  // Hilfsfunktion: Eigenschaften generieren
+  // -----------------------------
+  procedure AddProps(Ctrl: TControl);
+  begin
+    Add('  ' + Ctrl.Name + '.Left := ' + IntToStr(Ctrl.Left) + ';');
+    Add('  ' + Ctrl.Name + '.Top := ' + IntToStr(Ctrl.Top) + ';');
+    Add('  ' + Ctrl.Name + '.Width := ' + IntToStr(Ctrl.Width) + ';');
+    Add('  ' + Ctrl.Name + '.Height := ' + IntToStr(Ctrl.Height) + ';');
+
+    if Ctrl is TButton then
+      Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TButton(Ctrl).Caption) + ''';');
+
+    if Ctrl is TLabel then
+      Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TLabel(Ctrl).Caption) + ''';');
+
+    if Ctrl is TEdit then
+      Add('  ' + Ctrl.Name + '.Text := ''' + Escape(TEdit(Ctrl).Text) + ''';');
+  end;
+
+begin
+  // -----------------------------
+  // 1. Bestehenden Code sichern
+  // -----------------------------
+  UserCode := ExtractBlock(AStringList, '//<USERCODE-BEGIN>', '//<USERCODE-END>');
+  MainCode := ExtractBlock(AStringList, '//<MAIN-BEGIN>', '//<MAIN-END>');
+  UserGlobalVars := ExtractBlock(AStringList, '//<USER-GLOBAL-VARS-BEGIN>', '//<USER-GLOBAL-VARS-END>');
+  UserProps := ExtractBlock(AStringList, '//<USER-PROPS-BEGIN>', '//<USER-PROPS-END>');
+
+  try
+    // -----------------------------
+    // 2. Liste neu aufbauen
+    // -----------------------------
+    AStringList.Clear;
+
+    // =====================================================
+    // DESIGNER VARS
+    // =====================================================
+    Add('//<DESIGNER-VARS-BEGIN>');
+    Add('var');
+    Add('  ' + AFormName + ': TForm;');
+    for i := 0 to AJvDesignPanel.ComponentCount - 1 do
+    begin
+      if not (AJvDesignPanel.Components[i] is TControl) then Continue;
+      Ctrl := TControl(AJvDesignPanel.Components[i]);
+      Add('  ' + Ctrl.Name + ': ' + Ctrl.ClassName + ';');
+    end;
+    Add('//<DESIGNER-VARS-END>');
+    Add('');
+
+    // =====================================================
+    // USER-GLOBAL-VARS
+    // =====================================================
+    Add('//<USER-GLOBAL-VARS-BEGIN>');
+    AStringList.AddStrings(UserGlobalVars);
+    Add('//<USER-GLOBAL-VARS-END>');
+    Add('');
+
+    // =====================================================
+    // USER-CODE (vor Designer-Code, damit Events gefunden werden)
+    // =====================================================
+    Add('//<USERCODE-BEGIN>');
+    AStringList.AddStrings(UserCode);
+
+    // fehlende Events automatisch ergänzen
+    for i := 0 to AJvDesignPanel.ComponentCount - 1 do
+    begin
+      if not (AJvDesignPanel.Components[i] is TControl) then Continue;
+      Ctrl := TControl(AJvDesignPanel.Components[i]);
+
+      if Ctrl is TButton then
+        if not HasEvent(UserCode, Ctrl.Name + '_OnClick') then
+        begin
+          Add('procedure ' + Ctrl.Name + '_OnClick(Sender: TObject);');
+          Add('begin');
+          Add('  ');
+          Add('end;');
+          Add('');
+        end;
+
+      if Ctrl is TEdit then
+        if not HasEvent(UserCode, Ctrl.Name + '_OnChange') then
+        begin
+          Add('procedure ' + Ctrl.Name + '_OnChange(Sender: TObject);');
+          Add('begin');
+          Add('  ');
+          Add('end;');
+          Add('');
+        end;
+    end;
+
+    Add('//<USERCODE-END>');
+    Add('');
+
+    // =====================================================
+    // DESIGNER-CODE (nur Create + Parent)
+    // =====================================================
+    Add('//<DESIGNER-BEGIN>');
+    Add('procedure CreateNewForm;');
+    Add('begin');
+    Add('  ' + AFormName + ' := TForm.Create(nil);');
+    Add('  ' + AFormName + '.Caption := ''' + Escape(AFormName) + ''';');
+    Add('  ' + AFormName + '.Position := poDesigned;');
+    Add('  ' + AFormName + '.Visible := True;');
+    Add('');
+
+    for i := 0 to AJvDesignPanel.ComponentCount - 1 do
+    begin
+      if not (AJvDesignPanel.Components[i] is TControl) then Continue;
+      Ctrl := TControl(AJvDesignPanel.Components[i]);
+
+      Add('  ' + Ctrl.Name + ' := ' + Ctrl.ClassName + '.Create(' + AFormName + ');');
+      Add('  ' + Ctrl.Name + '.Parent := ' + AFormName + ';');
+
+      // Events zuweisen
+      if Ctrl is TButton then
+        Add('  ' + Ctrl.Name + '.OnClick := @' + Ctrl.Name + '_OnClick;');
+      if Ctrl is TEdit then
+        Add('  ' + Ctrl.Name + '.OnChange := @' + Ctrl.Name + '_OnChange;');
+
+      Add('');
+    end;
+
+    Add('//<DESIGNER-END>');
+    Add('');
+
+    // =====================================================
+    // USER-PROPS (Nutzer änderbare Eigenschaften)
+    // =====================================================
+    Add('//<USER-PROPS-BEGIN>');
+    if UserProps.Count > 0 then
+      AStringList.AddStrings(UserProps)
+    else
+    begin
+      for i := 0 to AJvDesignPanel.ComponentCount - 1 do
+      begin
+        if not (AJvDesignPanel.Components[i] is TControl) then Continue;
+        Ctrl := TControl(AJvDesignPanel.Components[i]);
+        AddProps(Ctrl);
+      end;
+    end;
+    Add('//<USER-PROPS-END>');
+    Add('');
+
+    // =====================================================
+    // MAIN-BLOCK am Ende
+    // =====================================================
+    Add('//<MAIN-BEGIN>');
+    if MainCode.Count > 0 then
+      AStringList.AddStrings(MainCode)
+    else
+    begin
+      Add('begin');
+      Add('  CreateNewForm;');
+      Add('end.');
+    end;
+    Add('//<MAIN-END>');
+
+  finally
+    UserCode.Free;
+    MainCode.Free;
+    UserGlobalVars.Free;
+    UserProps.Free;
   end;
 end;
 
