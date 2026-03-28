@@ -1,0 +1,21 @@
+{ This file was automatically created by Lazarus. Do not edit!
+  This source is only used to compile and install the package.
+ }
+
+unit jvdesign; 
+
+interface
+
+uses
+  JvDesignSurface, tp_register, LazarusPackageIntf;
+
+implementation
+
+procedure Register; 
+begin
+  RegisterUnit('tp_register', @tp_register.Register); 
+end; 
+
+initialization
+  RegisterPackage('jvdesign', @Register); 
+end.
