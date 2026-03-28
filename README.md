@@ -1,4 +1,4 @@
-# PascalScriptDesigner
+# PascalScript Runtime FormDesigner & Debugger
 
 PascalScriptDesigner is a cross-platform IDE for PascalScript that combines two worlds:
 
