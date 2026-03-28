@@ -2,8 +2,8 @@
 
 PascalScriptDesigner is a cross-platform IDE for PascalScript that combines two worlds:
 
-- **Drag-&-Drop Form Designer** (based on JvDesign)  
-- **PascalScript Console with Debugger** (RemObjects PascalScript)  
+- **Drag-&-Drop Form Designer** (based on https://github.com/havlicekp/form-designer)  
+- **PascalScript Console with Debugger** (based on RemObjects PascalScript IDE-Demo)  
 
 Cross-platform (Linux, Windows)
 
