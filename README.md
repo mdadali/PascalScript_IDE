@@ -1,30 +1,26 @@
-Lazarus PascalScript RuntimeDesigner/Debugger 
+PascalScriptDesigner is a cross-platform IDE for PascalScript that combines two worlds:
 
-Status: 🛠 Alpha – Experimentelle Entwicklung, kann instabil sein
+Drag-&-Drop Form Designer (based on https://github.com/havlicekp/form-designer)
+PascalScript Console with Debugger (based on RemObjects PascalScript-IDE)
 
-PascalScriptDesigner ist ein plattformunabhängiges IDE für PascalScript, das zwei Welten kombiniert:
-
-Drag-&-Drop Form Designer (basierend auf JvDesign)
-PascalScript-Konsole mit Debugger (RemObjects PascalScript)
-
-Platformunabhängig (Linux, Windows)
 
 Key Features:
 
-Drag & Drop Form Designer – Komponenten per Maus platzieren.
-Automatisches Code-Linking – Doppelklick auf ein Designer-Element springt direkt zur Code-Stelle.
-Debugger-Support – Breakpoints, Step Into / Step Over, Variablenüberwachung.
+Drag & Drop Form Designer – place components using the mouse.
+Automatic Code Linking – double-click on a designer element jumps directly to the code location.
+Debugger Support – breakpoints, Step Into / Step Over, variable watch.
+Cross-platform (Linux, Windows)
 
-Erweiterte Funktionen durch Modifikationen
-PascalScript Debugger: Prüft, ob Code an bestimmter Datei/Zeile vorhanden ist
-JvDesignSurface: Doppelklick-Event (OnControlDblClick) für Designer-Komponenten
-⚙ Modifizierte Komponenten
+Extended Features through Modifications
 
-Alle Modifikationen befinden sich im Verzeichnis source/components.
+PascalScript Debugger: Checks whether code exists at a specific file/line
+JvDesignSurface: Double-click event (OnControlDblClick) for designer components
+⚙ Modified Components
+
+All modifications are located in the directory source/components.
 
 PascalScript (Debugger)
-
-Neue Funktion in PascalScript.pas:
+New function in PascalScript.pas:
 
 function TPSCustomDebugExec.HasCode(Filename: string; LineNo: integer): boolean;
 var
@@ -47,9 +43,9 @@ begin
   end;
 end;
 
-Quelle: StackOverflow: Making an IDE using PascalScript and SynEdit
+Source: StackOverflow: Making an IDE using PascalScript and SynEdit
 
-Modifikationen in JvDesignSurface.pas:
+Modifications in JvDesignSurface.pas:
 
 type
   TJvDesignControlEvent = procedure(Sender: TObject; AControl: TControl) of object;
@@ -60,12 +56,10 @@ type
   published
     property OnControlDblClick: TJvDesignControlEvent read FOnControlDblClick write FOnControlDblClick;
   end;
-  
-Doppelklick auf eine Komponente löst OnControlDblClick aus
-Änderungen in TJvDesignCustomMessenger.IsDesignMessage ermöglichen korrektes Handling von Design-Nachrichten
-
-
+Double-clicking a component triggers OnControlDblClick
+Changes in TJvDesignCustomMessenger.IsDesignMessage enable correct handling of design messages
 
 ⚠ Known Limitations / Bugs
-Events werden nur auf 32-Bit-Versionen (Linux & Windows) ausgelöst, da die PascalScript-Portierung in Lazarus aktuell nur 32-Bit unterstützt
-Alpha-Status: Das Projekt ist experimentell und kann instabil sein
+
+Events are triggered only on 32-bit versions (Linux & Windows), since the PascalScript port in Lazarus currently supports only 32-bit
+Alpha Status: The project is experimental and may be unstable
