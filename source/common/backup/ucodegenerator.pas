@@ -5,18 +5,94 @@ unit uCodeGenerator;
 interface
 
 uses
-  Classes, SysUtils, Controls, StdCtrls, ExtCtrls, JvDesignPanel; // JvDesignPanel oder eigenes Panel
+  Classes, SysUtils, Controls, StdCtrls, ExtCtrls, SynEdit,
+  JvDesignSurface, JvDesignUtils;
 
+function GetControlClass(AControl: TControl): TClass;
 procedure GenerateCodeFromDesigner(AJvDesignPanel: TJvDesignPanel; AStringList: TStringList; AFormName: string);
+function GetDefaultEventName(Ctrl: TControl): string;
+function GetEventHandlerName(Ctrl: TControl): string;
+procedure JumpToEventInEditor(Editor: TSynEdit; const EventName: string);
+function EventExists(Lines: TStrings; const EventName: string): Boolean;
+
 
 implementation
 
 // -----------------------------
 // Hilfsfunktionen
 // -----------------------------
+function GetControlClass(AControl: TControl): TClass;
+begin
+  if AControl is TButton then Exit(TButton);
+  if AControl is TEdit then Exit(TEdit);
+  if AControl is TMemo then Exit(TMemo);
+  if AControl is TPanel then Exit(TPanel);
+  if AControl is TLabel then Exit(TLabel);
+  if AControl is TCheckBox then Exit(TCheckBox);
+  if AControl is TRadioButton then Exit(TRadioButton);
+  // andere Controls ergänzen
+  Result := AControl.ClassType;
+end;
+
+function GetControlClassName(AControl: TControl): string;
+begin
+  Result := GetControlClass(AControl).ClassName;
+end;
 function Escape(const s: string): string;
 begin
   Result := StringReplace(s, '''', '''''', [rfReplaceAll]);
+end;
+
+function GetDefaultEventName(Ctrl: TControl): string;
+begin
+  if Ctrl is TButton then Exit('OnClick');
+  if Ctrl is TEdit then Exit('OnChange');
+  if Ctrl is TMemo then Exit('OnChange');
+  if Ctrl is TCheckBox then Exit('OnClick');
+  if Ctrl is TRadioButton then Exit('OnClick');
+
+  Result := '';
+end;
+
+function GetEventHandlerName(Ctrl: TControl): string;
+begin
+  Result := Ctrl.Name + '_' + GetDefaultEventName(Ctrl);
+end;
+
+procedure JumpToEventInEditor(Editor: TSynEdit; const EventName: string);
+var
+  i, j: Integer;
+  Line: string;
+begin
+  for i := 0 to Editor.Lines.Count - 1 do
+  begin
+    Line := Editor.Lines[i];
+
+    if Pos('procedure ' + EventName, Line) > 0 then
+    begin
+      // Suche das "begin" ab der nächsten Zeile
+      for j := i + 1 to Editor.Lines.Count - 1 do
+      begin
+        if Trim(Editor.Lines[j]) = 'begin' then
+        begin
+          Editor.CaretY := j + 1;
+          Editor.CaretX := 3; // eingerückt
+          Editor.SetFocus;
+          Exit;
+        end;
+      end;
+    end;
+  end;
+end;
+
+function EventExists(Lines: TStrings; const EventName: string): Boolean;
+var
+  i: Integer;
+begin
+  Result := False;
+  for i := 0 to Lines.Count - 1 do
+    if Pos('procedure ' + EventName, Lines[i]) > 0 then
+      Exit(True);
 end;
 
 function ExtractBlock(const SL: TStringList; const StartTag, EndTag: string): TStringList;

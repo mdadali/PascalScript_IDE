@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 397
+  Left = 469
   Height = 570
-  Top = 178
+  Top = 262
   Width = 965
   Caption = 'jvDesigner Demo'
   ClientHeight = 544
@@ -9,6 +9,7 @@ object MainForm: TMainForm
   Menu = MainMenu1
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnKeyDown = FormKeyDown
   LCLVersion = '2.2.6.0'
   WindowState = wsMaximized
   object Panel1: TPanel
@@ -166,9 +167,9 @@ object MainForm: TMainForm
       Height = 78
       Top = 1
       Width = 668
-      ActivePage = TabSheet1
+      ActivePage = TabSheet3
       Align = alClient
-      TabIndex = 0
+      TabIndex = 2
       TabOrder = 1
       object TabSheet1: TTabSheet
         Caption = 'Standard'
@@ -427,6 +428,8 @@ object MainForm: TMainForm
           ParentColor = False
           TabOrder = 0
           OnClick = PaletteButtonClick
+          OnGetSiteInfo = JvDesignPanel1GetSiteInfo
+          OnMouseDown = JvDesignPanel1MouseDown
           OnChange = JvDesignPanel1Change
           OnGetAddClass = JvDesignPanel1GetAddClass
           OnSelectionChange = JvDesignPanel1SelectionChange

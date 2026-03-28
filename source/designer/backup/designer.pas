@@ -8,7 +8,7 @@ uses
   {$IFDEF Windows} Windows, {$ENDIF} LCLType, LCLIntf, LMessages,
   Math, Classes, SysUtils, FileUtil, RTTIGrids, Forms, Controls, Graphics, Dialogs,
   Menus, StdCtrls, ExtCtrls, JvDesignSurface, JvDesignUtils,
-  RTTI, ObjectInspector, PropEdits, PropEditUtils, GraphPropEdits,
+  RTTI, ObjectInspector, PropEdits, PropEditUtils, ComponentEditors, TypInfo, GraphPropEdits,
 
 
 
@@ -18,7 +18,7 @@ SynGutterLineNumber, SynGutterChanges, SynGutter, SynGutterCodeFolding,
 SynEditMarkupSpecialLine, SynEditRegexSearch, SynEditMarks, PrintersDlgs,
 
   uCodeGenerator,
-  ide_editor;
+  ide_editor, Types;
 type
 
   { TMainForm }
@@ -136,7 +136,13 @@ type
     procedure csDesigning1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure JvDesignPanel1Change(Sender: TObject);
+    procedure JvDesignPanel1DblClick(Sender: TObject);
+    procedure JvDesignPanel1GetSiteInfo(Sender: TObject; DockClient: TControl;
+      var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
+    procedure JvDesignPanel1MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure JvDesignPanel1SelectionChange(Sender: TObject);
     procedure Rules1Click(Sender: TObject);
     procedure JvDesignPanel1GetAddClass(Sender: TObject; var ioClass: String);
@@ -148,8 +154,8 @@ type
 
   private
     { private declarations }
-
-     procedure SetObjectInspectorRoot(AComponent: TComponent);
+    procedure OnControlDoubleClick(Sender: TObject; AControl: TControl);
+    procedure SetObjectInspectorRoot(AComponent: TComponent);
   public
     { public declarations }
     FFormName: string;
@@ -161,9 +167,9 @@ type
     ThePropertyEditorHook: TPropertyEditorHook;
     Selection: TPersistentSelectionList;
 
+     procedure JumpToControlEvent(AControl: TControl; Editor: TSynEdit);
      procedure PropertyGridOnModified(Sender: TObject);
      //procedure GenCodeFromDesigner(AJvDesignPanel: TJvDesignPanel; AStringList: TStringList; AFormName: string);
-
   protected
     function GetOwner: TPersistent; override;
 
@@ -191,6 +197,18 @@ uses
 
 
 { TMainForm }
+procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  Ctrl: TControl;
+begin
+  if Key = VK_F1 then
+  begin
+    Ctrl := TControl(Selection[0]);
+
+    if Assigned(Ctrl) and (Ctrl.Name <> 'Surface') then
+      JumpToControlEvent(Ctrl, IDE.ed);
+  end;
+end;
 
 procedure TMainForm.JvDesignPanel1SelectionChange(Sender: TObject);
 var i: integer;
@@ -205,8 +223,10 @@ begin
     TheObjectInspector.RefreshSelection;
     PropertyGrid.Selection := Selection;
 
-  end else
+    //PageControl3.ActivePage := tsEditor;
+    //JumpToControlEvent(TControl(ThePropertyEditorHook.LookupRoot), IDE.ed);
 
+  end else
   SetObjectInspectorRoot(JvDesignPanel1);
 end;
 
@@ -241,7 +261,6 @@ begin
   PropertyGrid:=TOIPropertyGrid.CreateWithParams(Self,ThePropertyEditorHook,
                                                  AllTypeKinds,25);
 
-
   {with PropertyGrid do begin
     Name:='PropertyGrid';
     Parent:=pnlInsp;
@@ -255,6 +274,7 @@ begin
   SaveDialog.InitialDir := OpenDialog.InitialDir;
   JvDesignPanel1.Surface.Active := true;
 
+  JvDesignPanel1.Surface.OnControlDblClick := @OnControlDoubleClick;
   IDE := TIDE.Create(tsEditor);
   IDE.Parent := tsEditor;
   IDE.BorderStyle := bsNone;
@@ -263,8 +283,12 @@ begin
   IDE.Visible := true;
 
   SetObjectInspectorRoot(JvDesignPanel1);
-  //JvDesignPanel1.Constraints.OnChange := nil;
   PropertyGrid.OnModified := @PropertyGridOnModified;
+end;
+
+procedure TMainForm.OnControlDoubleClick(Sender: TObject; AControl: TControl);
+begin
+  JumpToControlEvent(AControl, IDE.ed);
 end;
 
 procedure TMainForm.PropertyGridOnModified(Sender: TObject);
@@ -304,9 +328,65 @@ begin
   end;
 end;
 
+
 procedure TMainForm.JvDesignPanel1Change(Sender: TObject);
 begin
 
+end;
+
+procedure TMainForm.JvDesignPanel1DblClick(Sender: TObject);
+begin
+  ShowMessage('DblClick');
+end;
+
+procedure TMainForm.JvDesignPanel1GetSiteInfo(Sender: TObject;
+  DockClient: TControl; var InfluenceRect: TRect; MousePos: TPoint;
+  var CanDock: Boolean);
+begin
+end;
+
+procedure TMainForm.JvDesignPanel1MouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  Ctrl: TControl;
+  EventName: string;
+begin
+  if ssDouble in Shift then
+  begin
+    Ctrl := Sender as TControl;
+
+    // Surface ignorieren
+    if Assigned(Ctrl) and (Ctrl.Name <> 'Surface') then
+    begin
+      EventName := GetEventHandlerName(Ctrl);
+
+      // Event existiert noch nicht → Generator aufrufen
+      if not EventExists(IDE.ed.Lines, EventName) then
+      begin
+        GenerateCodeFromDesigner(JvDesignPanel1, TStringList(IDE.ed.Lines), FFormName);
+      end;
+
+      // Editor springen
+      JumpToEventInEditor(IDE.ed, EventName);
+    end;
+  end;
+end;
+
+procedure TMainForm.JumpToControlEvent(AControl: TControl; Editor: TSynEdit);
+var
+  EventName: string;
+begin
+  if AControl = nil then Exit;
+
+  EventName := GetEventHandlerName(AControl);
+  if EventName = '' then Exit; // kein Default-Event
+
+  // Event existiert noch nicht → Generator aufrufen
+  if not EventExists(Editor.Lines, EventName) then
+    GenerateCodeFromDesigner(JvDesignPanel1, TStringList(IDE.ed.Lines), FFormName);
+
+  // Springen in Editor
+  JumpToEventInEditor(IDE.ed, EventName);
 end;
 
 function TMainForm.GetOwner: TPersistent;
@@ -343,7 +423,7 @@ procedure TMainForm.acFileNewExecute(Sender: TObject);
 begin
   JvDesignPanel1.Clear;
   IDE.ed.Clear;
-  self.edtFormName.Text := 'NewForm';
+  edtFormName.Text := 'NewForm';
   GenerateCodeFromDesigner(JvDesignPanel1, TStringList(IDE.ed.Lines), Trim(edtFormName.Text));
 end;
 
@@ -480,12 +560,6 @@ begin
   DesignClass := cClasses[TControl(Sender).Tag];
 end;
 
-{procedure TMainForm.TIPropertyGrid1Modified(Sender: TObject);
-begin
-  Form1.Surface.Selection[0].Left := TControl(Form1.Surface.Selection[0]).Left;
-  Form1.Surface.Selection[0].Refresh;
-end;}
-
 procedure TMainForm.TIPropertyGrid1Modified(Sender: TObject);
 var ctrl: TControl;
 begin
@@ -513,206 +587,6 @@ procedure TMainForm.tsEditorShow(Sender: TObject);
 begin
   GenerateCodeFromDesigner(JvDesignPanel1, TStringList(IDE.ed.Lines), Trim(edtFormName.Text));
 end;
-
-{procedure TMainForm.GenCodeFromDesigner(AJvDesignPanel: TJvDesignPanel; AStringList: TStringList; AFormName: string);
-var
-  i: Integer;
-  Ctrl: TControl;
-  UserCode, MainCode, UserGlobalVars, UserProps: TStringList;
-
-  procedure Add(const S: string);
-  begin
-    AStringList.Add(S);
-  end;
-
-  function Escape(const s: string): string;
-  begin
-    Result := StringReplace(s, '''', '''''', [rfReplaceAll]);
-  end;
-
-  function ExtractBlock(const SL: TStringList; const StartTag, EndTag: string): TStringList;
-  var
-    i: Integer;
-    InBlock: Boolean;
-  begin
-    Result := TStringList.Create;
-    InBlock := False;
-    for i := 0 to SL.Count - 1 do
-    begin
-      if Pos(StartTag, SL[i]) > 0 then
-      begin
-        InBlock := True;
-        Continue;
-      end;
-      if Pos(EndTag, SL[i]) > 0 then
-        Break;
-      if InBlock then
-        Result.Add(SL[i]);
-    end;
-  end;
-
-  function HasEvent(const SL: TStringList; const EventName: string): Boolean;
-  var
-    i: Integer;
-  begin
-    Result := False;
-    for i := 0 to SL.Count - 1 do
-      if Pos('procedure ' + EventName, SL[i]) > 0 then
-        Exit(True);
-  end;
-
-  procedure AddProps(Ctrl: TControl);
-  begin
-    Add('  ' + Ctrl.Name + '.Left := ' + IntToStr(Ctrl.Left) + ';');
-    Add('  ' + Ctrl.Name + '.Top := ' + IntToStr(Ctrl.Top) + ';');
-    Add('  ' + Ctrl.Name + '.Width := ' + IntToStr(Ctrl.Width) + ';');
-    Add('  ' + Ctrl.Name + '.Height := ' + IntToStr(Ctrl.Height) + ';');
-
-    if Ctrl is TButton then
-      Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TButton(Ctrl).Caption) + ''';');
-    if Ctrl is TLabel then
-      Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TLabel(Ctrl).Caption) + ''';');
-    if Ctrl is TEdit then
-      Add('  ' + Ctrl.Name + '.Text := ''' + Escape(TEdit(Ctrl).Text) + ''';');
-  end;
-
-begin
-  // 1. Alte Blöcke sichern
-  UserCode := ExtractBlock(AStringList, '//<USERCODE-BEGIN>', '//<USERCODE-END>');
-  MainCode := ExtractBlock(AStringList, '//<MAIN-BEGIN>', '//<MAIN-END>');
-  UserGlobalVars := ExtractBlock(AStringList, '//<USER-GLOBAL-VARS-BEGIN>', '//<USER-GLOBAL-VARS-END>');
-  UserProps := ExtractBlock(AStringList, '//<USER-PROPS-BEGIN>', '//<USER-PROPS-END>');
-
-  try
-    AStringList.Clear;
-
-    // =====================================================
-    // DESIGNER VARS
-    // =====================================================
-    Add('//<DESIGNER-VARS-BEGIN>');
-    Add('var');
-    Add('  ' + AFormName + ': TForm;');
-    for i := 0 to AJvDesignPanel.ComponentCount - 1 do
-    begin
-      if not (AJvDesignPanel.Components[i] is TControl) then Continue;
-      Ctrl := TControl(AJvDesignPanel.Components[i]);
-      Add('  ' + Ctrl.Name + ': ' + Ctrl.ClassName + ';');
-    end;
-    Add('//<DESIGNER-VARS-END>');
-    Add('');
-
-    // =====================================================
-    // USER-GLOBAL-VARS
-    // =====================================================
-    Add('//<USER-GLOBAL-VARS-BEGIN>');
-    AStringList.AddStrings(UserGlobalVars);
-    Add('//<USER-GLOBAL-VARS-END>');
-    Add('');
-
-    // =====================================================
-    // USER-CODE
-    // =====================================================
-    Add('//<USERCODE-BEGIN>');
-    AStringList.AddStrings(UserCode);
-
-    // Events ergänzen
-    for i := 0 to AJvDesignPanel.ComponentCount - 1 do
-    begin
-      if not (AJvDesignPanel.Components[i] is TControl) then Continue;
-      Ctrl := TControl(AJvDesignPanel.Components[i]);
-
-      if Ctrl is TButton then
-        if not HasEvent(UserCode, Ctrl.Name + '_OnClick') then
-        begin
-          Add('procedure ' + Ctrl.Name + '_OnClick(Sender: TObject);');
-          Add('begin');
-          Add('  ');
-          Add('end;');
-          Add('');
-        end;
-
-      if Ctrl is TEdit then
-        if not HasEvent(UserCode, Ctrl.Name + '_OnChange') then
-        begin
-          Add('procedure ' + Ctrl.Name + '_OnChange(Sender: TObject);');
-          Add('begin');
-          Add('  ');
-          Add('end;');
-          Add('');
-        end;
-    end;
-    Add('//<USERCODE-END>');
-    Add('');
-
-    // =====================================================
-    // DESIGNER-CODE + USER-PROPS (innerhalb der Prozedur)
-    // =====================================================
-    Add('//<DESIGNER-BEGIN>');
-    Add('procedure CreateNewForm;');
-    Add('begin');
-    Add('  ' + AFormName + ' := TForm.Create(nil);');
-    Add('  ' + AFormName + '.Caption := ''' + Escape(AFormName) + ''';');
-    Add('  ' + AFormName + '.Position := poDesigned;');
-    Add(''); // Visible erst nach Props
-
-    // Komponenten erzeugen + Events
-    for i := 0 to AJvDesignPanel.ComponentCount - 1 do
-    begin
-      if not (AJvDesignPanel.Components[i] is TControl) then Continue;
-      Ctrl := TControl(AJvDesignPanel.Components[i]);
-
-      Add('  ' + Ctrl.Name + ' := ' + Ctrl.ClassName + '.Create(' + AFormName + ');');
-      Add('  ' + Ctrl.Name + '.Parent := ' + AFormName + ';');
-
-      if Ctrl is TButton then
-        Add('  ' + Ctrl.Name + '.OnClick := @' + Ctrl.Name + '_OnClick;');
-      if Ctrl is TEdit then
-        Add('  ' + Ctrl.Name + '.OnChange := @' + Ctrl.Name + '_OnChange;');
-
-      Add('');
-    end;
-
-    // USER-PROPS innerhalb CreateNewForm einfügen
-    Add('  //<USER-PROPS-BEGIN>');
-    if UserProps.Count > 0 then
-      AStringList.AddStrings(UserProps)
-    else
-      for i := 0 to AJvDesignPanel.ComponentCount - 1 do
-      begin
-        if not (AJvDesignPanel.Components[i] is TControl) then Continue;
-        Ctrl := TControl(AJvDesignPanel.Components[i]);
-        AddProps(Ctrl);
-      end;
-    Add('  //<USER-PROPS-END>');
-
-    // Form sichtbar machen **nach User-Properties**
-    Add('  ' + AFormName + '.Visible := True;');
-
-    Add('end;'); // Ende CreateNewForm
-    Add('//<DESIGNER-END>');
-    Add('');
-
-    // =====================================================
-    // MAIN-BLOCK
-    // =====================================================
-    Add('//<MAIN-BEGIN>');
-    if MainCode.Count > 0 then
-      AStringList.AddStrings(MainCode)
-    else
-    begin
-      Add('begin');
-      Add('  CreateNewForm;');
-      Add('end.');
-    end;
-    Add('//<MAIN-END>');
-
-  finally
-    UserCode.Free;
-    MainCode.Free;
-    UserGlobalVars.Free;
-    UserProps.Free;
-  end;
-end;}
 
 initialization
   RegisterClass(TMainMenu);
