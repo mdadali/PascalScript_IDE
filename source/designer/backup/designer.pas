@@ -288,6 +288,7 @@ end;
 
 procedure TMainForm.OnControlDoubleClick(Sender: TObject; AControl: TControl);
 begin
+  PageControl3.ActivePage := tseditor;
   JumpToControlEvent(AControl, IDE.ed);
 end;
 

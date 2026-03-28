@@ -15,7 +15,7 @@
     <i18n>
       <EnableI18N LFM="False"/>
     </i18n>
-    <BuildModes Count="8" Active="Win32_Win_Release">
+    <BuildModes Count="8" Active="Linux64_Gtk2_Debug">
       <Item1 Name="Linux64_Gtk2_Debug" Default="True"/>
       <Item2 Name="Linux64_Gtk2_Release">
         <CompilerOptions>
