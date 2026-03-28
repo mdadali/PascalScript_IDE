@@ -26,22 +26,39 @@ New function in PascalScript.pas:
 function TPSCustomDebugExec.HasCode(Filename: string; LineNo: integer): boolean;
 
 var
+
   i, j: integer;
+  
   fi: PFunctionInfo;
+  
   pt: TIfList;
+  
   r: PPositionData;
+  
 begin
+
   result := false;
+  
   for i := 0 to FDebugDataForProcs.Count - 1 do
+  
   begin
+  
     fi := FDebugDataForProcs[i];
+    
     pt := fi^.FPositionTable;
+    
     for j := 0 to pt.Count - 1 do
+    
     begin
+    
       r := pt[j];
+      
       result := SameText(r^.FileName, Filename) and (r^.Row = LineNo);
+      
       if result then exit;
+      
     end;
+    
   end;
   
 end;
