@@ -1,5 +1,7 @@
 # PascalScript Runtime FormDesigner & Debugger
 
+![PascalScript IDE](source/images/PascalScript_IDE.gif)
+
 PascalScriptDesigner is a cross-platform IDE for PascalScript that combines two worlds:
 
 - **Drag-&-Drop Form Designer** (based on https://github.com/havlicekp/form-designer)  
