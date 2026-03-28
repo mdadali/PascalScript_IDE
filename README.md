@@ -21,7 +21,7 @@ All modifications are located in the directory source/components.
 
 PascalScript (Debugger)
 New function in PascalScript.pas:
-
+(from https://stackoverflow.com/questions/1049948/making-an-ide-using-pascal-script-and-synedit)
 function TPSCustomDebugExec.HasCode(Filename: string; LineNo: integer): boolean;
 var
   i, j: integer;
