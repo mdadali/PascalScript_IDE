@@ -24,6 +24,7 @@ New function in PascalScript.pas:
 (from https://stackoverflow.com/questions/1049948/making-an-ide-using-pascal-script-and-synedit)
 
 function TPSCustomDebugExec.HasCode(Filename: string; LineNo: integer): boolean;
+
 var
   i, j: integer;
   fi: PFunctionInfo;
@@ -42,7 +43,9 @@ begin
       if result then exit;
     end;
   end;
+  
 end;
+
 
 Source: StackOverflow: Making an IDE using PascalScript and SynEdit
 
