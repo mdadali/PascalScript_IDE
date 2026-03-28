@@ -5,13 +5,13 @@ PascalScriptDesigner is a cross-platform IDE for PascalScript that combines two 
 - **Drag-&-Drop Form Designer** (based on https://github.com/havlicekp/form-designer)  
 - **PascalScript Console with Debugger** (based on RemObjects PascalScript IDE-Demo)  
 
-Cross-platform (Linux, Windows)
 
 ## Key Features
 
 - **Drag & Drop Form Designer** – place components using the mouse.  
 - **Automatic Code Linking** – double-click on a designer element jumps directly to the code location.  
 - **Debugger Support** – breakpoints, Step Into / Step Over, variable watch.  
+- **Cross-platform** – Linux & Windows
 
 ## Extended Features through Modifications
 
