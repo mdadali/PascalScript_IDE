@@ -9,10 +9,12 @@ PascalScript-Konsole mit Debugger (RemObjects PascalScript)
 
 Platformunabhängig (Linux, Windows)
 
-🔑 Key Features
+Key Features:
+
 Drag & Drop Form Designer – Komponenten per Maus platzieren.
 Automatisches Code-Linking – Doppelklick auf ein Designer-Element springt direkt zur Code-Stelle.
 Debugger-Support – Breakpoints, Step Into / Step Over, Variablenüberwachung.
+
 Erweiterte Funktionen durch Modifikationen
 PascalScript Debugger: Prüft, ob Code an bestimmter Datei/Zeile vorhanden ist
 JvDesignSurface: Doppelklick-Event (OnControlDblClick) für Designer-Komponenten
