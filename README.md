@@ -1,27 +1,69 @@
-# PascalScriptDesigner
+Lazarus PascalScript RuntimeDesigner/Debugger 
 
-**Status:** 🛠 Alpha – the project is in early development and may be unstable.  
+Status: 🛠 Alpha – Experimentelle Entwicklung, kann instabil sein
 
-PascalScriptDesigner is an **integrated development environment (IDE)** for **PascalScript**, combining two worlds:  
-the **Drag-&-Drop Form Designer** from [form-designer](https://github.com/havlicekp/form-designer) and the **PascalScript console IDE** from RemObjects.  
+PascalScriptDesigner ist ein plattformunabhängiges IDE für PascalScript, das zwei Welten kombiniert:
 
-**Platform-independent:** Runs on Linux, Windows, and other operating systems, as long as a 32-bit environment is available.  
+Drag-&-Drop Form Designer (basierend auf JvDesign)
+PascalScript-Konsole mit Debugger (RemObjects PascalScript)
 
----
+Platformunabhängig (Linux, Windows)
 
-## Key Features
+🔑 Key Features
+Drag & Drop Form Designer – Komponenten per Maus platzieren.
+Automatisches Code-Linking – Doppelklick auf ein Designer-Element springt direkt zur Code-Stelle.
+Debugger-Support – Breakpoints, Step Into / Step Over, Variablenüberwachung.
+Erweiterte Funktionen durch Modifikationen
+PascalScript Debugger: Prüft, ob Code an bestimmter Datei/Zeile vorhanden ist
+JvDesignSurface: Doppelklick-Event (OnControlDblClick) für Designer-Komponenten
+⚙ Modifizierte Komponenten
 
-- **Drag & Drop Form Designer:** Easily place components with the mouse.  
-- **Automatic Code Linking:** Double-clicking a component in the designer jumps directly to the corresponding code at the right place.  
-- **Debugger Support:** Set breakpoints, Step Into / Step Over functions, monitor variables.  
+Alle Modifikationen befinden sich im Verzeichnis source/components.
 
----
+PascalScript (Debugger)
 
-## Known Limitations / Bugs
+Neue Funktion in PascalScript.pas:
 
-- **Events are only triggered on 32-bit versions** (Linux and Windows) because the PascalScript port to Lazarus currently only supports 32-bit.  
-- Alpha status: The project is experimental and may be unstable.  
+function TPSCustomDebugExec.HasCode(Filename: string; LineNo: integer): boolean;
+var
+  i, j: integer;
+  fi: PFunctionInfo;
+  pt: TIfList;
+  r: PPositionData;
+begin
+  result := false;
+  for i := 0 to FDebugDataForProcs.Count - 1 do
+  begin
+    fi := FDebugDataForProcs[i];
+    pt := fi^.FPositionTable;
+    for j := 0 to pt.Count - 1 do
+    begin
+      r := pt[j];
+      result := SameText(r^.FileName, Filename) and (r^.Row = LineNo);
+      if result then exit;
+    end;
+  end;
+end;
 
----
+Quelle: StackOverflow: Making an IDE using PascalScript and SynEdit
 
-PascalScriptDesigner makes it easy to **design GUI forms, edit scripts, and test them directly**, all in one environment.
+Modifikationen in JvDesignSurface.pas:
+
+type
+  TJvDesignControlEvent = procedure(Sender: TObject; AControl: TControl) of object;
+
+  TJvDesignSurface = class(TComponent)
+  private
+    FOnControlDblClick: TJvDesignControlEvent;
+  published
+    property OnControlDblClick: TJvDesignControlEvent read FOnControlDblClick write FOnControlDblClick;
+  end;
+  
+Doppelklick auf eine Komponente löst OnControlDblClick aus
+Änderungen in TJvDesignCustomMessenger.IsDesignMessage ermöglichen korrektes Handling von Design-Nachrichten
+
+
+
+⚠ Known Limitations / Bugs
+Events werden nur auf 32-Bit-Versionen (Linux & Windows) ausgelöst, da die PascalScript-Portierung in Lazarus aktuell nur 32-Bit unterstützt
+Alpha-Status: Das Projekt ist experimentell und kann instabil sein
