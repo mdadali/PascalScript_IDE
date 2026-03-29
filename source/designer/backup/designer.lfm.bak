@@ -1,7 +1,7 @@
 object MainForm: TMainForm
   Left = 397
   Height = 570
-  Top = 141
+  Top = 162
   Width = 965
   Caption = 'jvDesigner Demo'
   ClientHeight = 544
@@ -158,7 +158,7 @@ object MainForm: TMainForm
           Top = 2
           Width = 133
           TabOrder = 0
-          Text = 'NewForm'
+          Text = 'Form1'
         end
       end
     end
@@ -202,9 +202,9 @@ object MainForm: TMainForm
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ButtonButton: TToolButton
+          object tbtnMainMenu: TToolButton
             Tag = 1
-            Left = 34
+            Left = 562
             Top = 0
             AutoSize = True
             Caption = 'Button'
@@ -213,9 +213,9 @@ object MainForm: TMainForm
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object LabelButton: TToolButton
+          object tbtnPopupMenu: TToolButton
             Tag = 2
-            Left = 67
+            Left = 595
             Top = 0
             AutoSize = True
             Caption = 'Label'
@@ -224,9 +224,9 @@ object MainForm: TMainForm
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object PanelButton: TToolButton
+          object tbtnLabel: TToolButton
             Tag = 4
-            Left = 133
+            Left = 67
             Top = 0
             AutoSize = True
             Caption = 'Panel'
@@ -235,112 +235,112 @@ object MainForm: TMainForm
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ImageButton: TToolButton
+          object tbtnEdit: TToolButton
             Tag = 5
-            Left = 166
+            Left = 100
             Top = 0
             AutoSize = True
-            Caption = 'ImageButton'
+            Caption = 'tbtnEdit'
             Grouped = True
             ImageIndex = 138
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ToolButton1: TToolButton
+          object tbtnButton: TToolButton
             Tag = 3
-            Left = 100
+            Left = 34
             Top = 0
-            Caption = 'ToolButton1'
+            Caption = 'tbtnButton'
             Grouped = True
             ImageIndex = 24
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ToolButton2: TToolButton
+          object tbtnMemo: TToolButton
             Tag = 6
-            Left = 199
+            Left = 133
             Top = 0
-            Caption = 'ToolButton2'
+            Caption = 'tbtnMemo'
             Grouped = True
             ImageIndex = 368
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ToolButton3: TToolButton
+          object tbtnToggleBox: TToolButton
             Tag = 7
-            Left = 232
+            Left = 166
             Top = 0
-            Caption = 'ToolButton3'
+            Caption = 'tbtnToggleBox'
             Grouped = True
             ImageIndex = 339
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ToolButton4: TToolButton
+          object tbtnCheckBox: TToolButton
             Tag = 8
-            Left = 265
+            Left = 199
             Top = 0
-            Caption = 'ToolButton4'
+            Caption = 'tbtnCheckBox'
             Grouped = True
             ImageIndex = 369
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ToolButton5: TToolButton
+          object tbtnRadioButton: TToolButton
             Tag = 9
-            Left = 298
+            Left = 232
             Top = 0
-            Caption = 'ToolButton5'
+            Caption = 'tbtnRadioButton'
             Grouped = True
             ImageIndex = 267
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ToolButton6: TToolButton
+          object tbtnListBox: TToolButton
             Tag = 10
-            Left = 331
+            Left = 265
             Top = 0
-            Caption = 'ToolButton6'
+            Caption = 'tbtnListBox'
             Grouped = True
             ImageIndex = 212
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ToolButton7: TToolButton
+          object tbtnComboBox: TToolButton
             Tag = 11
-            Left = 364
+            Left = 298
             Top = 0
-            Caption = 'ToolButton7'
+            Caption = 'tbtnComboBox'
             Grouped = True
             ImageIndex = 68
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ToolButton8: TToolButton
+          object tbtnScrollBar: TToolButton
             Tag = 12
-            Left = 397
+            Left = 331
             Top = 0
-            Caption = 'ToolButton8'
+            Caption = 'tbtnScrollBar'
             Grouped = True
             ImageIndex = 282
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ToolButton9: TToolButton
+          object tbtnGroupBox: TToolButton
             Tag = 13
-            Left = 430
+            Left = 364
             Top = 0
-            Caption = 'ToolButton9'
+            Caption = 'tbtnGroupBox'
             Grouped = True
             ImageIndex = 173
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ToolButton10: TToolButton
+          object tbtnCheckGroup: TToolButton
             Tag = 14
-            Left = 463
+            Left = 397
             Top = 0
-            Caption = 'ToolButton10'
+            Caption = 'tbtnCheckGroup'
             Grouped = True
             ImageIndex = 270
             OnClick = PaletteButtonClick
@@ -348,7 +348,7 @@ object MainForm: TMainForm
           end
           object ToolButton11: TToolButton
             Tag = 15
-            Left = 496
+            Left = 430
             Top = 0
             Caption = 'ToolButton11'
             Grouped = True
@@ -356,30 +356,30 @@ object MainForm: TMainForm
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ToolButton12: TToolButton
+          object tbtnPanel: TToolButton
             Tag = 16
-            Left = 529
+            Left = 463
             Top = 0
-            Caption = 'ToolButton12'
+            Caption = 'tbtnPanel'
             Grouped = True
             ImageIndex = 249
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ToolButton13: TToolButton
+          object tbtnFrame: TToolButton
             Tag = 17
-            Left = 562
+            Left = 496
             Top = 0
-            Caption = 'ToolButton13'
+            Caption = 'tbtnFrame'
             Grouped = True
             ImageIndex = 370
             Style = tbsCheck
           end
-          object ToolButton14: TToolButton
+          object tbtnActionList: TToolButton
             Tag = 18
-            Left = 595
+            Left = 529
             Top = 0
-            Caption = 'ToolButton14'
+            Caption = 'tbtnActionList'
             Grouped = True
             ImageIndex = 2
             Style = tbsCheck
@@ -7186,16 +7186,16 @@ object MainForm: TMainForm
     CompilerMode = pcmDelphi
     NestedComments = False
     TypeHelpers = True
-    Left = 136
-    Top = 280
+    Left = 200
+    Top = 368
   end
   object ImageListClassic: TImageList
     AllocBy = 10
     BlendColor = clBlack
     BkColor = clBlack
     DrawingStyle = dsTransparent
-    Left = 520
-    Top = 312
+    Left = 72
+    Top = 424
     Bitmap = {
       4C7A210000001000000010000000382600000000000078DAED5B07541567D3BE
       74504154A457511444405091DE51A477B14B554045AA80280AA258D0C458632C
@@ -7508,8 +7508,8 @@ object MainForm: TMainForm
   end
   object ActionList1: TActionList
     Images = ImageListClassic
-    Left = 680
-    Top = 320
+    Left = 176
+    Top = 448
     object acFileNew: TAction
       Category = 'File'
       AutoCheck = True

@@ -56,14 +56,14 @@ type
     pnlInsp: TPanel;
     PropertyGrid: TOIPropertyGrid;
     Active1: TMenuItem;
-    ButtonButton: TToolButton;
+    tbtnMainMenu: TToolButton;
     csDesigning1: TMenuItem;
     DelphiSelector1: TMenuItem;
     File1: TMenuItem;
     Grid1: TMenuItem;
-    ImageButton: TToolButton;
+    tbtnEdit: TToolButton;
     ImageList1: TImageList;
-    LabelButton: TToolButton;
+    tbtnPopupMenu: TToolButton;
     MainMenu1: TMainMenu;
     N1: TMenuItem;
     N2: TMenuItem;
@@ -75,7 +75,7 @@ type
     PageControl1: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
-    PanelButton: TToolButton;
+    tbtnLabel: TToolButton;
     Rules1: TMenuItem;
     Save1: TMenuItem;
     SaveDialog: TSaveDialog;
@@ -112,20 +112,20 @@ type
     tsDesign: TTabSheet;
     tsEditor: TTabSheet;
     ToolBar1: TToolBar;
-    ToolButton1: TToolButton;
-    ToolButton10: TToolButton;
+    tbtnButton: TToolButton;
+    tbtnCheckGroup: TToolButton;
     ToolButton11: TToolButton;
-    ToolButton12: TToolButton;
-    ToolButton13: TToolButton;
-    ToolButton14: TToolButton;
-    ToolButton2: TToolButton;
-    ToolButton3: TToolButton;
-    ToolButton4: TToolButton;
-    ToolButton5: TToolButton;
-    ToolButton6: TToolButton;
-    ToolButton7: TToolButton;
-    ToolButton8: TToolButton;
-    ToolButton9: TToolButton;
+    tbtnPanel: TToolButton;
+    tbtnFrame: TToolButton;
+    tbtnActionList: TToolButton;
+    tbtnMemo: TToolButton;
+    tbtnToggleBox: TToolButton;
+    tbtnCheckBox: TToolButton;
+    tbtnRadioButton: TToolButton;
+    tbtnListBox: TToolButton;
+    tbtnComboBox: TToolButton;
+    tbtnScrollBar: TToolButton;
+    tbtnGroupBox: TToolButton;
     VSSelector1: TMenuItem;
     WindowProcHook1: TMenuItem;
     procedure acDebugRunExecute(Sender: TObject);
@@ -158,6 +158,7 @@ type
     procedure SetObjectInspectorRoot(AComponent: TComponent);
   public
     { public declarations }
+    FStdFormTemplateFile: string;
     FFormName: string;
 
     DesignClass: string;
@@ -169,7 +170,8 @@ type
 
      procedure JumpToControlEvent(AControl: TControl; Editor: TSynEdit);
      procedure PropertyGridOnModified(Sender: TObject);
-     //procedure GenCodeFromDesigner(AJvDesignPanel: TJvDesignPanel; AStringList: TStringList; AFormName: string);
+
+     procedure OpenFileSilent(AFileName: string);
   protected
     function GetOwner: TPersistent; override;
 
@@ -243,6 +245,9 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  FStdFormTemplateFile := ExtractFilePath(Application.ExeName) +
+       PathDelim +'FormTemplates' + PathDelim + 'StdTemplate.cfrm';
+
   // create the PropertyEditorHook (the interface to the properties)
   ThePropertyEditorHook:=TPropertyEditorHook.Create(nil);
 
@@ -284,6 +289,8 @@ begin
 
   SetObjectInspectorRoot(JvDesignPanel1);
   PropertyGrid.OnModified := @PropertyGridOnModified;
+
+  OpenFileSilent(FStdFormTemplateFile);
 end;
 
 procedure TMainForm.OnControlDoubleClick(Sender: TObject; AControl: TControl);
@@ -424,20 +431,18 @@ procedure TMainForm.acFileNewExecute(Sender: TObject);
 begin
   JvDesignPanel1.Clear;
   IDE.ed.Clear;
-  edtFormName.Text := 'NewForm';
+  edtFormName.Text := 'Form1';
   GenerateCodeFromDesigner(JvDesignPanel1, TStringList(IDE.ed.Lines), Trim(edtFormName.Text));
 end;
 
-procedure TMainForm.acFileOpenExecute(Sender: TObject);
+procedure TMainForm.OpenFileSilent(AFileName: string);
 var
   BaseName, CfrmFile, RopsFile: string;
   SL: TStringList;
   i: Integer;
   Line, FormName: string;
 begin
-  if OpenDialog.Execute then
-  begin
-    BaseName := ChangeFileExt(OpenDialog.Filename, '');
+    BaseName := ChangeFileExt(AFilename, '');
 
     // Designer laden
     CfrmFile := BaseName + '.cfrm';
@@ -488,7 +493,12 @@ begin
     end;
 
     Caption := 'VF IDE - ' + ExtractFileName(BaseName);
-  end;
+end;
+
+procedure TMainForm.acFileOpenExecute(Sender: TObject);
+begin
+  if OpenDialog.Execute then
+    OpenFileSilent(OpenDialog.FileName);
 end;
 
 procedure TMainForm.acFileSaveExecute(Sender: TObject);
