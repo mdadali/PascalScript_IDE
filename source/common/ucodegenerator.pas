@@ -479,10 +479,13 @@ begin
         IntToStr(RootPanel.Height) + ');');
       Add('  ' + AFormName + '.Color := ' + IntToStr(RootPanel.Color) + ';');
       Add('  ' + AFormName + '.Position := poDesigned;');
-      if TitlePanel <> nil then
+      {if TitlePanel <> nil then
         Add('  ' + AFormName + '.Caption := ''' + Escape(TitlePanel.Caption) + ''';')
       else
         Add('  ' + AFormName + '.Caption := ''' + Escape(AFormName) + ''';');
+      Add('');}
+
+      Add('  ' + AFormName + '.Caption := ''' + Escape(AFormName) + ''';');
       Add('');
 
       GenerateCreate(CtrlList);

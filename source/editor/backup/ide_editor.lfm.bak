@@ -1,7 +1,7 @@
 object IDE: TIDE
-  Left = 856
+  Left = 289
   Height = 585
-  Top = 141
+  Top = 465
   Width = 996
   Caption = 'LazCAD IDE'
   ClientHeight = 585
@@ -769,8 +769,8 @@ object IDE: TIDE
     OnIdle = ceIdle
     OnLineInfo = ceLineInfo
     OnBreakpoint = ceBreakpoint
-    Left = 752
-    Top = 224
+    Left = 832
+    Top = 352
   end
   object IFPS3DllPlugin1: TPSDllPlugin
     Left = 456
@@ -910,8 +910,8 @@ object IDE: TIDE
     Top = 632
   end
   object IFPS3CE_DateUtils1: TPSImport_DateUtils
-    Left = 456
-    Top = 176
+    Left = 616
+    Top = 296
   end
   object IFPS3CE_Std1: TPSImport_Classes
     EnableStreams = True
@@ -922,33 +922,33 @@ object IDE: TIDE
   object IFPS3CE_Forms1: TPSImport_Forms
     EnableForms = True
     EnableMenus = True
-    Left = 600
-    Top = 256
+    Left = 608
+    Top = 216
   end
   object IFPS3CE_StdCtrls1: TPSImport_StdCtrls
     EnableExtCtrls = True
     EnableButtons = True
-    Left = 464
-    Top = 256
+    Left = 760
+    Top = 144
   end
   object IFPS3CE_ComObj1: TPSImport_ComObj
-    Left = 456
-    Top = 99
+    Left = 768
+    Top = 272
   end
   object PSImport_DB1: TPSImport_DB
     Left = 600
-    Top = 99
+    Top = 112
   end
   object PSImport_Controls1: TPSImport_Controls
     EnableStreams = True
     EnableGraphics = True
     EnableControls = True
-    Left = 600
-    Top = 167
+    Left = 760
+    Top = 56
   end
   object PSCustomPlugin1: TPSCustomPlugin
-    Left = 752
-    Top = 152
+    Left = 440
+    Top = 128
   end
   object ImageListClassic: TImageList
     AllocBy = 10

@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 465
+  Left = 380
   Height = 570
-  Top = 107
+  Top = 96
   Width = 965
   Caption = 'jvDesigner Demo'
   ClientHeight = 544
@@ -168,14 +168,6 @@ object MainForm: TMainForm
           Caption = 'ToolButton33'
           OnClick = ToolButton33Click
         end
-        object edtFormName: TEdit
-          Left = 139
-          Height = 30
-          Top = 2
-          Width = 133
-          TabOrder = 0
-          Text = 'Form1'
-        end
       end
     end
     object PageControl1: TPageControl
@@ -183,15 +175,16 @@ object MainForm: TMainForm
       Height = 78
       Top = 1
       Width = 668
-      ActivePage = TabSheet1
+      ActivePage = tsCommonControls
       Align = alClient
-      TabIndex = 0
+      Images = ImageList1
+      TabIndex = 2
       TabOrder = 1
-      object TabSheet1: TTabSheet
+      object tsStandard: TTabSheet
         Caption = 'Standard'
         ClientHeight = 44
         ClientWidth = 664
-        object ToolBar1: TToolBar
+        object tbarStandard: TToolBar
           Left = 0
           Height = 34
           Top = 0
@@ -199,7 +192,7 @@ object MainForm: TMainForm
           AutoSize = True
           ButtonHeight = 32
           ButtonWidth = 33
-          Caption = 'ToolBar1'
+          Caption = 'tbarStandard'
           Color = clBtnFace
           EdgeBorders = [ebBottom]
           Images = ImageList1
@@ -408,11 +401,57 @@ object MainForm: TMainForm
           end
         end
       end
-      object TabSheet2: TTabSheet
+      object tsAdditional: TTabSheet
         Caption = 'Additional'
+        ClientHeight = 44
+        ClientWidth = 664
+        object tbarAdditional: TToolBar
+          Left = 0
+          Height = 26
+          Top = 0
+          Width = 664
+          Caption = 'tbarAdditional'
+          Images = ImageList1
+          TabOrder = 0
+          object ToolButton1: TToolButton
+            Tag = 30
+            Left = 31
+            Top = 2
+            Caption = 'ToolButton1'
+            Grouped = True
+            ImageIndex = 16
+            OnClick = PaletteButtonClick
+          end
+          object ToolButton2: TToolButton
+            Left = 61
+            Top = 2
+            Caption = 'ToolButton2'
+          end
+          object SelectButton1: TToolButton
+            Left = 1
+            Top = 2
+            AutoSize = True
+            Caption = 'Select'
+            Down = True
+            Grouped = True
+            ImageIndex = 0
+            OnClick = PaletteButtonClick
+            Style = tbsCheck
+          end
+        end
       end
-      object TabSheet3: TTabSheet
+      object tsCommonControls: TTabSheet
         Caption = 'Common Controls'
+        ClientHeight = 44
+        ClientWidth = 664
+        object tbarCommonControls: TToolBar
+          Left = 0
+          Height = 26
+          Top = 0
+          Width = 664
+          Caption = 'tbarCommonControls'
+          TabOrder = 0
+        end
       end
     end
   end
@@ -488,20 +527,20 @@ object MainForm: TMainForm
     TabOrder = 3
     object PageControl2: TPageControl
       Left = 1
-      Height = 462
-      Top = 1
+      Height = 412
+      Top = 51
       Width = 313
-      ActivePage = TabSheet4
+      ActivePage = TabSheet5
       Align = alClient
-      TabIndex = 0
+      TabIndex = 1
       TabOrder = 0
       object TabSheet4: TTabSheet
         Caption = 'Objectinspector'
-        ClientHeight = 428
+        ClientHeight = 378
         ClientWidth = 309
         object pnlInsp: TPanel
           Left = 0
-          Height = 428
+          Height = 378
           Top = 0
           Width = 309
           Align = alClient
@@ -511,6 +550,36 @@ object MainForm: TMainForm
       end
       object TabSheet5: TTabSheet
         Caption = 'Codetree'
+        OnContextPopup = TabSheet5ContextPopup
+      end
+    end
+    object Panel4: TPanel
+      Left = 1
+      Height = 50
+      Top = 1
+      Width = 313
+      Align = alTop
+      ClientHeight = 50
+      ClientWidth = 313
+      TabOrder = 1
+      object Label1: TLabel
+        Left = 8
+        Height = 20
+        Top = 12
+        Width = 78
+        Caption = 'Form Name'
+        ParentColor = False
+      end
+      object edtFormName: TEdit
+        Left = 104
+        Height = 30
+        Top = 8
+        Width = 192
+        OnChange = edtFormNameChange
+        OnExit = edtFormNameExit
+        OnKeyPress = edtFormNameKeyPress
+        TabOrder = 0
+        Text = 'Form1'
       end
     end
   end

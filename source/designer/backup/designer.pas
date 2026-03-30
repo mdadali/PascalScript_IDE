@@ -12,10 +12,11 @@ uses
 
 
 
-ComCtrls, ActnList, SynEdit, SynEditTypes, SynHighlighterPas, SynEditSearch,
-SynEditMiscClasses, SynEditHighlighter, SynGutterBase, SynGutterMarks,
-SynGutterLineNumber, SynGutterChanges, SynGutter, SynGutterCodeFolding,
-SynEditMarkupSpecialLine, SynEditRegexSearch, SynEditMarks, PrintersDlgs,
+ComCtrls, ActnList, Buttons, SynEdit, SynEditTypes, SynHighlighterPas,
+SynEditSearch, SynEditMiscClasses, SynEditHighlighter, SynGutterBase,
+SynGutterMarks, SynGutterLineNumber, SynGutterChanges, SynGutter,
+SynGutterCodeFolding, SynEditMarkupSpecialLine, SynEditRegexSearch,
+SynEditMarks, PrintersDlgs,
 
   uCodeGenerator,
   ide_editor, Types;
@@ -48,15 +49,18 @@ type
     edtFormName: TEdit;
     ImageListClassic: TImageList;
     JvDesignPanel1: TJvDesignPanel;
+    Label1: TLabel;
     PageControl2: TPageControl;
     PageControl3: TPageControl;
     Panel3: TPanel;
+    Panel4: TPanel;
     Panel5: TPanel;
     pashighlighter: TSynPasSyn;
     pnlInsp: TPanel;
     PropertyGrid: TOIPropertyGrid;
     Active1: TMenuItem;
     RadioGroup1: TRadioGroup;
+    SelectButton1: TToolButton;
     tbtnMainMenu: TToolButton;
     csDesigning1: TMenuItem;
     DelphiSelector1: TMenuItem;
@@ -83,9 +87,13 @@ type
     SelectButton: TToolButton;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
-    TabSheet1: TTabSheet;
-    TabSheet2: TTabSheet;
-    TabSheet3: TTabSheet;
+    tbarCommonControls: TToolBar;
+    ToolButton1: TToolButton;
+    ToolButton2: TToolButton;
+    tsStandard: TTabSheet;
+    tbarAdditional: TToolBar;
+    tsAdditional: TTabSheet;
+    tsCommonControls: TTabSheet;
     TabSheet4: TTabSheet;
     TabSheet5: TTabSheet;
     ToolBar2: TToolBar;
@@ -112,7 +120,7 @@ type
     ToolButton33: TToolButton;
     tsDesign: TTabSheet;
     tsEditor: TTabSheet;
-    ToolBar1: TToolBar;
+    tbarStandard: TToolBar;
     tbtnButton: TToolButton;
     tbtnRadioGroup: TToolButton;
     tbtnCheckGroup: TToolButton;
@@ -135,6 +143,9 @@ type
     procedure acFileSaveExecute(Sender: TObject);
     procedure Active1Click(Sender: TObject);
     procedure csDesigning1Click(Sender: TObject);
+    procedure edtFormNameChange(Sender: TObject);
+    procedure edtFormNameExit(Sender: TObject);
+    procedure edtFormNameKeyPress(Sender: TObject; var Key: char);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -145,6 +156,8 @@ type
     procedure JvDesignPanel1GetAddClass(Sender: TObject; var ioClass: String);
     procedure JvDesignPanelPaint(Sender: TObject);
     procedure PaletteButtonClick(Sender: TObject);
+    procedure TabSheet5ContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: Boolean);
     procedure TIPropertyGrid1Modified(Sender: TObject);
     procedure ToolButton33Click(Sender: TObject);
     procedure tsEditorShow(Sender: TObject);
@@ -176,12 +189,15 @@ type
   end;
 
 const
-  cClasses: array[0..18] of string = ( '', 'TMainMenu', 'TPopupMenu', 'TButton',
+  cClasses: array[0..30] of string = ( '', 'TMainMenu', 'TPopupMenu', 'TButton',
                                           'TLabel', 'TEdit', 'TMemo', 'TToggleBox',
                                           'TCheckBox', 'TRadioButton', 'TListBox',
                                           'TComboBox', 'TScrollBar', 'TGroupBox',
                                           'TRadioGroup', 'TCheckGroup', 'TPanel',
-                                          'TFrame', 'ActionList');
+                                          'TFrame', 'ActionList', '', '', '', '',
+                                          '', '', '', '', '', '', '',
+                                          'TBitBtn' //Tag=30 //Register additional
+                                          );
 
 
 
@@ -194,6 +210,24 @@ uses
   JvDesignImp;
 {$R *.lfm}
 
+
+function IsValidFormName(const S: string): Boolean;
+var
+  i: Integer;
+begin
+  Result := False;
+
+  if S = '' then Exit;
+
+  // erstes Zeichen
+  if not (S[1] in ['A'..'Z', 'a'..'z', '_']) then Exit;
+
+  // restliche Zeichen
+  for i := 2 to Length(S) do
+    if not (S[i] in ['A'..'Z', 'a'..'z', '0'..'9', '_']) then Exit;
+
+  Result := True;
+end;
 
 { TMainForm }
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -211,7 +245,17 @@ end;
 
 procedure TMainForm.JvDesignPanel1SelectionChange(Sender: TObject);
 var i: integer;
+    AControl: TControl;
 begin
+  {AControl := JvDesignPanel1.Surface.Selection[0];
+  if (AControl.Name = 'pnlDesign') or
+     (AControl.Name = 'JvDesignPanel1') or
+     (AControl.Name = 'pnlFormTitle') or
+     (AControl.Name = 'btnTitleMaximize') or
+     (AControl.Name = 'btnTitleMinimize') or
+     (AControl.Name = 'btnTitleClose')
+     then}
+
   if JvDesignPanel1.Surface.Count > 0 then
   begin
     Selection.Clear;
@@ -238,6 +282,34 @@ begin
     JvDesignPanel1.Surface.MessengerClass := TJvDesignDesignerMessenger;
   JvDesignPanel1.Active := true;
   JvDesignPanel1.Invalidate;
+end;
+
+procedure TMainForm.edtFormNameChange(Sender: TObject);
+var
+  TitlePanel: TPanel;
+begin
+  TitlePanel := TPanel(JvDesignPanel1.FindComponent('pnlFormTitle'));
+
+  if TitlePanel <> nil then
+    TitlePanel.Caption := edtFormName.Text;
+end;
+
+procedure TMainForm.edtFormNameExit(Sender: TObject);
+begin
+  if (not IsValidFormName(edtFormName.Text)) then
+    edtFormName.Text := 'Form1';
+end;
+
+
+procedure TMainForm.edtFormNameKeyPress(Sender: TObject; var Key: Char);
+begin
+  // erlaubte Zeichen
+  if not (Key in ['A'..'Z', 'a'..'z', '0'..'9', '_', #8]) then
+    Key := #0;
+
+  // erstes Zeichen darf keine Zahl sein
+  if (edtFormName.SelStart = 0) and (Key in ['0'..'9']) then
+    Key := #0;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -301,14 +373,22 @@ begin
 end;
 
 procedure TMainForm.OnControlDoubleClick(Sender: TObject; AControl: TControl);
-var
-  EventName: string;
+var EventName: string;
 begin
+  if (AControl.Name = 'pnlDesign') or
+     (AControl.Name = 'JvDesignPanel1') or
+     (AControl.Name = 'pnlFormTitle') or
+     (AControl.Name = 'btnTitleMaximize') or
+     (AControl.Name = 'btnTitleMinimize') or
+     (AControl.Name = 'btnTitleClose')
+     then
+  exit;
+
   EventName := GetEventHandlerName(AControl);
 
   if not EventExists(IDE.ed.Lines, EventName) then
   begin
-    GenerateEvent(AControl, IDE.ed.Lines);      // erzeugt Event-Code
+    GenerateEvent(AControl, TStringList(IDE.ed.Lines));     // erzeugt Event-Code
     AssignEventToControl(AControl, TStringList(IDE.ed.Lines)); // fügt Zuweisung in EVENTS-Block
   end;
 
@@ -556,6 +636,12 @@ begin
   DesignClass := cClasses[TControl(Sender).Tag];
 end;
 
+procedure TMainForm.TabSheet5ContextPopup(Sender: TObject; MousePos: TPoint;
+  var Handled: Boolean);
+begin
+
+end;
+
 procedure TMainForm.TIPropertyGrid1Modified(Sender: TObject);
 var ctrl: TControl;
 begin
@@ -603,5 +689,7 @@ initialization
   RegisterClass(TPanel);
   RegisterClass(TFrame);
   RegisterClass(TActionList);
+
+  RegisterClass(TBitBtn);
 end.
 

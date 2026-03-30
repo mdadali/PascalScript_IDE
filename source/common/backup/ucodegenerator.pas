@@ -322,8 +322,8 @@ begin
   EndIndex := -1;
   for i := 0 to ALines.Count - 1 do
   begin
-    if Trim(ALines[i]) = '//<EVENTS-BEGIN>' then BeginIndex := i;
-    if Trim(ALines[i]) = '//<EVENTS-END>' then EndIndex := i;
+    if Trim(ALines[i]) = '//<EVENT_BINDINGS-BEGIN>' then BeginIndex := i;
+    if Trim(ALines[i]) = '//<EVENT_BINDINGS-END>' then EndIndex := i;
   end;
 
   // Event-Zuweisung direkt vor END einfügen
@@ -380,7 +380,7 @@ var
   end;
 
   // -------------------------
-  // 🔹 Controls rekursiv sammeln
+  //Controls rekursiv sammeln
   // -------------------------
   procedure CollectControls(ParentCtrl: TControl; List: TList);
   var
@@ -479,11 +479,17 @@ begin
         IntToStr(RootPanel.Height) + ');');
       Add('  ' + AFormName + '.Color := ' + IntToStr(RootPanel.Color) + ';');
       Add('  ' + AFormName + '.Position := poDesigned;');
-      if TitlePanel <> nil then
+      {if TitlePanel <> nil then
         Add('  ' + AFormName + '.Caption := ''' + Escape(TitlePanel.Caption) + ''';')
       else
         Add('  ' + AFormName + '.Caption := ''' + Escape(AFormName) + ''';');
+      Add('');}
+
+      Add('  ' + AFormName + '.Caption := ''' + Escape(AFormName) + ''';');
       Add('');
+
+      if TitlePanel <> nil then
+        Add('  ' + TitlePanel.Name + '.Caption := ''' + Escape(AFormName) + ''';');
 
       GenerateCreate(CtrlList);
 
