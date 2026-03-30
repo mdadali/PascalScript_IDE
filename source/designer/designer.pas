@@ -231,16 +231,74 @@ begin
 end;
 
 { TMainForm }
+
+{procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  i: Integer;
+  Comp: TPersistent;
+begin
+  if Key = VK_DELETE then
+  begin
+    for i := 0 to JvDesignPanel1.Surface.Count - 1 do
+    begin
+      Comp := JvDesignPanel1.Surface.Selection[i];
+
+      if (Comp is TComponent) and
+         (TComponent(Comp).Name = 'pnlDesign') then
+      begin
+        // Löschen verhindern standardmäßig
+        Key := 0;
+
+        //Benutzer fragen
+        if MessageDlg('Möchten Sie wirklich das Hauptformular löschen?',
+                      mtWarning, [mbYes, mbNo], 0) = mrYes then
+        begin
+          Key := VK_DELETE;
+          OpenFileSilent(FStdFormTemplateFile);
+        end
+        else
+        begin
+          //
+        end;
+
+        Exit; // wir haben die RootControl gefunden → abbrechen Schleife
+      end;
+    end;
+  end;
+end;}
+
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
-  Ctrl: TControl;
+  i: Integer;
+  Comp: TPersistent;
 begin
-  if Key = VK_F1 then
+  if Key = VK_DELETE then
   begin
-    Ctrl := TControl(Selection[0]);
+    for i := 0 to JvDesignPanel1.Surface.Count - 1 do
+    begin
+      Comp := JvDesignPanel1.Surface.Selection[i];
 
-    if Assigned(Ctrl) and (Ctrl.Name <> 'Surface') then
-      JumpToControlEvent(Ctrl, IDE.ed);
+      if (Comp is TComponent) and
+         (TComponent(Comp).Name = 'pnlDesign') then
+      begin
+        // Prevent deletion by default
+        Key := 0;
+
+        // Ask the user
+        if MessageDlg('Do you really want to delete the main form?',
+                      mtWarning, [mbYes, mbNo], 0) = mrYes then
+        begin
+          Key := VK_DELETE;
+          OpenFileSilent(FStdFormTemplateFile);
+        end
+        else
+        begin
+          // User canceled → do nothing
+        end;
+
+        Exit; // RootControl found → exit loop
+      end;
+    end;
   end;
 end;
 
@@ -563,6 +621,7 @@ var
   SL: TStringList;
   i: Integer;
   Line, FormName: string;
+  RootCtrl: TComponent;
 begin
     BaseName := ChangeFileExt(AFilename, '');
 
@@ -615,6 +674,16 @@ begin
     end;
 
     Caption := 'VF IDE - ' + ExtractFileName(BaseName);
+
+    {RootCtrl := JvDesignPanel1.FindComponent('pnlDesign');
+    if Assigned(RootCtrl) and (RootCtrl is TWinControl) then
+    begin
+      with TWinControl(RootCtrl) do
+      begin
+        OnKeyDown := self.OnKeyDown; //  pnlDesignKeyDown;
+        TabStop := True;
+      end;
+    end;}
 end;
 
 procedure TMainForm.acFileOpenExecute(Sender: TObject);

@@ -231,16 +231,74 @@ begin
 end;
 
 { TMainForm }
+
+{procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  i: Integer;
+  Comp: TPersistent;
+begin
+  if Key = VK_DELETE then
+  begin
+    for i := 0 to JvDesignPanel1.Surface.Count - 1 do
+    begin
+      Comp := JvDesignPanel1.Surface.Selection[i];
+
+      if (Comp is TComponent) and
+         (TComponent(Comp).Name = 'pnlDesign') then
+      begin
+        // Löschen verhindern standardmäßig
+        Key := 0;
+
+        //Benutzer fragen
+        if MessageDlg('Möchten Sie wirklich das Hauptformular löschen?',
+                      mtWarning, [mbYes, mbNo], 0) = mrYes then
+        begin
+          Key := VK_DELETE;
+          OpenFileSilent(FStdFormTemplateFile);
+        end
+        else
+        begin
+          //
+        end;
+
+        Exit; // wir haben die RootControl gefunden → abbrechen Schleife
+      end;
+    end;
+  end;
+end;}
+
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
-  Ctrl: TControl;
+  i: Integer;
+  Comp: TPersistent;
 begin
-  if Key = VK_F1 then
+  if Key = VK_DELETE then
   begin
-    Ctrl := TControl(Selection[0]);
+    for i := 0 to JvDesignPanel1.Surface.Count - 1 do
+    begin
+      Comp := JvDesignPanel1.Surface.Selection[i];
 
-    if Assigned(Ctrl) and (Ctrl.Name <> 'Surface') then
-      JumpToControlEvent(Ctrl, IDE.ed);
+      if (Comp is TComponent) and
+         (TComponent(Comp).Name = 'pnlDesign') then
+      begin
+        // Prevent deletion by default
+        Key := 0;
+
+        // Ask the user
+        if MessageDlg('Do you really want to delete the main form?',
+                      mtWarning, [mbYes, mbNo], 0) = mrYes then
+        begin
+          Key := VK_DELETE;
+          OpenFileSilent(FStdFormTemplateFile);
+        end
+        else
+        begin
+          // User canceled → do nothing
+        end;
+
+        Exit; // RootControl found → exit loop
+      end;
+    end;
   end;
 end;
 
@@ -311,52 +369,8 @@ begin
   else
   begin
     SetObjectInspectorRoot(RootCtrl);
-    //SetObjectInspectorRoot(JvDesignPanel1.Components[0]);
   end;
 end;
-
-{procedure TMainForm.JvDesignPanel1SelectionChange(Sender: TObject);
-var
-  i: Integer;
-  AControl: TControl;
-  RootCtrl: TComponent;
-begin
-  if JvDesignPanel1.ComponentCount < 7 then
-  begin
-    Selection.Clear;
-    exit;
-  end;
-  if Selection.Count > 0 then
-  begin
-    Selection.Clear;
-    AControl := TControl(Selection[0]);
-
-    // 👉 Template Controls abfangen
-    if (AControl.Name = 'JvDesignPanel1') or
-       (AControl.Name = 'pnlFormTitle') or
-       (AControl.Name = 'btnTitleMaximize') or
-       (AControl.Name = 'btnTitleMinimize') or
-       (AControl.Name = 'btnTitleClose') then
-    begin
-      RootCtrl := JvDesignPanel1.FindComponent('pnlDesign');
-    end
-    else
-      RootCtrl := AControl;
-
-    // 👉 Root setzen
-    ThePropertyEditorHook.LookupRoot := RootCtrl;
-
-    // 👉 Selection aufbauen
-    for i := 0 to JvDesignPanel1.Surface.Count - 1 do
-      Selection.Add(JvDesignPanel1.Surface.Selection[i]);
-
-    TheObjectInspector.Selection := Selection;
-    TheObjectInspector.RefreshSelection;
-    PropertyGrid.Selection := Selection;
-  end
-  else;
-    //SetObjectInspectorRoot(JvDesignPanel1.Components[0]);
-end;}
 
 procedure TMainForm.csDesigning1Click(Sender: TObject);
 begin
@@ -398,6 +412,7 @@ begin
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
+var RootCtrl: TComponent;
 begin;
   JvDesignPanel1.Surface.OnSelectionChange := @JvDesignSurface1SelectionChange;
 
@@ -443,10 +458,23 @@ begin;
   IDE.Align := alClient;
   IDE.Visible := true;
 
-  SetObjectInspectorRoot(JvDesignPanel1);
   PropertyGrid.OnModified := @PropertyGridOnModified;
-
   OpenFileSilent(FStdFormTemplateFile);
+
+  RootCtrl := JvDesignPanel1.FindComponent('pnlDesign');
+  if Assigned(RootCtrl) then
+  begin
+    JvDesignPanel1.Surface.Selector.AddToSelection(TControl(RootCtrl));
+    Selection.Add(RootCtrl);
+    ThePropertyEditorHook.LookupRoot := RootCtrl;
+    TheObjectInspector.Selection := Selection;
+    TheObjectInspector.RefreshSelection;
+    PropertyGrid.Selection := Selection;
+    PropertyGrid.Refresh;
+    JvDesignPanel1.Invalidate;
+    Exit;
+  end else
+    SetObjectInspectorRoot(JvDesignPanel1);
 end;
 
 
@@ -593,6 +621,7 @@ var
   SL: TStringList;
   i: Integer;
   Line, FormName: string;
+  RootCtrl: TComponent;
 begin
     BaseName := ChangeFileExt(AFilename, '');
 
@@ -645,6 +674,16 @@ begin
     end;
 
     Caption := 'VF IDE - ' + ExtractFileName(BaseName);
+
+    {RootCtrl := JvDesignPanel1.FindComponent('pnlDesign');
+    if Assigned(RootCtrl) and (RootCtrl is TWinControl) then
+    begin
+      with TWinControl(RootCtrl) do
+      begin
+        OnKeyDown := self.OnKeyDown; //  pnlDesignKeyDown;
+        TabStop := True;
+      end;
+    end;}
 end;
 
 procedure TMainForm.acFileOpenExecute(Sender: TObject);

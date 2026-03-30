@@ -1,7 +1,7 @@
 object IDE: TIDE
-  Left = 800
+  Left = 540
   Height = 585
-  Top = 471
+  Top = 254
   Width = 996
   Caption = 'LazCAD IDE'
   ClientHeight = 585

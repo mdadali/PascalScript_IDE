@@ -1,11 +1,12 @@
 object MainForm: TMainForm
-  Left = 203
+  Left = 397
   Height = 570
-  Top = 622
+  Top = 141
   Width = 965
   Caption = 'jvDesigner Demo'
   ClientHeight = 544
   ClientWidth = 965
+  KeyPreview = True
   Menu = MainMenu1
   OnCreate = FormCreate
   OnDestroy = FormDestroy
