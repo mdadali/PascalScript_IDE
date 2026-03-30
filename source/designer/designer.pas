@@ -61,6 +61,7 @@ type
     Active1: TMenuItem;
     RadioGroup1: TRadioGroup;
     SelectButton1: TToolButton;
+    SelectButton2: TToolButton;
     tbtnMainMenu: TToolButton;
     csDesigning1: TMenuItem;
     DelphiSelector1: TMenuItem;
@@ -151,7 +152,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure JvDesignPanel1Change(Sender: TObject);
     procedure JvDesignPanel1DblClick(Sender: TObject);
-    procedure JvDesignPanel1SelectionChange(Sender: TObject);
+    procedure JvDesignSurface1SelectionChange(Sender: TObject);
     procedure Rules1Click(Sender: TObject);
     procedure JvDesignPanel1GetAddClass(Sender: TObject; var ioClass: String);
     procedure JvDesignPanelPaint(Sender: TObject);
@@ -243,30 +244,74 @@ begin
   end;
 end;
 
-{AControl := JvDesignPanel1.Surface.Selection[0];
-if (AControl.Name = 'pnlDesign') or
-   (AControl.Name = 'JvDesignPanel1') or
-   (AControl.Name = 'pnlFormTitle') or
-   (AControl.Name = 'btnTitleMaximize') or
-   (AControl.Name = 'btnTitleMinimize') or
-   (AControl.Name = 'btnTitleClose')
-   then}
-
-procedure TMainForm.JvDesignPanel1SelectionChange(Sender: TObject);
-var i: integer;
-    AControl: TControl;
+procedure TMainForm.JvDesignSurface1SelectionChange(Sender: TObject);
+var
+  i: Integer;
+  APersistent: TPersistent;
+  RootCtrl: TComponent;
+  AName: string;
+  ArrayLength: Integer;
 begin
+  ArrayLength := Length(JvDesignPanel1.Surface.Selected);
+  if ArrayLength = 0 then
+    Exit;
+
+  RootCtrl := JvDesignPanel1.FindComponent('pnlDesign');
+
+  APersistent := TPersistent(JvDesignPanel1.Surface.Selected[0]);
+
+  // Safety: nur weiter wenn es wirklich eine Komponente ist
+  if not (APersistent is TComponent) then
+    Exit;
+
+  AName := TComponent(APersistent).Name;
+
+  //Diese Controls dürfen NICHT selektiert werden
+  if (AName = 'JvDesignPanel1') or
+     (AName = 'pnlFormTitle') or
+     (AName = 'btnTitleMaximize') or
+     (AName = 'btnTitleMinimize') or
+     (AName = 'btnTitleClose') then
+  begin
+    Selection.Clear;
+    JvDesignPanel1.Surface.ClearSelection;
+
+    //RootCtrl auch im Designer selektieren
+    if Assigned(RootCtrl) then
+    begin
+      JvDesignPanel1.Surface.Selector.AddToSelection(TControl(RootCtrl));
+      //Sync mit Inspector
+      Selection.Add(RootCtrl);
+      ThePropertyEditorHook.LookupRoot := RootCtrl;
+      TheObjectInspector.Selection := Selection;
+      TheObjectInspector.RefreshSelection;
+      PropertyGrid.Selection := Selection;
+      PropertyGrid.Refresh;
+      JvDesignPanel1.Invalidate;
+      Exit;
+    end;
+  end;
+
+  //Erlaubte Selection → Object Inspector aktualisieren
   if JvDesignPanel1.Surface.Count > 0 then
   begin
     Selection.Clear;
-    ThePropertyEditorHook.LookupRoot := JvDesignPanel1.Surface.Selection[0];
+
+    ThePropertyEditorHook.LookupRoot :=
+      JvDesignPanel1.Surface.Selection[0];
+
     for i := 0 to JvDesignPanel1.Surface.Count - 1 do
       Selection.Add(JvDesignPanel1.Surface.Selection[i]);
+
     TheObjectInspector.Selection := Selection;
     TheObjectInspector.RefreshSelection;
+
     PropertyGrid.Selection := Selection;
-  end else
-    SetObjectInspectorRoot(JvDesignPanel1.Components[0]);
+  end
+  else
+  begin
+    SetObjectInspectorRoot(RootCtrl);
+  end;
 end;
 
 procedure TMainForm.csDesigning1Click(Sender: TObject);
@@ -309,7 +354,10 @@ begin
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
-begin
+var RootCtrl: TComponent;
+begin;
+  JvDesignPanel1.Surface.OnSelectionChange := @JvDesignSurface1SelectionChange;
+
   FStdFormTemplateFile := ExtractFilePath(Application.ExeName) +
        PathDelim + 'data' + PathDelim + 'FormTemplates' + PathDelim + 'StdTemplate.cfrm';
 
@@ -352,10 +400,23 @@ begin
   IDE.Align := alClient;
   IDE.Visible := true;
 
-  SetObjectInspectorRoot(JvDesignPanel1);
   PropertyGrid.OnModified := @PropertyGridOnModified;
-
   OpenFileSilent(FStdFormTemplateFile);
+
+  RootCtrl := JvDesignPanel1.FindComponent('pnlDesign');
+  if Assigned(RootCtrl) then
+  begin
+    JvDesignPanel1.Surface.Selector.AddToSelection(TControl(RootCtrl));
+    Selection.Add(RootCtrl);
+    ThePropertyEditorHook.LookupRoot := RootCtrl;
+    TheObjectInspector.Selection := Selection;
+    TheObjectInspector.RefreshSelection;
+    PropertyGrid.Selection := Selection;
+    PropertyGrid.Refresh;
+    JvDesignPanel1.Invalidate;
+    Exit;
+  end else
+    SetObjectInspectorRoot(JvDesignPanel1);
 end;
 
 
@@ -607,6 +668,8 @@ begin
   begin
     DesignClass := '';
     SelectButton.Down  := true;
+    SelectButton1.Down  := true;
+    SelectButton2.Down  := true;
   end;
 end;
 
@@ -659,6 +722,7 @@ begin
   ShowMessage('JvDesignPanel1.Components[0].Name = ' + JvDesignPanel1.Components[0].Name);
   ShowMessage('JvDesignPanel1.ComponentCount = ' + IntToStr(JvDesignPanel1.ComponentCount));
   ShowMessage('Surface.ComponentCount = ' + IntToStr(JvDesignPanel1.Surface.ComponentCount));
+  ShowMessage('Selection.Count = ' + IntToStr(Selection.Count));
 end;
 
 procedure TMainForm.tsEditorShow(Sender: TObject);

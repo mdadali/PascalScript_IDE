@@ -251,12 +251,12 @@
         <PackageName Value="LCL"/>
       </Item8>
     </RequiredPackages>
-    <Units Count="58">
+    <Units Count="53">
       <Unit0>
         <Filename Value="PSDesigner.lpr"/>
         <IsPartOfProject Value="True"/>
         <CursorPos Y="27"/>
-        <UsageCount Value="157"/>
+        <UsageCount Value="166"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -267,9 +267,9 @@
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="251"/>
-        <CursorPos Y="272"/>
-        <UsageCount Value="157"/>
+        <TopLine Value="392"/>
+        <CursorPos X="21" Y="405"/>
+        <UsageCount Value="166"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -279,35 +279,30 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="642"/>
         <CursorPos X="40" Y="644"/>
-        <UsageCount Value="82"/>
+        <UsageCount Value="81"/>
       </Unit2>
       <Unit3>
-        <Filename Value="..\..\tp_register.pas"/>
-        <CursorPos X="82" Y="19"/>
-        <UsageCount Value="1"/>
-      </Unit3>
-      <Unit4>
         <Filename Value="..\..\jvresources.pas"/>
         <UnitName Value="JvResources"/>
         <TopLine Value="148"/>
         <CursorPos X="17" Y="164"/>
-        <UsageCount Value="7"/>
-      </Unit4>
-      <Unit5>
+        <UsageCount Value="6"/>
+      </Unit3>
+      <Unit4>
         <Filename Value="..\..\..\codetools\laz2_xmlwrite.pas"/>
         <UnitName Value="laz2_XMLWrite"/>
         <TopLine Value="172"/>
         <CursorPos X="25" Y="187"/>
-        <UsageCount Value="10"/>
-      </Unit5>
-      <Unit6>
+        <UsageCount Value="9"/>
+      </Unit4>
+      <Unit5>
         <Filename Value="..\..\..\..\fpc\2.4.3\source\rtl\win32\system.pp"/>
         <UnitName Value="System"/>
         <TopLine Value="51"/>
         <CursorPos X="3" Y="66"/>
-        <UsageCount Value="5"/>
-      </Unit6>
-      <Unit7>
+        <UsageCount Value="4"/>
+      </Unit5>
+      <Unit6>
         <Filename Value="..\E:\sw\laz_jvdesigner\mainunit.pas"/>
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
@@ -315,499 +310,466 @@
         <UnitName Value="mainUnit"/>
         <TopLine Value="106"/>
         <CursorPos Y="120"/>
-        <UsageCount Value="10"/>
-      </Unit7>
-      <Unit8>
+        <UsageCount Value="9"/>
+      </Unit6>
+      <Unit7>
         <Filename Value="..\..\..\..\designer\controlselection.pp"/>
         <UnitName Value="ControlSelection"/>
         <TopLine Value="1252"/>
         <CursorPos X="3" Y="1257"/>
-        <UsageCount Value="10"/>
-      </Unit8>
-      <Unit9>
-        <Filename Value="..\..\..\..\lcl\include\wincontrol.inc"/>
-        <TopLine Value="4691"/>
-        <CursorPos Y="4707"/>
-        <UsageCount Value="1"/>
-      </Unit9>
-      <Unit10>
+        <UsageCount Value="9"/>
+      </Unit7>
+      <Unit8>
         <Filename Value="..\..\..\..\lcl\controls.pp"/>
         <UnitName Value="Controls"/>
         <TopLine Value="1947"/>
         <CursorPos X="15" Y="1733"/>
-        <UsageCount Value="10"/>
-      </Unit10>
-      <Unit11>
+        <UsageCount Value="9"/>
+      </Unit8>
+      <Unit9>
         <Filename Value="..\..\..\..\fpc\2.4.3\source\packages\fcl-db\src\dbase\dbf_idxfile.pas"/>
         <TopLine Value="1226"/>
         <CursorPos X="31" Y="1236"/>
-        <UsageCount Value="10"/>
-      </Unit11>
-      <Unit12>
+        <UsageCount Value="9"/>
+      </Unit9>
+      <Unit10>
         <Filename Value="..\E:\sw\laz_jvdesigner\jvdesignutils.pas"/>
         <UnitName Value="JvDesignUtils"/>
         <TopLine Value="58"/>
         <CursorPos X="19"/>
-        <UsageCount Value="2"/>
-      </Unit12>
-      <Unit13>
+        <UsageCount Value="1"/>
+      </Unit10>
+      <Unit11>
         <Filename Value="..\E:\sw\laz_jvdesigner\jvdesignimp.pas"/>
         <UnitName Value="JvDesignImp"/>
         <TopLine Value="1213"/>
         <CursorPos X="30" Y="1241"/>
-        <UsageCount Value="2"/>
-      </Unit13>
-      <Unit14>
+        <UsageCount Value="1"/>
+      </Unit11>
+      <Unit12>
         <Filename Value="..\..\jvdesignimp.pas"/>
         <UnitName Value="JvDesignImp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1298"/>
         <CursorPos Y="1481"/>
-        <UsageCount Value="18"/>
+        <UsageCount Value="17"/>
         <Bookmarks Count="1">
           <Item0 X="23" Y="363" ID="1"/>
         </Bookmarks>
-      </Unit14>
-      <Unit15>
+      </Unit12>
+      <Unit13>
         <Filename Value="..\..\..\..\lcl\include\control.inc"/>
         <TopLine Value="1577"/>
         <CursorPos Y="1593"/>
-        <UsageCount Value="4"/>
-      </Unit15>
-      <Unit16>
+        <UsageCount Value="3"/>
+      </Unit13>
+      <Unit14>
         <Filename Value="..\..\jvdesignutils.pas"/>
         <UnitName Value="JvDesignUtils"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="7"/>
         <CursorPos X="19" Y="10"/>
-        <UsageCount Value="7"/>
-      </Unit16>
-      <Unit17>
+        <UsageCount Value="6"/>
+      </Unit14>
+      <Unit15>
         <Filename Value="..\..\jvdesignclip.pas"/>
         <UnitName Value="JvDesignClip"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2"/>
         <CursorPos X="25" Y="2"/>
-        <UsageCount Value="7"/>
-      </Unit17>
-      <Unit18>
+        <UsageCount Value="6"/>
+      </Unit15>
+      <Unit16>
         <Filename Value="..\..\jvconsts.pas"/>
         <UnitName Value="JvConsts"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="162"/>
         <CursorPos X="90" Y="186"/>
-        <UsageCount Value="2"/>
-      </Unit18>
-      <Unit19>
-        <Filename Value="..\..\..\..\lcl\include\canvas.inc"/>
-        <TopLine Value="387"/>
-        <CursorPos Y="406"/>
         <UsageCount Value="1"/>
-      </Unit19>
-      <Unit20>
-        <Filename Value="..\..\..\..\lcl\include\customcontrol.inc"/>
-        <TopLine Value="107"/>
-        <CursorPos Y="136"/>
-        <UsageCount Value="1"/>
-      </Unit20>
-      <Unit21>
-        <Filename Value="..\E:\sw\laz_designer\jvdesignsurface.pas"/>
-        <TopLine Value="301"/>
-        <CursorPos X="69" Y="312"/>
-        <UsageCount Value="1"/>
-      </Unit21>
-      <Unit22>
+      </Unit16>
+      <Unit17>
         <Filename Value="..\..\..\..\..\Programme\Lazarus\2.2.6\lazarus\lcl\include\customform.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="193"/>
         <CursorPos X="42" Y="201"/>
-        <UsageCount Value="8"/>
-      </Unit22>
-      <Unit23>
+        <UsageCount Value="7"/>
+      </Unit17>
+      <Unit18>
         <Filename Value="..\..\..\..\..\Programme\Lazarus\2.2.6\lazarus\lcl\include\wincontrol.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="5132"/>
         <CursorPos Y="5145"/>
-        <UsageCount Value="8"/>
-      </Unit23>
-      <Unit24>
+        <UsageCount Value="7"/>
+      </Unit18>
+      <Unit19>
         <Filename Value="..\..\..\..\..\Programme\Lazarus\2.2.6\lazarus\components\ideintf\objectinspector.pp"/>
         <UnitName Value="ObjectInspector"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1314"/>
         <CursorPos Y="1331"/>
-        <UsageCount Value="2"/>
-      </Unit24>
-      <Unit25>
+        <UsageCount Value="1"/>
+      </Unit19>
+      <Unit20>
         <Filename Value="..\..\..\..\..\Programme\Lazarus\2.2.6\lazarus\lcl\editbtn.pas"/>
         <UnitName Value="EditBtn"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1181"/>
         <CursorPos X="31" Y="1194"/>
-        <UsageCount Value="5"/>
-      </Unit25>
-      <Unit26>
+        <UsageCount Value="4"/>
+      </Unit20>
+      <Unit21>
         <Filename Value="..\..\..\pascalscript\Source\uPSR_dll.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="163"/>
         <CursorPos X="38" Y="176"/>
-        <UsageCount Value="2"/>
-      </Unit26>
-      <Unit27>
+        <UsageCount Value="1"/>
+      </Unit21>
+      <Unit22>
         <Filename Value="..\..\..\..\..\Programme\Lazarus_2.2.6_new\config_lazarus\onlinepackagemanager\packages\BGRAControls\bgradialogs.pas"/>
         <UnitName Value="BGRADialogs"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="402"/>
         <CursorPos X="7" Y="420"/>
-        <UsageCount Value="5"/>
-      </Unit27>
-      <Unit28>
+        <UsageCount Value="4"/>
+      </Unit22>
+      <Unit23>
         <Filename Value="editor\ide_editor.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="IDE"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="4"/>
         <CursorPos X="14" Y="19"/>
-        <UsageCount Value="112"/>
+        <UsageCount Value="121"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
-      </Unit28>
-      <Unit29>
+      </Unit23>
+      <Unit24>
         <Filename Value="..\editor\Imports\upsi_mathscriptinterface.pas"/>
         <UnitName Value="uPSI_MathScriptinterface"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="49"/>
         <CursorPos X="70" Y="67"/>
-        <UsageCount Value="19"/>
-      </Unit29>
-      <Unit30>
+        <UsageCount Value="18"/>
+      </Unit24>
+      <Unit25>
         <Filename Value="..\editor\Imports\upsi_cad2dscripinterface.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="27"/>
         <CursorPos X="36" Y="27"/>
-        <UsageCount Value="18"/>
-      </Unit30>
-      <Unit31>
+        <UsageCount Value="17"/>
+      </Unit25>
+      <Unit26>
         <Filename Value="..\editor\Imports\mainscriptinterface.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="15" Y="14"/>
-        <UsageCount Value="20"/>
-      </Unit31>
-      <Unit32>
+        <UsageCount Value="19"/>
+      </Unit26>
+      <Unit27>
         <Filename Value="..\..\..\..\LazCAD_git\LazCAD\src\components\PascalScript\Source\uPSCompiler.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13550"/>
         <CursorPos Y="13568"/>
-        <UsageCount Value="16"/>
-      </Unit32>
-      <Unit33>
+        <UsageCount Value="15"/>
+      </Unit27>
+      <Unit28>
         <Filename Value="..\editor\Imports\upsi_dialogsscriptinterface.pas"/>
         <UnitName Value="uPSI_DialogsScriptInterface"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="187"/>
         <CursorPos X="52" Y="194"/>
-        <UsageCount Value="16"/>
-      </Unit33>
-      <Unit34>
+        <UsageCount Value="15"/>
+      </Unit28>
+      <Unit29>
         <Filename Value="..\..\..\..\LazCAD_git\LazCAD\src\components\PascalScript\Source\uPSComponent.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1442"/>
         <CursorPos X="68" Y="1448"/>
-        <UsageCount Value="15"/>
-      </Unit34>
-      <Unit35>
+        <UsageCount Value="14"/>
+      </Unit29>
+      <Unit30>
         <Filename Value="..\..\..\..\..\Programme\Lazarus_2.2.6_new\lazarus\lcl\extdlgs.pas"/>
         <UnitName Value="ExtDlgs"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="115"/>
         <CursorPos X="3" Y="132"/>
-        <UsageCount Value="15"/>
-      </Unit35>
-      <Unit36>
+        <UsageCount Value="14"/>
+      </Unit30>
+      <Unit31>
         <Filename Value="..\editor\formcodegenerator.pas"/>
         <UnitName Value="FormCodeGenerator"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="45" Y="13"/>
-        <UsageCount Value="38"/>
-      </Unit36>
-      <Unit37>
+        <UsageCount Value="37"/>
+      </Unit31>
+      <Unit32>
         <Filename Value="..\..\..\..\..\Programme\Lazarus_2.2.6_new\lazarus\lcl\forms.pp"/>
         <UnitName Value="Forms"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1766"/>
         <CursorPos X="60" Y="1790"/>
-        <UsageCount Value="14"/>
-      </Unit37>
-      <Unit38>
+        <UsageCount Value="13"/>
+      </Unit32>
+      <Unit33>
         <Filename Value="..\..\..\..\..\Programme\Lazarus_2.2.6_new\lazarus\components\ideintf\objectinspector.pp"/>
         <UnitName Value="ObjectInspector"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="549"/>
         <CursorPos X="14" Y="564"/>
-        <UsageCount Value="7"/>
-      </Unit38>
-      <Unit39>
+        <UsageCount Value="6"/>
+      </Unit33>
+      <Unit34>
         <Filename Value="..\..\..\..\LazCAD_git\LazCAD\src\components\PascalScript\Source\uPSDebugger.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="106"/>
         <CursorPos X="25" Y="106"/>
-        <UsageCount Value="7"/>
-      </Unit39>
-      <Unit40>
+        <UsageCount Value="6"/>
+      </Unit34>
+      <Unit35>
         <Filename Value="..\..\..\..\LazCAD_git\LazCAD\src\components\PascalScript\Source\uPSUtils.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="915"/>
         <CursorPos Y="933"/>
-        <UsageCount Value="6"/>
-      </Unit40>
-      <Unit41>
+        <UsageCount Value="5"/>
+      </Unit35>
+      <Unit36>
         <Filename Value="..\..\..\..\LazCAD_git\LazCAD\src\components\PascalScript\Source\x86.inc"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="4"/>
-      </Unit41>
-      <Unit42>
+        <UsageCount Value="3"/>
+      </Unit36>
+      <Unit37>
         <Filename Value="..\..\..\..\..\Programme\Lazarus_2.2.6_new\lazarus\components\PascalScript\Source\uPSDebugger.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="138"/>
         <CursorPos X="22" Y="141"/>
-        <UsageCount Value="4"/>
-      </Unit42>
-      <Unit43>
+        <UsageCount Value="3"/>
+      </Unit37>
+      <Unit38>
         <Filename Value="..\..\..\..\..\Programme\Lazarus_2.2.6_new\lazarus\components\PascalScript\Source\uPSComponent.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="317"/>
         <CursorPos X="9" Y="332"/>
-        <UsageCount Value="5"/>
-      </Unit43>
-      <Unit44>
+        <UsageCount Value="4"/>
+      </Unit38>
+      <Unit39>
         <Filename Value="..\..\..\PascalScript\Source\uPSCompiler.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13550"/>
         <CursorPos X="24" Y="13560"/>
-        <UsageCount Value="5"/>
-      </Unit44>
-      <Unit45>
+        <UsageCount Value="4"/>
+      </Unit39>
+      <Unit40>
         <Filename Value="common\ucodegenerator.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="uCodeGenerator"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="293"/>
-        <CursorPos X="9" Y="293"/>
-        <UsageCount Value="72"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="503"/>
+        <CursorPos X="26" Y="530"/>
+        <UsageCount Value="81"/>
         <Loaded Value="True"/>
-      </Unit45>
-      <Unit46>
+      </Unit40>
+      <Unit41>
         <Filename Value="..\..\..\..\..\..\..\Programme\Lazarus_2.2.6_new\lazarus\components\ideintf\objectinspector.pp"/>
         <UnitName Value="ObjectInspector"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="311"/>
         <CursorPos X="3" Y="344"/>
-        <UsageCount Value="10"/>
-      </Unit46>
-      <Unit47>
+        <UsageCount Value="9"/>
+      </Unit41>
+      <Unit42>
         <Filename Value="..\..\..\..\..\..\..\Programme\Lazarus_2.2.6_new\fpcsrc\rtl\objpas\classes\classesh.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="2208"/>
-        <CursorPos X="8" Y="2212"/>
-        <UsageCount Value="8"/>
-      </Unit47>
-      <Unit48>
+        <EditorIndex Value="2"/>
+        <TopLine Value="411"/>
+        <CursorPos X="3" Y="429"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
+      </Unit42>
+      <Unit43>
         <Filename Value="..\..\..\..\..\..\..\Programme\Lazarus_2.2.6_new\lazarus\lcl\controls.pp"/>
         <UnitName Value="Controls"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1988"/>
         <CursorPos X="3" Y="2007"/>
-        <UsageCount Value="14"/>
-      </Unit48>
-      <Unit49>
+        <UsageCount Value="13"/>
+      </Unit43>
+      <Unit44>
         <Filename Value="..\..\components\jvdesign\jvdesignsurface.pas"/>
         <UnitName Value="JvDesignSurface"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="97" Y="7"/>
-        <UsageCount Value="29"/>
-      </Unit49>
-      <Unit50>
+        <EditorIndex Value="3"/>
+        <TopLine Value="205"/>
+        <CursorPos X="14" Y="220"/>
+        <UsageCount Value="33"/>
+        <Loaded Value="True"/>
+      </Unit44>
+      <Unit45>
         <Filename Value="..\..\components\jvdesign\jvdesignutils.pas"/>
         <UnitName Value="JvDesignUtils"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="73"/>
         <CursorPos X="26" Y="108"/>
-        <UsageCount Value="10"/>
-      </Unit50>
-      <Unit51>
+        <UsageCount Value="9"/>
+      </Unit45>
+      <Unit46>
         <Filename Value="..\..\components\jvdesign\jvdesignimp.pas"/>
         <UnitName Value="JvDesignImp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="6"/>
         <CursorPos X="65" Y="21"/>
-        <UsageCount Value="28"/>
-      </Unit51>
-      <Unit52>
+        <UsageCount Value="27"/>
+      </Unit46>
+      <Unit47>
         <Filename Value="..\..\components\PascalScript\Source\uPSComponent_StdCtrls.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="28"/>
         <CursorPos X="10" Y="28"/>
-        <UsageCount Value="11"/>
-      </Unit52>
-      <Unit53>
+        <UsageCount Value="10"/>
+      </Unit47>
+      <Unit48>
         <Filename Value="..\..\components\PascalScript\Source\uPSR_stdctrls.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="25"/>
         <CursorPos X="48" Y="25"/>
-        <UsageCount Value="11"/>
-      </Unit53>
-      <Unit54>
+        <UsageCount Value="10"/>
+      </Unit48>
+      <Unit49>
         <Filename Value="..\..\components\jvdesign\tp_register.pas"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="10"/>
-      </Unit54>
-      <Unit55>
+        <UsageCount Value="9"/>
+      </Unit49>
+      <Unit50>
         <Filename Value="..\..\components\jvdesign\jvconsts.pas"/>
         <UnitName Value="JvConsts"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="169"/>
         <CursorPos X="48" Y="204"/>
-        <UsageCount Value="10"/>
-      </Unit55>
-      <Unit56>
+        <UsageCount Value="9"/>
+      </Unit50>
+      <Unit51>
         <Filename Value="..\..\components\jvdesign\jvdesignclip.pas"/>
         <UnitName Value="JvDesignClip"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="10"/>
-      </Unit56>
-      <Unit57>
+        <UsageCount Value="9"/>
+      </Unit51>
+      <Unit52>
         <Filename Value="..\..\components\jvdesign\jvresources.pas"/>
         <UnitName Value="JvResources"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="64" Y="6"/>
-        <UsageCount Value="10"/>
-      </Unit57>
+        <UsageCount Value="9"/>
+      </Unit52>
     </Units>
-    <JumpHistory Count="30" HistoryIndex="29">
+    <JumpHistory Count="27" HistoryIndex="26">
       <Position1>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="306" Column="33" TopLine="294"/>
+        <Caret Line="325" TopLine="311"/>
       </Position1>
       <Position2>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="307" Column="33" TopLine="295"/>
+        <Caret Line="327" TopLine="311"/>
       </Position2>
       <Position3>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="308" Column="33" TopLine="296"/>
+        <Caret Line="333" TopLine="311"/>
       </Position3>
       <Position4>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="309" Column="33" TopLine="297"/>
+        <Caret Line="318" TopLine="311"/>
       </Position4>
       <Position5>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="308" Column="33" TopLine="296"/>
+        <Caret Line="338" TopLine="311"/>
       </Position5>
       <Position6>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="555" Column="3" TopLine="553"/>
+        <Caret Line="318" Column="34" TopLine="312"/>
       </Position6>
       <Position7>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="556" Column="3" TopLine="554"/>
+        <Caret Line="336" TopLine="302"/>
       </Position7>
       <Position8>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="188" Column="75" TopLine="179"/>
+        <Caret Line="317" TopLine="302"/>
       </Position8>
       <Position9>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="611" Column="24" TopLine="578"/>
+        <Caret Line="321" TopLine="302"/>
       </Position9>
       <Position10>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="556" Column="3" TopLine="554"/>
+        <Caret Line="323" TopLine="302"/>
       </Position10>
       <Position11>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="189" Column="71" TopLine="178"/>
+        <Caret Line="329" TopLine="302"/>
       </Position11>
       <Position12>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="184" Column="23" TopLine="171"/>
+        <Caret Line="317" TopLine="302"/>
       </Position12>
       <Position13>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="190" Column="71" TopLine="172"/>
+        <Caret Line="321" TopLine="302"/>
       </Position13>
       <Position14>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="315" Column="44" TopLine="304"/>
+        <Caret Line="323" TopLine="302"/>
       </Position14>
       <Position15>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="308" Column="33" TopLine="303"/>
+        <Caret Line="329" TopLine="302"/>
       </Position15>
       <Position16>
-        <Filename Value="common\ucodegenerator.pas"/>
-        <Caret Line="427" Column="6" TopLine="422"/>
+        <Filename Value="designer\designer.pas"/>
+        <Caret Line="330" TopLine="302"/>
       </Position16>
       <Position17>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="225" Column="14" TopLine="220"/>
+        <Caret Line="331" Column="33" TopLine="302"/>
       </Position17>
       <Position18>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="437" Column="87" TopLine="408"/>
+        <Caret Line="332" Column="18" TopLine="315"/>
       </Position18>
       <Position19>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="446" Column="14" TopLine="422"/>
+        <Caret Line="335" Column="39" TopLine="315"/>
       </Position19>
       <Position20>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="272" TopLine="262"/>
+        <Caret Line="332" Column="9" TopLine="308"/>
       </Position20>
       <Position21>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="525" Column="11" TopLine="521"/>
+        <Caret Line="323" Column="23" TopLine="311"/>
       </Position21>
       <Position22>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="178" Column="22" TopLine="161"/>
+        <Caret Line="342" TopLine="333"/>
       </Position22>
       <Position23>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="320" Column="17" TopLine="292"/>
+        <Caret Line="352" Column="7" TopLine="333"/>
       </Position23>
       <Position24>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="457" Column="17" TopLine="428"/>
+        <Caret Line="334" Column="37" TopLine="319"/>
       </Position24>
       <Position25>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="458" Column="17" TopLine="429"/>
+        <Caret Line="322" TopLine="314"/>
       </Position25>
       <Position26>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="459" Column="17" TopLine="430"/>
+        <Caret Line="277" TopLine="274"/>
       </Position26>
       <Position27>
         <Filename Value="designer\designer.pas"/>
-        <Caret Line="458" Column="17" TopLine="429"/>
+        <Caret Line="407" Column="69" TopLine="390"/>
       </Position27>
-      <Position28>
-        <Filename Value="designer\designer.pas"/>
-        <Caret Line="461" Column="17" TopLine="432"/>
-      </Position28>
-      <Position29>
-        <Filename Value="designer\designer.pas"/>
-        <Caret Line="610" Column="3" TopLine="607"/>
-      </Position29>
-      <Position30>
-        <Filename Value="designer\designer.pas"/>
-        <Caret Line="214" Column="25" TopLine="212"/>
-      </Position30>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>

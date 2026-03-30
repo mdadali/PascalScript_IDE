@@ -527,6 +527,7 @@ begin
       UserCode.Free;
       MainCode.Free;
       UserGlobalVars.Free;
+      EventBindings.Free;
     end;
 
   finally

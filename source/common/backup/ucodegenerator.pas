@@ -488,9 +488,6 @@ begin
       Add('  ' + AFormName + '.Caption := ''' + Escape(AFormName) + ''';');
       Add('');
 
-      if TitlePanel <> nil then
-        Add('  ' + TitlePanel.Name + '.Caption := ''' + Escape(AFormName) + ''';');
-
       GenerateCreate(CtrlList);
 
       // -------------------------

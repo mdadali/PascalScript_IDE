@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 380
+  Left = 203
   Height = 570
-  Top = 96
+  Top = 622
   Width = 965
   Caption = 'jvDesigner Demo'
   ClientHeight = 544
@@ -175,10 +175,10 @@ object MainForm: TMainForm
       Height = 78
       Top = 1
       Width = 668
-      ActivePage = tsCommonControls
+      ActivePage = tsStandard
       Align = alClient
       Images = ImageList1
-      TabIndex = 2
+      TabIndex = 0
       TabOrder = 1
       object tsStandard: TTabSheet
         Caption = 'Standard'
@@ -451,6 +451,17 @@ object MainForm: TMainForm
           Width = 664
           Caption = 'tbarCommonControls'
           TabOrder = 0
+          object SelectButton2: TToolButton
+            Left = 1
+            Top = 2
+            AutoSize = True
+            Caption = 'Select'
+            Down = True
+            Grouped = True
+            ImageIndex = 0
+            OnClick = PaletteButtonClick
+            Style = tbsCheck
+          end
         end
       end
     end
@@ -491,7 +502,6 @@ object MainForm: TMainForm
           OnClick = PaletteButtonClick
           OnChange = JvDesignPanel1Change
           OnGetAddClass = JvDesignPanel1GetAddClass
-          OnSelectionChange = JvDesignPanel1SelectionChange
         end
       end
       object tsEditor: TTabSheet
@@ -530,9 +540,9 @@ object MainForm: TMainForm
       Height = 412
       Top = 51
       Width = 313
-      ActivePage = TabSheet5
+      ActivePage = TabSheet4
       Align = alClient
-      TabIndex = 1
+      TabIndex = 0
       TabOrder = 0
       object TabSheet4: TTabSheet
         Caption = 'Objectinspector'
