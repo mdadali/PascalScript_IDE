@@ -56,6 +56,7 @@ type
     pnlInsp: TPanel;
     PropertyGrid: TOIPropertyGrid;
     Active1: TMenuItem;
+    RadioGroup1: TRadioGroup;
     tbtnMainMenu: TToolButton;
     csDesigning1: TMenuItem;
     DelphiSelector1: TMenuItem;
@@ -289,10 +290,30 @@ begin
   OpenFileSilent(FStdFormTemplateFile);
 end;
 
-procedure TMainForm.OnControlDoubleClick(Sender: TObject; AControl: TControl);
+
+procedure EnsureEventExists(AControl: TControl; Lines: TStrings);
+var EventName: string;
 begin
+  EventName := GetEventHandlerName(AControl);
+
+  if not EventExists(Lines, EventName) then
+    GenerateEvent(AControl, TStringList(Lines));
+end;
+
+procedure TMainForm.OnControlDoubleClick(Sender: TObject; AControl: TControl);
+var
+  EventName: string;
+begin
+  EventName := GetEventHandlerName(AControl);
+
+  if not EventExists(IDE.ed.Lines, EventName) then
+  begin
+    GenerateEvent(AControl, IDE.ed.Lines);      // erzeugt Event-Code
+    AssignEventToControl(AControl, TStringList(IDE.ed.Lines)); // fügt Zuweisung in EVENTS-Block
+  end;
+
   PageControl3.ActivePage := tseditor;
-  JumpToControlEvent(AControl, IDE.ed);
+  JumpToEventInEditor(IDE.ed, EventName);
 end;
 
 procedure TMainForm.PropertyGridOnModified(Sender: TObject);
@@ -353,8 +374,8 @@ begin
   if EventName = '' then Exit; // kein Default-Event
 
   // Event existiert noch nicht → Generator aufrufen
-  if not EventExists(Editor.Lines, EventName) then
-    GenerateCodeFromDesigner(JvDesignPanel1, TStringList(IDE.ed.Lines), FFormName);
+  //if not EventExists(Editor.Lines, EventName) then
+    //GenerateCodeFromDesigner(JvDesignPanel1, TStringList(IDE.ed.Lines), FFormName);
 
   // Springen in Editor
   JumpToEventInEditor(IDE.ed, EventName);

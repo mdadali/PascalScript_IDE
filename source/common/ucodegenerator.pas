@@ -9,12 +9,14 @@ uses
   SynEdit, JvDesignSurface, JvDesignUtils;
 
 function GetControlClass(AControl: TControl): TClass;
+
+procedure GenerateEvent(Ctrl: TControl; AStringList: TStringList);
 procedure GenerateCodeFromDesigner(AJvDesignPanel: TJvDesignPanel; AStringList: TStringList; AFormName: string);
 function GetDefaultEventName(Ctrl: TControl): string;
 function GetEventHandlerName(Ctrl: TControl): string;
 procedure JumpToEventInEditor(Editor: TSynEdit; const EventName: string);
 function EventExists(Lines: TStrings; const EventName: string): Boolean;
-
+procedure AssignEventToControl(Ctrl: TControl; ALines: TStringList);
 
 implementation
 
@@ -171,6 +173,7 @@ begin
     // Font.Color
     SL.Add('  ' + Ctrl.Name + '.Font.Color := ' + IntToStr(Ctrl.Font.Color) + ';');
   end;}
+
 end;
 
 procedure WriteSpecificProps(Ctrl: TControl; SL: TStringList);
@@ -242,13 +245,134 @@ begin
   WriteSpecificProps(Ctrl, SL);
 end;
 
+procedure InsertIntoUserCode(ALines: TStrings; ACode: TStrings);
+var
+  i,j, BeginIndex, EndIndex: Integer;
+begin
+  BeginIndex := -1;
+  EndIndex := -1;
+
+  // Marker suchen
+  for i := 0 to ALines.Count - 1 do
+  begin
+    if Trim(ALines[i]) = '//<USERCODE-BEGIN>' then
+      BeginIndex := i;
+
+    if Trim(ALines[i]) = '//<USERCODE-END>' then
+    begin
+      EndIndex := i;
+      Break;
+    end;
+  end;
+
+  // Falls Block fehlt → neu anlegen
+  if (BeginIndex = -1) or (EndIndex = -1) or (BeginIndex > EndIndex) then
+  begin
+    // Block ans Ende setzen
+    if (ALines.Count > 0) and (Trim(ALines[ALines.Count - 1]) <> '') then
+      ALines.Add('');
+
+    ALines.Add('//<USERCODE-BEGIN>');
+    ALines.Add('//<USERCODE-END>');
+
+    BeginIndex := ALines.Count - 2;
+    EndIndex := ALines.Count - 1;
+  end;
+
+  // Optional: Leerzeile vor Einfügen
+  if (EndIndex > BeginIndex + 1) then
+  begin
+    if Trim(ALines[EndIndex - 1]) <> '' then
+    begin
+      ALines.Insert(EndIndex, '');
+      Inc(EndIndex);
+    end;
+  end;
+
+  // Code einfügen (vor END)
+
+    for j := 0 to ACode.Count - 1 do
+    begin
+      ALines.Insert(EndIndex + j, ACode[j]);
+    end;
+
+  // Optional: Leerzeile nach eingefügtem Code
+  if (EndIndex + ACode.Count < ALines.Count) then
+  begin
+    if Trim(ALines[EndIndex + ACode.Count]) <> '' then
+      ALines.Insert(EndIndex + ACode.Count, '');
+  end;
+end;
+
+procedure AssignEventToControl(Ctrl: TControl; ALines: TStringList);
+var
+  i, BeginIndex, EndIndex: Integer;
+  EventName, EventProp, LineToInsert: string;
+begin
+  EventProp := GetDefaultEventName(Ctrl);
+  EventName := GetEventHandlerName(Ctrl);
+  LineToInsert := Ctrl.Name + '.' + EventProp + ' := @' + EventName + ';';
+
+  // Prüfen ob schon vorhanden
+  for i := 0 to ALines.Count - 1 do
+    if Trim(ALines[i]) = LineToInsert then Exit;
+
+  // EVENTS-BLOCK suchen
+  BeginIndex := -1;
+  EndIndex := -1;
+  for i := 0 to ALines.Count - 1 do
+  begin
+    if Trim(ALines[i]) = '//<EVENT_BINDINGS-BEGIN>' then BeginIndex := i;
+    if Trim(ALines[i]) = '//<EVENT_BINDINGS-END>' then EndIndex := i;
+  end;
+
+  // Event-Zuweisung direkt vor END einfügen
+  ALines.Insert(EndIndex, '  ' + LineToInsert);
+end;
+
+procedure GenerateEvent(Ctrl: TControl; AStringList: TStringList);
+var
+  EventLines: TStringList;
+  UserCode: TStringList;
+  EventName: string;
+begin
+  // 1. Eventnamen bestimmen
+  EventName := GetEventHandlerName(Ctrl);
+
+  // 2. bestehenden UserCode extrahieren
+  UserCode := ExtractBlock(AStringList, '//<USERCODE-BEGIN>', '//<USERCODE-END>');
+  try
+    // 3. prüfen ob Event schon existiert
+    if HasEvent(UserCode, EventName) then
+      Exit;
+
+    // 4. Event-Code erstellen
+    EventLines := TStringList.Create;
+    try
+      EventLines.Add('procedure ' + EventName + '(Sender: TObject);');
+      EventLines.Add('begin');
+      EventLines.Add('  ');
+      EventLines.Add('end;');
+      EventLines.Add('');
+
+      // 5. in UserCode-Bereich einfügen
+      InsertIntoUserCode(AStringList, EventLines);
+
+    finally
+      EventLines.Free;
+    end;
+
+  finally
+    UserCode.Free;
+  end;
+end;
+
 procedure GenerateCodeFromDesigner(AJvDesignPanel: TJvDesignPanel; AStringList: TStringList; AFormName: string);
 var
-  UserCode, MainCode, UserGlobalVars: TStringList;
+  UserCode, MainCode, UserGlobalVars, EventBindings: TStringList;
   CtrlList: TList;
   RootPanel, TitlePanel: TPanel;
   i: Integer;
-
 
   procedure Add(const S: string);
   begin
@@ -256,7 +380,7 @@ var
   end;
 
   // -------------------------
-  // 🔹 Controls rekursiv sammeln
+  //Controls rekursiv sammeln
   // -------------------------
   procedure CollectControls(ParentCtrl: TControl; List: TList);
   var
@@ -274,37 +398,7 @@ var
   end;
 
   // -------------------------
-  // 🔹 Events generieren
-  // -------------------------
-  procedure GenerateEvents(List: TList);
-  var
-    i: Integer;
-    Ctrl: TControl;
-  begin
-    for i := 0 to List.Count - 1 do
-    begin
-      Ctrl := TControl(List[i]);
-      if (Ctrl is TButton) and (not HasEvent(UserCode, Ctrl.Name + '_OnClick')) then
-      begin
-        Add('procedure ' + Ctrl.Name + '_OnClick(Sender: TObject);');
-        Add('begin');
-        Add('  ');
-        Add('end;');
-        Add('');
-      end;
-      if (Ctrl is TEdit) and (not HasEvent(UserCode, Ctrl.Name + '_OnChange')) then
-      begin
-        Add('procedure ' + Ctrl.Name + '_OnChange(Sender: TObject);');
-        Add('begin');
-        Add('  ');
-        Add('end;');
-        Add('');
-      end;
-    end;
-  end;
-
-  // -------------------------
-  // 🔹 Komponenten erzeugen
+  //Komponenten erzeugen
   // -------------------------
   procedure GenerateCreate(List: TList);
   var
@@ -322,12 +416,6 @@ var
 
       Add('  ' + Ctrl.Name + ' := ' + Ctrl.ClassName + '.Create(' + ParentName + ');');
       Add('  ' + Ctrl.Name + '.Parent := ' + ParentName + ';');
-
-      if Ctrl is TButton then
-        Add('  ' + Ctrl.Name + '.OnClick := @' + Ctrl.Name + '_OnClick;');
-      if Ctrl is TEdit then
-        Add('  ' + Ctrl.Name + '.OnChange := @' + Ctrl.Name + '_OnChange;');
-
       Add('');
     end;
   end;
@@ -335,6 +423,7 @@ var
 begin
   RootPanel := TPanel(AJvDesignPanel.FindComponent('pnlDesign'));
   if RootPanel = nil then Exit;
+
   TitlePanel := TPanel(RootPanel.FindComponent('pnlFormTitle'));
 
   CtrlList := TList.Create;
@@ -344,6 +433,7 @@ begin
     UserCode := ExtractBlock(AStringList, '//<USERCODE-BEGIN>', '//<USERCODE-END>');
     MainCode := ExtractBlock(AStringList, '//<MAIN-BEGIN>', '//<MAIN-END>');
     UserGlobalVars := ExtractBlock(AStringList, '//<USER-GLOBAL-VARS-BEGIN>', '//<USER-GLOBAL-VARS-END>');
+    EventBindings  := ExtractBlock(AStringList, '//<EVENT_BINDINGS-BEGIN>', '//<EVENT_BINDINGS-END>');
 
     try
       AStringList.Clear;
@@ -372,7 +462,6 @@ begin
       // -------------------------
       Add('//<USERCODE-BEGIN>');
       AStringList.AddStrings(UserCode);
-      GenerateEvents(CtrlList);
       Add('//<USERCODE-END>');
       Add('');
 
@@ -403,6 +492,14 @@ begin
       // -------------------------
       for i := 0 to CtrlList.Count - 1 do
         WriteAllProps(TControl(CtrlList[i]), AStringList);
+
+      // -------------------------
+      //NEUER EVENTS-BLOCK (geschützt)
+      // -------------------------
+      Add('  //<EVENT_BINDINGS-BEGIN>');
+      AStringList.AddStrings(EventBindings);
+      Add('  //<EVENT_BINDINGS-END>');
+      ///////////////////////////////////////////////
 
       Add('  ' + AFormName + '.Visible := True;');
       Add('end;');
