@@ -113,8 +113,8 @@ type
     tsEditor: TTabSheet;
     ToolBar1: TToolBar;
     tbtnButton: TToolButton;
+    tbtnRadioGroup: TToolButton;
     tbtnCheckGroup: TToolButton;
-    ToolButton11: TToolButton;
     tbtnPanel: TToolButton;
     tbtnFrame: TToolButton;
     tbtnActionList: TToolButton;
@@ -139,10 +139,6 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure JvDesignPanel1Change(Sender: TObject);
     procedure JvDesignPanel1DblClick(Sender: TObject);
-    procedure JvDesignPanel1GetSiteInfo(Sender: TObject; DockClient: TControl;
-      var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
-    procedure JvDesignPanel1MouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
     procedure JvDesignPanel1SelectionChange(Sender: TObject);
     procedure Rules1Click(Sender: TObject);
     procedure JvDesignPanel1GetAddClass(Sender: TObject; var ioClass: String);
@@ -229,7 +225,7 @@ begin
     //JumpToControlEvent(TControl(ThePropertyEditorHook.LookupRoot), IDE.ed);
 
   end else
-  SetObjectInspectorRoot(JvDesignPanel1);
+    SetObjectInspectorRoot(JvDesignPanel1.Components[0]);
 end;
 
 procedure TMainForm.csDesigning1Click(Sender: TObject);
@@ -347,39 +343,6 @@ begin
   ShowMessage('DblClick');
 end;
 
-procedure TMainForm.JvDesignPanel1GetSiteInfo(Sender: TObject;
-  DockClient: TControl; var InfluenceRect: TRect; MousePos: TPoint;
-  var CanDock: Boolean);
-begin
-end;
-
-procedure TMainForm.JvDesignPanel1MouseDown(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var
-  Ctrl: TControl;
-  EventName: string;
-begin
-  if ssDouble in Shift then
-  begin
-    Ctrl := Sender as TControl;
-
-    // Surface ignorieren
-    if Assigned(Ctrl) and (Ctrl.Name <> 'Surface') then
-    begin
-      EventName := GetEventHandlerName(Ctrl);
-
-      // Event existiert noch nicht → Generator aufrufen
-      if not EventExists(IDE.ed.Lines, EventName) then
-      begin
-        GenerateCodeFromDesigner(JvDesignPanel1, TStringList(IDE.ed.Lines), FFormName);
-      end;
-
-      // Editor springen
-      JumpToEventInEditor(IDE.ed, EventName);
-    end;
-  end;
-end;
-
 procedure TMainForm.JumpToControlEvent(AControl: TControl; Editor: TSynEdit);
 var
   EventName: string;
@@ -432,6 +395,7 @@ begin
   JvDesignPanel1.Clear;
   IDE.ed.Clear;
   edtFormName.Text := 'Form1';
+  OpenFileSilent(FStdFormTemplateFile);
   GenerateCodeFromDesigner(JvDesignPanel1, TStringList(IDE.ed.Lines), Trim(edtFormName.Text));
 end;
 

@@ -5,8 +5,8 @@ unit uCodeGenerator;
 interface
 
 uses
-  Classes, SysUtils, Controls, StdCtrls, ExtCtrls, SynEdit,
-  JvDesignSurface, JvDesignUtils;
+  Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Types, Graphics,
+  SynEdit, JvDesignSurface, JvDesignUtils;
 
 function GetControlClass(AControl: TControl): TClass;
 procedure GenerateCodeFromDesigner(AJvDesignPanel: TJvDesignPanel; AStringList: TStringList; AFormName: string);
@@ -129,121 +129,199 @@ end;
 // -----------------------------
 // Komponenten Eigenschaften hinzufügen
 // -----------------------------
-procedure AddProps(Ctrl: TControl; SL: TStringList);
+procedure WriteCommonProps(Ctrl: TControl; SL: TStringList);
+var
+  fs: string;
+  i: Integer;
 begin
+  // Position & Größe
   SL.Add('  ' + Ctrl.Name + '.Left := ' + IntToStr(Ctrl.Left) + ';');
-  SL.Add('  ' + Ctrl.Name + '.Top := ' + IntToStr(Ctrl.Top) + ';');
+  SL.Add('  ' + Ctrl.Name + '.Top := ' + IntToStr(Ctrl.Top - 30) + ';');
   SL.Add('  ' + Ctrl.Name + '.Width := ' + IntToStr(Ctrl.Width) + ';');
   SL.Add('  ' + Ctrl.Name + '.Height := ' + IntToStr(Ctrl.Height) + ';');
 
-  if Ctrl is TButton then
-    SL.Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TButton(Ctrl).Caption) + ''';');
-  if Ctrl is TLabel then
-    SL.Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TLabel(Ctrl).Caption) + ''';');
-  if Ctrl is TEdit then
-    SL.Add('  ' + Ctrl.Name + '.Text := ''' + Escape(TEdit(Ctrl).Text) + ''';');
+  // Sichtbarkeit & Aktivierung
+  SL.Add('  ' + Ctrl.Name + '.Visible := ' + BoolToStr(Ctrl.Visible, True) + ';');
+  SL.Add('  ' + Ctrl.Name + '.Enabled := ' + BoolToStr(Ctrl.Enabled, True) + ';');
+
+  // Tag
+  SL.Add('  ' + Ctrl.Name + '.Tag := ' + IntToStr(Ctrl.Tag) + ';');
+
+  // Color
+  //if not (Ctrl is TButton) then
+    //SL.Add('  ' + Ctrl.Name + '.Color := ' + IntToStr(TWinControl(Ctrl).Color) + ';');
+
+  //SL.Add('  ' + Ctrl.Name + '.Color := ' + IntToStr(TWinControl(Ctrl).Color) + ';');
+
+  // Font (Name, Size, Style, Color)
+  {if Ctrl.Font <> nil then
+  begin
+    SL.Add('  ' + Ctrl.Name + '.Font.Name := ''' + Ctrl.Font.Name + ''';');
+    SL.Add('  ' + Ctrl.Name + '.Font.Size := ' + IntToStr(Ctrl.Font.Size) + ';');
+
+    // Font.Style
+    fs := '';
+    if fsBold in Ctrl.Font.Style then fs := fs + 'fsBold,';
+    if fsItalic in Ctrl.Font.Style then fs := fs + 'fsItalic,';
+    if fsUnderline in Ctrl.Font.Style then fs := fs + 'fsUnderline,';
+    if fsStrikeOut in Ctrl.Font.Style then fs := fs + 'fsStrikeOut,';
+    if fs <> '' then fs := Copy(fs, 1, Length(fs) - 1); // letztes Komma entfernen
+    SL.Add('  ' + Ctrl.Name + '.Font.Style := [' + fs + '];');
+
+    // Font.Color
+    SL.Add('  ' + Ctrl.Name + '.Font.Color := ' + IntToStr(Ctrl.Font.Color) + ';');
+  end;}
 end;
 
-// -----------------------------
-// Hauptprozedur
-// -----------------------------
+procedure WriteSpecificProps(Ctrl: TControl; SL: TStringList);
+begin
+  // Caption für Controls, die es haben
+  if Ctrl is TLabel then
+    SL.Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TLabel(Ctrl).Caption) + ''';')
+  else if Ctrl is TButton then
+    SL.Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TButton(Ctrl).Caption) + ''';')
+  else if Ctrl is TPanel then
+    SL.Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TPanel(Ctrl).Caption) + ''';')
+  else if Ctrl is TGroupBox then
+    SL.Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TGroupBox(Ctrl).Caption) + ''';')
+  else if Ctrl is TRadioButton then
+    SL.Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TRadioButton(Ctrl).Caption) + ''';')
+  else if Ctrl is TCheckBox then
+    SL.Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TCheckBox(Ctrl).Caption) + ''';')
+  else if Ctrl is TRadioGroup then
+    SL.Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TRadioGroup(Ctrl).Caption) + ''';')
+  else if Ctrl is TCheckGroup then
+    SL.Add('  ' + Ctrl.Name + '.Caption := ''' + Escape(TCheckGroup(Ctrl).Caption) + ''';');
+
+  // Color
+  if (Ctrl is TWinControl) and not (Ctrl is TButton)
+     and not (Ctrl is TScrollBar) and not (Ctrl is TToggleBox) then
+    SL.Add('  ' + Ctrl.Name + '.Color := ' + IntToStr(TWinControl(Ctrl).Color) + ';');
+
+
+  // Text / Lines / Items
+  if Ctrl is TEdit then
+    SL.Add('  ' + Ctrl.Name + '.Text := ''' + Escape(TEdit(Ctrl).Text) + ''';')
+  else if Ctrl is TMemo then
+    SL.Add('  ' + Ctrl.Name + '.Lines.Text := ''' + Escape(TMemo(Ctrl).Lines.Text) + ''';')
+  else if Ctrl is TListBox then
+    SL.Add('  ' + Ctrl.Name + '.Items.Text := ''' + Escape(TListBox(Ctrl).Items.Text) + ''';')
+  else if Ctrl is TComboBox then
+    SL.Add('  ' + Ctrl.Name + '.Items.Text := ''' + Escape(TComboBox(Ctrl).Items.Text) + ''';')
+  else if Ctrl is TToggleBox then
+    SL.Add('  ' + Ctrl.Name + '.Checked := ' + BoolToStr(TToggleBox(Ctrl).Checked, True) + ';');
+
+  // Font (Name, Size, Color, Style)
+  {if Ctrl is TWinControl then
+    with TWinControl(Ctrl).Font do
+      SL.Add('  ' + Ctrl.Name + '.Font.Name := ''' + Name + ''';');
+      SL.Add('  ' + Ctrl.Name + '.Font.Size := ' + IntToStr(Size) + ';');
+      SL.Add('  ' + Ctrl.Name + '.Font.Color := ' + IntToStr(Color) + ';');
+      SL.Add('  ' + Ctrl.Name + '.Font.Style := [' +
+        IfThen(fsBold in Style, 'fsBold,', '') +
+        IfThen(fsItalic in Style, 'fsItalic,', '') +
+        IfThen(fsUnderline in Style, 'fsUnderline,', '') +
+        IfThen(fsStrikeOut in Style, 'fsStrikeOut,', '') +
+        '];'); }
+
+end;
+
+function IsTemplateControl(Ctrl: TControl): Boolean;
+begin
+  Result :=
+    (Ctrl.Name = 'pnlDesign') or
+    (Ctrl.Name = 'pnlFormTitle') or
+    (Ctrl.Name = 'btnTitleClose') or
+    (Ctrl.Name = 'btnTitleMinimize') or
+    (Ctrl.Name = 'btnTitleMaximize');
+end;
+
+procedure WriteAllProps(Ctrl: TControl; SL: TStringList);
+begin
+  WriteCommonProps(Ctrl, SL);
+  WriteSpecificProps(Ctrl, SL);
+end;
+
 procedure GenerateCodeFromDesigner(AJvDesignPanel: TJvDesignPanel; AStringList: TStringList; AFormName: string);
 var
+  UserCode, MainCode, UserGlobalVars: TStringList;
+  CtrlList: TList;
+  RootPanel, TitlePanel: TPanel;
   i: Integer;
-  Ctrl: TControl;
-  UserCode, MainCode, UserGlobalVars, UserProps: TStringList;
+
 
   procedure Add(const S: string);
   begin
     AStringList.Add(S);
   end;
 
-begin
-  // 1. Alte Blöcke sichern
-  UserCode := ExtractBlock(AStringList, '//<USERCODE-BEGIN>', '//<USERCODE-END>');
-  MainCode := ExtractBlock(AStringList, '//<MAIN-BEGIN>', '//<MAIN-END>');
-  UserGlobalVars := ExtractBlock(AStringList, '//<USER-GLOBAL-VARS-BEGIN>', '//<USER-GLOBAL-VARS-END>');
-  UserProps := ExtractBlock(AStringList, '//<USER-PROPS-BEGIN>', '//<USER-PROPS-END>');
+  // -------------------------
+  // 🔹 Controls rekursiv sammeln
+  // -------------------------
+  procedure CollectControls(ParentCtrl: TControl; List: TList);
+  var
+    i: Integer;
+    Child: TControl;
+  begin
+    if ParentCtrl is TWinControl then
+      for i := 0 to TWinControl(ParentCtrl).ControlCount - 1 do
+      begin
+        Child := TWinControl(ParentCtrl).Controls[i];
+        if IsTemplateControl(Child) then Continue;
+        List.Add(Child);
+        CollectControls(Child, List);
+      end;
+  end;
 
-  try
-    AStringList.Clear;
-
-    // =====================================================
-    // DESIGNER VARS
-    // =====================================================
-    Add('//<DESIGNER-VARS-BEGIN>');
-    Add('var');
-    Add('  ' + AFormName + ': TForm;');
-    for i := 0 to AJvDesignPanel.ComponentCount - 1 do
+  // -------------------------
+  // 🔹 Events generieren
+  // -------------------------
+  procedure GenerateEvents(List: TList);
+  var
+    i: Integer;
+    Ctrl: TControl;
+  begin
+    for i := 0 to List.Count - 1 do
     begin
-      if not (AJvDesignPanel.Components[i] is TControl) then Continue;
-      Ctrl := TControl(AJvDesignPanel.Components[i]);
-      Add('  ' + Ctrl.Name + ': ' + Ctrl.ClassName + ';');
+      Ctrl := TControl(List[i]);
+      if (Ctrl is TButton) and (not HasEvent(UserCode, Ctrl.Name + '_OnClick')) then
+      begin
+        Add('procedure ' + Ctrl.Name + '_OnClick(Sender: TObject);');
+        Add('begin');
+        Add('  ');
+        Add('end;');
+        Add('');
+      end;
+      if (Ctrl is TEdit) and (not HasEvent(UserCode, Ctrl.Name + '_OnChange')) then
+      begin
+        Add('procedure ' + Ctrl.Name + '_OnChange(Sender: TObject);');
+        Add('begin');
+        Add('  ');
+        Add('end;');
+        Add('');
+      end;
     end;
-    Add('//<DESIGNER-VARS-END>');
-    Add('');
+  end;
 
-    // =====================================================
-    // USER-GLOBAL-VARS
-    // =====================================================
-    Add('//<USER-GLOBAL-VARS-BEGIN>');
-    AStringList.AddStrings(UserGlobalVars);
-    Add('//<USER-GLOBAL-VARS-END>');
-    Add('');
-
-    // =====================================================
-    // USER-CODE
-    // =====================================================
-    Add('//<USERCODE-BEGIN>');
-    AStringList.AddStrings(UserCode);
-    // Events automatisch ergänzen (TButton.OnClick, TEdit.OnChange)
-    for i := 0 to AJvDesignPanel.ComponentCount - 1 do
+  // -------------------------
+  // 🔹 Komponenten erzeugen
+  // -------------------------
+  procedure GenerateCreate(List: TList);
+  var
+    i: Integer;
+    Ctrl: TControl;
+    ParentName: string;
+  begin
+    for i := 0 to List.Count - 1 do
     begin
-      if not (AJvDesignPanel.Components[i] is TControl) then Continue;
-      Ctrl := TControl(AJvDesignPanel.Components[i]);
+      Ctrl := TControl(List[i]);
+      if Ctrl.Parent = RootPanel then
+        ParentName := AFormName
+      else
+        ParentName := Ctrl.Parent.Name;
 
-      if Ctrl is TButton then
-        if not HasEvent(UserCode, Ctrl.Name + '_OnClick') then
-        begin
-          Add('procedure ' + Ctrl.Name + '_OnClick(Sender: TObject);');
-          Add('begin');
-          Add('  ');
-          Add('end;');
-          Add('');
-        end;
-
-      if Ctrl is TEdit then
-        if not HasEvent(UserCode, Ctrl.Name + '_OnChange') then
-        begin
-          Add('procedure ' + Ctrl.Name + '_OnChange(Sender: TObject);');
-          Add('begin');
-          Add('  ');
-          Add('end;');
-          Add('');
-        end;
-    end;
-    Add('//<USERCODE-END>');
-    Add('');
-
-    // =====================================================
-    // DESIGNER + USER-PROPS + Visible fix
-    // =====================================================
-    Add('//<DESIGNER-BEGIN>');
-    Add('procedure CreateNewForm;');
-    Add('begin');
-    Add('  ' + AFormName + ' := TForm.Create(nil);');
-    Add('  ' + AFormName + '.Caption := ''' + Escape(AFormName) + ''';');
-    Add('  ' + AFormName + '.Position := poDesigned;');
-    Add('');
-
-    // Komponenten erzeugen + Events
-    for i := 0 to AJvDesignPanel.ComponentCount - 1 do
-    begin
-      if not (AJvDesignPanel.Components[i] is TControl) then Continue;
-      Ctrl := TControl(AJvDesignPanel.Components[i]);
-
-      Add('  ' + Ctrl.Name + ' := ' + Ctrl.ClassName + '.Create(' + AFormName + ');');
-      Add('  ' + Ctrl.Name + '.Parent := ' + AFormName + ';');
+      Add('  ' + Ctrl.Name + ' := ' + Ctrl.ClassName + '.Create(' + ParentName + ');');
+      Add('  ' + Ctrl.Name + '.Parent := ' + ParentName + ';');
 
       if Ctrl is TButton then
         Add('  ' + Ctrl.Name + '.OnClick := @' + Ctrl.Name + '_OnClick;');
@@ -252,47 +330,109 @@ begin
 
       Add('');
     end;
+  end;
 
-    // USER-PROPS
-    Add('  //<USER-PROPS-BEGIN>');
-    if UserProps.Count > 0 then
-      AStringList.AddStrings(UserProps)
-    else
-      for i := 0 to AJvDesignPanel.ComponentCount - 1 do
-      begin
-        if not (AJvDesignPanel.Components[i] is TControl) then Continue;
-        Ctrl := TControl(AJvDesignPanel.Components[i]);
-        AddProps(Ctrl, AStringList);
-      end;
-    Add('  //<USER-PROPS-END>');
+begin
+  RootPanel := TPanel(AJvDesignPanel.FindComponent('pnlDesign'));
+  if RootPanel = nil then Exit;
+  TitlePanel := TPanel(RootPanel.FindComponent('pnlFormTitle'));
 
-    // Form sichtbar machen **nach User-Props**
-    Add('  ' + AFormName + '.Visible := True;');
+  CtrlList := TList.Create;
+  try
+    CollectControls(RootPanel, CtrlList);
 
-    Add('end;');
-    Add('//<DESIGNER-END>');
-    Add('');
+    UserCode := ExtractBlock(AStringList, '//<USERCODE-BEGIN>', '//<USERCODE-END>');
+    MainCode := ExtractBlock(AStringList, '//<MAIN-BEGIN>', '//<MAIN-END>');
+    UserGlobalVars := ExtractBlock(AStringList, '//<USER-GLOBAL-VARS-BEGIN>', '//<USER-GLOBAL-VARS-END>');
 
-    // =====================================================
-    // MAIN-BLOCK
-    // =====================================================
-    Add('//<MAIN-BEGIN>');
-    if MainCode.Count > 0 then
-      AStringList.AddStrings(MainCode)
-    else
-    begin
+    try
+      AStringList.Clear;
+
+      // -------------------------
+      // VARS
+      // -------------------------
+      Add('//<DESIGNER-VARS-BEGIN>');
+      Add('var');
+      Add('  ' + AFormName + ': TForm;');
+      for i := 0 to CtrlList.Count - 1 do
+        Add('  ' + TControl(CtrlList[i]).Name + ': ' + TControl(CtrlList[i]).ClassName + ';');
+      Add('//<DESIGNER-VARS-END>');
+      Add('');
+
+      // -------------------------
+      // USER GLOBAL
+      // -------------------------
+      Add('//<USER-GLOBAL-VARS-BEGIN>');
+      AStringList.AddStrings(UserGlobalVars);
+      Add('//<USER-GLOBAL-VARS-END>');
+      Add('');
+
+      // -------------------------
+      // USER CODE
+      // -------------------------
+      Add('//<USERCODE-BEGIN>');
+      AStringList.AddStrings(UserCode);
+      GenerateEvents(CtrlList);
+      Add('//<USERCODE-END>');
+      Add('');
+
+      // -------------------------
+      // DESIGNER
+      // -------------------------
+      Add('//<DESIGNER-BEGIN>');
+      Add('procedure CreateNewForm;');
       Add('begin');
-      Add('  CreateNewForm;');
-      Add('end.');
+      Add('  ' + AFormName + ' := TForm.Create(nil);');
+      Add('  ' + AFormName + '.SetBounds(' +
+        IntToStr(RootPanel.Left) + ', ' +
+        IntToStr(RootPanel.Top) + ', ' +
+        IntToStr(RootPanel.Width) + ', ' +
+        IntToStr(RootPanel.Height) + ');');
+      Add('  ' + AFormName + '.Color := ' + IntToStr(RootPanel.Color) + ';');
+      Add('  ' + AFormName + '.Position := poDesigned;');
+      if TitlePanel <> nil then
+        Add('  ' + AFormName + '.Caption := ''' + Escape(TitlePanel.Caption) + ''';')
+      else
+        Add('  ' + AFormName + '.Caption := ''' + Escape(AFormName) + ''';');
+      Add('');
+
+      GenerateCreate(CtrlList);
+
+      // -------------------------
+      // PROPS – immer frisch setzen
+      // -------------------------
+      for i := 0 to CtrlList.Count - 1 do
+        WriteAllProps(TControl(CtrlList[i]), AStringList);
+
+      Add('  ' + AFormName + '.Visible := True;');
+      Add('end;');
+      Add('//<DESIGNER-END>');
+      Add('');
+
+      // -------------------------
+      // MAIN
+      // -------------------------
+      Add('//<MAIN-BEGIN>');
+      if MainCode.Count > 0 then
+        AStringList.AddStrings(MainCode)
+      else
+      begin
+        Add('begin');
+        Add('  CreateNewForm;');
+        Add('end.');
+      end;
+      Add('//<MAIN-END>');
+
+    finally
+      UserCode.Free;
+      MainCode.Free;
+      UserGlobalVars.Free;
     end;
-    Add('//<MAIN-END>');
 
   finally
-    UserCode.Free;
-    MainCode.Free;
-    UserGlobalVars.Free;
-    UserProps.Free;
+    CtrlList.Free;
   end;
 end;
+
 
 end.

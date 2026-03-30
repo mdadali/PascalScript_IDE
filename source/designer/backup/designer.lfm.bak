@@ -1,7 +1,7 @@
 object MainForm: TMainForm
   Left = 397
   Height = 570
-  Top = 162
+  Top = 89
   Width = 965
   Caption = 'jvDesigner Demo'
   ClientHeight = 544
@@ -204,7 +204,7 @@ object MainForm: TMainForm
           end
           object tbtnMainMenu: TToolButton
             Tag = 1
-            Left = 562
+            Left = 529
             Top = 0
             AutoSize = True
             Caption = 'Button'
@@ -212,10 +212,11 @@ object MainForm: TMainForm
             ImageIndex = 218
             OnClick = PaletteButtonClick
             Style = tbsCheck
+            Visible = False
           end
           object tbtnPopupMenu: TToolButton
             Tag = 2
-            Left = 595
+            Left = 562
             Top = 0
             AutoSize = True
             Caption = 'Label'
@@ -223,6 +224,7 @@ object MainForm: TMainForm
             ImageIndex = 252
             OnClick = PaletteButtonClick
             Style = tbsCheck
+            Visible = False
           end
           object tbtnLabel: TToolButton
             Tag = 4
@@ -268,17 +270,18 @@ object MainForm: TMainForm
           end
           object tbtnToggleBox: TToolButton
             Tag = 7
-            Left = 166
+            Left = 595
             Top = 0
             Caption = 'tbtnToggleBox'
             Grouped = True
             ImageIndex = 339
             OnClick = PaletteButtonClick
             Style = tbsCheck
+            Visible = False
           end
           object tbtnCheckBox: TToolButton
             Tag = 8
-            Left = 199
+            Left = 166
             Top = 0
             Caption = 'tbtnCheckBox'
             Grouped = True
@@ -288,7 +291,7 @@ object MainForm: TMainForm
           end
           object tbtnRadioButton: TToolButton
             Tag = 9
-            Left = 232
+            Left = 199
             Top = 0
             Caption = 'tbtnRadioButton'
             Grouped = True
@@ -298,7 +301,7 @@ object MainForm: TMainForm
           end
           object tbtnListBox: TToolButton
             Tag = 10
-            Left = 265
+            Left = 232
             Top = 0
             Caption = 'tbtnListBox'
             Grouped = True
@@ -308,7 +311,7 @@ object MainForm: TMainForm
           end
           object tbtnComboBox: TToolButton
             Tag = 11
-            Left = 298
+            Left = 265
             Top = 0
             Caption = 'tbtnComboBox'
             Grouped = True
@@ -318,7 +321,7 @@ object MainForm: TMainForm
           end
           object tbtnScrollBar: TToolButton
             Tag = 12
-            Left = 331
+            Left = 298
             Top = 0
             Caption = 'tbtnScrollBar'
             Grouped = True
@@ -328,7 +331,7 @@ object MainForm: TMainForm
           end
           object tbtnGroupBox: TToolButton
             Tag = 13
-            Left = 364
+            Left = 331
             Top = 0
             Caption = 'tbtnGroupBox'
             Grouped = True
@@ -336,29 +339,30 @@ object MainForm: TMainForm
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object tbtnCheckGroup: TToolButton
+          object tbtnRadioGroup: TToolButton
             Tag = 14
-            Left = 397
+            Left = 364
             Top = 0
-            Caption = 'tbtnCheckGroup'
+            Caption = 'tbtnRadioGroup'
             Grouped = True
             ImageIndex = 270
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
-          object ToolButton11: TToolButton
+          object tbtnCheckGroup: TToolButton
             Tag = 15
             Left = 430
             Top = 0
-            Caption = 'ToolButton11'
+            Caption = 'tbtnCheckGroup'
             Grouped = True
             ImageIndex = 48
             OnClick = PaletteButtonClick
             Style = tbsCheck
+            Visible = False
           end
           object tbtnPanel: TToolButton
             Tag = 16
-            Left = 463
+            Left = 397
             Top = 0
             Caption = 'tbtnPanel'
             Grouped = True
@@ -368,21 +372,23 @@ object MainForm: TMainForm
           end
           object tbtnFrame: TToolButton
             Tag = 17
-            Left = 496
+            Left = 463
             Top = 0
             Caption = 'tbtnFrame'
             Grouped = True
             ImageIndex = 370
             Style = tbsCheck
+            Visible = False
           end
           object tbtnActionList: TToolButton
             Tag = 18
-            Left = 529
+            Left = 496
             Top = 0
             Caption = 'tbtnActionList'
             Grouped = True
             ImageIndex = 2
             Style = tbsCheck
+            Visible = False
           end
         end
       end
@@ -428,8 +434,6 @@ object MainForm: TMainForm
           ParentColor = False
           TabOrder = 0
           OnClick = PaletteButtonClick
-          OnGetSiteInfo = JvDesignPanel1GetSiteInfo
-          OnMouseDown = JvDesignPanel1MouseDown
           OnChange = JvDesignPanel1Change
           OnGetAddClass = JvDesignPanel1GetAddClass
           OnSelectionChange = JvDesignPanel1SelectionChange
