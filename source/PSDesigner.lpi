@@ -15,7 +15,7 @@
     <i18n>
       <EnableI18N LFM="False"/>
     </i18n>
-    <BuildModes Count="8" Active="Win32_Win_Debug">
+    <BuildModes Count="8" Active="Linux64_Gtk2_Release">
       <Item1 Name="Linux64_Gtk2_Debug" Default="True"/>
       <Item2 Name="Linux64_Gtk2_Release">
         <CompilerOptions>
@@ -206,7 +206,6 @@
             </Options>
           </Linking>
           <Other>
-            <CompilerPath Value="\opt\fpc\fpc"/>
             <ExecuteBefore>
               <Command Value="wine ..\bin\$(TargetCPU)-$(TargetOS)-win-release\PSDesigner_$(TargetCPU)-$(TargetOS)"/>
               <CompileReasons Compile="False" Build="False"/>
@@ -256,7 +255,7 @@
         <Filename Value="PSDesigner.lpr"/>
         <IsPartOfProject Value="True"/>
         <CursorPos Y="27"/>
-        <UsageCount Value="192"/>
+        <UsageCount Value="193"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -268,7 +267,7 @@
         <EditorIndex Value="1"/>
         <TopLine Value="576"/>
         <CursorPos X="68" Y="599"/>
-        <UsageCount Value="192"/>
+        <UsageCount Value="193"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -403,7 +402,7 @@
         <EditorIndex Value="7"/>
         <TopLine Value="4"/>
         <CursorPos X="14" Y="19"/>
-        <UsageCount Value="147"/>
+        <UsageCount Value="148"/>
         <Loaded Value="True"/>
       </Unit18>
       <Unit19>
@@ -529,8 +528,8 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <TopLine Value="64"/>
-        <CursorPos X="20" Y="68"/>
-        <UsageCount Value="107"/>
+        <CursorPos X="22" Y="67"/>
+        <UsageCount Value="108"/>
         <Loaded Value="True"/>
       </Unit35>
       <Unit36>
@@ -542,7 +541,7 @@
         <EditorIndex Value="3"/>
         <TopLine Value="599"/>
         <CursorPos X="33" Y="634"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="22"/>
         <Loaded Value="True"/>
       </Unit36>
       <Unit37>
@@ -550,7 +549,7 @@
         <EditorIndex Value="5"/>
         <TopLine Value="411"/>
         <CursorPos X="3" Y="429"/>
-        <UsageCount Value="26"/>
+        <UsageCount Value="27"/>
         <Loaded Value="True"/>
       </Unit37>
       <Unit38>
@@ -559,7 +558,7 @@
         <EditorIndex Value="4"/>
         <TopLine Value="1723"/>
         <CursorPos X="14" Y="1739"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="25"/>
         <Loaded Value="True"/>
       </Unit38>
       <Unit39>
@@ -568,7 +567,7 @@
         <EditorIndex Value="6"/>
         <TopLine Value="205"/>
         <CursorPos X="14" Y="220"/>
-        <UsageCount Value="46"/>
+        <UsageCount Value="47"/>
         <Loaded Value="True"/>
       </Unit39>
       <Unit40>
