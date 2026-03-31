@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 490
+  Left = 837
   Height = 570
-  Top = 315
+  Top = 124
   Width = 965
   Caption = 'jvDesigner Demo'
   ClientHeight = 544
@@ -408,7 +408,7 @@ object MainForm: TMainForm
         ClientWidth = 664
         object tbarAdditional: TToolBar
           Left = 0
-          Height = 26
+          Height = 34
           Top = 0
           Width = 664
           Caption = 'tbarAdditional'

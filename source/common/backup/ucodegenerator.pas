@@ -8,6 +8,12 @@ uses
   Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Types, Graphics,
   SynEdit, JvDesignSurface, JvDesignUtils;
 
+procedure AssignSpecialEvent(AStringList: TStringList; const Line: string);
+procedure GenerateSpecialEvent(AStringList: TStringList; const EventName, Signature: string);
+procedure GenerateFormCreate(AStringList: TStringList);
+procedure GenerateFormClose(AStringList: TStringList);
+procedure GenerateFormStateChange(AStringList: TStringList);
+
 function GetControlClass(AControl: TControl): TClass;
 
 procedure GenerateEvent(Ctrl: TControl; AStringList: TStringList);
@@ -18,7 +24,127 @@ procedure JumpToEventInEditor(Editor: TSynEdit; const EventName: string);
 function EventExists(Lines: TStrings; const EventName: string): Boolean;
 procedure AssignEventToControl(Ctrl: TControl; ALines: TStringList);
 
+
+function ExtractBlock(const SL: TStringList; const StartTag, EndTag: string): TStringList;
+procedure InsertIntoUserCode(ALines: TStrings; ACode: TStrings);
+function HasEvent(const SL: TStringList; const EventName: string): Boolean;
+
 implementation
+
+procedure GenerateSpecialEvent(AStringList: TStringList;
+  const EventName, Signature: string);
+var
+  EventLines: TStringList;
+  UserCode: TStringList;
+begin
+  //bestehenden UserCode holen
+  UserCode := ExtractBlock(AStringList, '//<USERCODE-BEGIN>', '//<USERCODE-END>');
+  try
+    //schon vorhanden → raus
+    if HasEvent(UserCode, EventName) then
+      Exit;
+
+    //Event erzeugen
+    EventLines := TStringList.Create;
+    try
+      EventLines.Add('procedure ' + EventName + Signature + ';');
+      EventLines.Add('begin');
+      EventLines.Add('  ');
+      EventLines.Add('end;');
+      EventLines.Add('');
+
+      //in USERCODE einfügen
+      InsertIntoUserCode(AStringList, EventLines);
+
+    finally
+      EventLines.Free;
+    end;
+
+  finally
+    UserCode.Free;
+  end;
+end;
+
+procedure GenerateFormCreate(AStringList: TStringList);
+begin
+  GenerateSpecialEvent(AStringList,
+    'FormCreate',
+    '(Sender: TObject)');
+end;
+
+procedure GenerateFormClose(AStringList: TStringList);
+begin
+  GenerateSpecialEvent(AStringList,
+    'FormClose',
+    '(Sender: TObject; var CloseAction: TCloseAction)');
+end;
+
+procedure GenerateFormStateChange(AStringList: TStringList);
+begin
+  GenerateSpecialEvent(AStringList,
+    'FormStateChange',
+    '(Sender: TObject)');
+end;
+
+{procedure AssignSpecialEvent(AStringList: TStringList; const Line: string);
+var
+  i: Integer;
+begin
+  // schon vorhanden?
+  for i := 0 to AStringList.Count - 1 do
+    if Pos(Line, AStringList[i]) > 0 then Exit;
+
+  // Marker suchen
+  for i := 0 to AStringList.Count - 1 do
+    if Trim(AStringList[i]) = '//<EVENT_BINDINGS-END>' then
+    begin
+      AStringList.Insert(i, '  ' + Line);
+      Exit;
+    end;
+end;}
+
+procedure AssignSpecialEvent(AStringList: TStringList; const Line, FormName: string);
+var
+  i: Integer;
+begin
+  // 1. Prüfen, ob Binding schon vorhanden ist
+  for i := 0 to AStringList.Count - 1 do
+    if Pos(Line, AStringList[i]) > 0 then Exit;
+
+  // 2. Marker für Event-Ende suchen
+  for i := 0 to AStringList.Count - 1 do
+    if Trim(AStringList[i]) = '//<EVENT_BINDINGS-END>' then
+    begin
+      // 3. Binding einfügen
+      AStringList.Insert(i, '  ' + Line);
+
+      // 4. Speziell für OnCreate: direkt nach Binding triggern
+      if Pos('.OnCreate :=', Line) > 0 then
+      begin
+        // z.B. Form1.OnCreate(Form1);
+        AStringList.Insert(i+1, '  ' + FormName + '.OnCreate(' + FormName + ');');
+      end;
+
+      Exit;
+    end;
+end;
+
+//???????????????????????????????ß
+procedure InsertEventBinding(ALines: TStringList; const Line: string);
+var i: Integer;
+begin
+  // schon vorhanden?
+  for i := 0 to ALines.Count - 1 do
+    if Pos(Line, ALines[i]) > 0 then Exit;
+
+  // Block finden
+  for i := 0 to ALines.Count - 1 do
+    if Trim(ALines[i]) = '//<EVENT_BINDINGS-END>' then
+    begin
+      ALines.Insert(i, '  ' + Line);
+      Exit;
+    end;
+end;
 
 // -----------------------------
 // Hilfsfunktionen
@@ -527,6 +653,7 @@ begin
       UserCode.Free;
       MainCode.Free;
       UserGlobalVars.Free;
+      EventBindings.Free;
     end;
 
   finally

@@ -165,7 +165,6 @@ type
 
   private
     { private declarations }
-    procedure OnControlDoubleClick(Sender: TObject; AControl: TControl);
     procedure SetObjectInspectorRoot(AComponent: TComponent);
   public
     { public declarations }
@@ -179,10 +178,15 @@ type
     ThePropertyEditorHook: TPropertyEditorHook;
     Selection: TPersistentSelectionList;
 
-     procedure JumpToControlEvent(AControl: TControl; Editor: TSynEdit);
-     procedure PropertyGridOnModified(Sender: TObject);
+    procedure OnControlDoubleClick(Sender: TObject; AControl: TControl);
+    procedure JumpToControlEvent(AControl: TControl; Editor: TSynEdit);
+    procedure PropertyGridOnModified(Sender: TObject);
 
-     procedure OpenFileSilent(AFileName: string);
+    procedure OpenFileSilent(AFileName: string);
+
+    procedure  TIPropertyGrid1EditingDone(Sender: TObject);
+    procedure  TIPropertyGrid1EditorFilter(Sender: TObject;
+      aEditor: TPropertyEditor; var aShow: boolean);
   protected
     function GetOwner: TPersistent; override;
 
@@ -231,41 +235,6 @@ begin
 end;
 
 { TMainForm }
-
-{procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-var
-  i: Integer;
-  Comp: TPersistent;
-begin
-  if Key = VK_DELETE then
-  begin
-    for i := 0 to JvDesignPanel1.Surface.Count - 1 do
-    begin
-      Comp := JvDesignPanel1.Surface.Selection[i];
-
-      if (Comp is TComponent) and
-         (TComponent(Comp).Name = 'pnlDesign') then
-      begin
-        // Löschen verhindern standardmäßig
-        Key := 0;
-
-        //Benutzer fragen
-        if MessageDlg('Möchten Sie wirklich das Hauptformular löschen?',
-                      mtWarning, [mbYes, mbNo], 0) = mrYes then
-        begin
-          Key := VK_DELETE;
-          OpenFileSilent(FStdFormTemplateFile);
-        end
-        else
-        begin
-          //
-        end;
-
-        Exit; // wir haben die RootControl gefunden → abbrechen Schleife
-      end;
-    end;
-  end;
-end;}
 
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
@@ -387,6 +356,7 @@ procedure TMainForm.edtFormNameChange(Sender: TObject);
 var
   TitlePanel: TPanel;
 begin
+  FFormName := edtFormName.Text;
   TitlePanel := TPanel(JvDesignPanel1.FindComponent('pnlFormTitle'));
 
   if TitlePanel <> nil then
@@ -396,7 +366,10 @@ end;
 procedure TMainForm.edtFormNameExit(Sender: TObject);
 begin
   if (not IsValidFormName(edtFormName.Text)) then
+  begin
     edtFormName.Text := 'Form1';
+    FFormName := edtFormName.Text;
+  end;
 end;
 
 
@@ -437,12 +410,11 @@ begin;
   PropertyGrid:=TOIPropertyGrid.CreateWithParams(Self,ThePropertyEditorHook,
                                                  AllTypeKinds,25);
 
-  {with PropertyGrid do begin
-    Name:='PropertyGrid';
-    Parent:=pnlInsp;
-    Align:=alClient;
-  end;}
 
+  //procedure TForm1.TIPropertyGrid1EditorFilter(Sender: TObject;
+  //aEditor: TPropertyEditor; var aShow: boolean);
+
+  //PropertyGrid.EditingDone := @PropertyGrid1EditingDone;
 
   // select the Form1 in the ObjectInspector
   TheObjectInspector.Show;         // For some reason this is not shown otherwise
@@ -461,6 +433,8 @@ begin;
   PropertyGrid.OnModified := @PropertyGridOnModified;
   OpenFileSilent(FStdFormTemplateFile);
 
+  PropertyGrid.OnEditorFilter := @TIPropertyGrid1EditorFilter;
+
   RootCtrl := JvDesignPanel1.FindComponent('pnlDesign');
   if Assigned(RootCtrl) then
   begin
@@ -478,6 +452,39 @@ begin;
 end;
 
 
+procedure TMainForm.TIPropertyGrid1EditorFilter(Sender: TObject;
+  aEditor: TPropertyEditor; var aShow: boolean);
+var
+  Prop: PPropInfo;
+  Comp: TObject;
+begin
+    //Comp := PropertyGrid.Selection[0];
+    //Prop := PropertyGrid.pr
+
+    //if Assigned(Prop) and (Prop^.Name = 'Lines') then
+    //begin
+      // User klickte Button oder bearbeitete die Lines-Property
+      //ShowMessage('EditorFilter');
+      //ShowMemoLinesEditor(TMemo(Comp));
+    //end;
+end;
+
+procedure TMainForm.TIPropertyGrid1EditingDone(Sender: TObject);
+var
+  Comp: TObject;
+begin
+{  if not Assigned(LastEditor) then Exit;
+
+  if LastEditor.GetName = 'Lines' then
+  begin
+    Comp := LastEditor.GetComponent(0);
+
+    if Comp is TMemo then
+      ShowMessage('EditingDone');
+      //ShowMemoLinesEditor(TMemo(Comp));
+  end; }
+end;
+
 procedure EnsureEventExists(AControl: TControl; Lines: TStrings);
 var EventName: string;
 begin
@@ -487,28 +494,134 @@ begin
     GenerateEvent(AControl, TStringList(Lines));
 end;
 
-procedure TMainForm.OnControlDoubleClick(Sender: TObject; AControl: TControl);
-var EventName: string;
+{procedure TMainForm.OnControlDoubleClick(Sender: TObject; AControl: TControl);
+var
+  EventName: string;
+  Lines: TStringList;
 begin
-  if (AControl.Name = 'pnlDesign') or
-     (AControl.Name = 'JvDesignPanel1') or
-     (AControl.Name = 'pnlFormTitle') or
-     (AControl.Name = 'btnTitleMaximize') or
-     (AControl.Name = 'btnTitleMinimize') or
-     (AControl.Name = 'btnTitleClose')
-     then
-  exit;
+  Lines := TStringList(IDE.ed.Lines);
 
-  EventName := GetEventHandlerName(AControl);
+  //ignorieren
+  if AControl.Name = 'JvDesignPanel1' then Exit;
 
-  if not EventExists(IDE.ed.Lines, EventName) then
+  //CLOSE
+  if AControl.Name = 'btnTitleClose' then
   begin
-    GenerateEvent(AControl, TStringList(IDE.ed.Lines));     // erzeugt Event-Code
-    AssignEventToControl(AControl, TStringList(IDE.ed.Lines)); // fügt Zuweisung in EVENTS-Block
+    EventName := 'FormClose';
+
+    GenerateFormClose(Lines);
+    AssignSpecialEvent(Lines,
+      FFormName + '.OnClose := @FormClose;');
+  end
+
+  //CREATE
+  else if (AControl.Name = 'pnlDesign') or
+          (AControl.Name = 'pnlFormTitle') then
+  begin
+    EventName := 'FormCreate';
+
+    GenerateFormCreate(Lines);
+    AssignSpecialEvent(Lines,
+      FFormName + '.OnCreate := @FormCreate;');
+  end
+
+  //STATE
+  else if (AControl.Name = 'btnTitleMaximize') or
+          (AControl.Name = 'btnTitleMinimize') then
+  begin
+    EventName := 'FormStateChange';
+
+    GenerateFormStateChange(Lines);
+    AssignSpecialEvent(Lines,
+      FFormName + '.OnStateChange := @FormStateChange;');
+  end
+
+  //STANDARD
+  else
+  begin
+    EventName := GetEventHandlerName(AControl);
+
+    if not EventExists(Lines, EventName) then
+    begin
+      GenerateEvent(AControl, Lines);
+      AssignEventToControl(AControl, Lines);
+    end;
   end;
 
+  //springen
   PageControl3.ActivePage := tseditor;
   JumpToEventInEditor(IDE.ed, EventName);
+end;}
+
+procedure TMainForm.OnControlDoubleClick(Sender: TObject; AControl: TControl);
+var
+  EventName: string;
+  Lines: TStringList;
+begin
+  Lines := TStringList.Create;
+  try
+    Lines.Assign(IDE.ed.Lines);
+
+    // ignorieren
+    if AControl.Name = 'JvDesignPanel1' then Exit;
+
+    // CLOSE
+    if AControl.Name = 'btnTitleClose' then
+    begin
+      EventName := 'FormClose';
+
+      GenerateFormClose(Lines);
+      AssignSpecialEvent(Lines,
+        FFormName + '.OnClose := @FormClose;',
+        FFormName);
+    end
+
+    // CREATE
+    else if (AControl.Name = 'pnlDesign') or
+            (AControl.Name = 'pnlFormTitle') then
+    begin
+      EventName := 'FormCreate';
+
+      GenerateFormCreate(Lines);
+      AssignSpecialEvent(Lines,
+        FFormName + '.OnCreate := @FormCreate;',
+        FFormName);
+    end
+
+    // STATE
+    else if (AControl.Name = 'btnTitleMaximize') or
+            (AControl.Name = 'btnTitleMinimize') then
+    begin
+      EventName := 'FormStateChange';
+
+      GenerateFormStateChange(Lines);
+      AssignSpecialEvent(Lines,
+        FFormName + '.OnWindowStateChange := @FormStateChange;',
+        FFormName);
+    end
+
+    // STANDARD
+    else
+    begin
+      EventName := GetEventHandlerName(AControl);
+
+      if not EventExists(Lines, EventName) then
+      begin
+        GenerateEvent(AControl, Lines);
+        AssignEventToControl(AControl, Lines);
+      end;
+    end;
+
+    // IDE Lines aktualisieren
+    IDE.ed.Lines.Assign(Lines);
+
+    // springen zum Event
+    PageControl3.ActivePage := tseditor;
+    JumpToEventInEditor(IDE.ed, EventName);
+
+  finally
+    Lines.Free;
+  end;
 end;
 
 procedure TMainForm.PropertyGridOnModified(Sender: TObject);
@@ -666,7 +779,10 @@ begin
         end;
 
         if FormName <> '' then
+        begin
           edtFormName.Text := FormName;
+          FFormName := edtFormName.Text;
+        end;
 
       finally
         SL.Free;
