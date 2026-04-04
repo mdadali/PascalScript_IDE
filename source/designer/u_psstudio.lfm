@@ -1,16 +1,19 @@
-object MainForm: TMainForm
-  Left = 610
+object frmPSStudio: TfrmPSStudio
+  Left = 660
   Height = 570
-  Top = 424
+  Top = 206
   Width = 965
-  Caption = 'jvDesigner Demo'
-  ClientHeight = 544
+  Caption = 'PascalScript Studio'
+  ClientHeight = 542
   ClientWidth = 965
   KeyPreview = True
   Menu = MainMenu1
+  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
+  OnShow = FormShow
+  Position = poScreenCenter
   LCLVersion = '2.2.6.0'
   WindowState = wsMaximized
   object Panel1: TPanel
@@ -37,12 +40,12 @@ object MainForm: TMainForm
         Top = 27
         Width = 293
         Caption = 'ToolBar2'
-        Images = IDE.ImageListClassic
+        Images = frmConsoleIDE.ImageListClassic
         TabOrder = 0
         object ToolButton15: TToolButton
           Left = 1
           Top = 2
-          Action = IDE.acDebugSyntaxCheck
+          Action = acDebugSyntaxCheck
         end
         object ToolButton16: TToolButton
           Left = 24
@@ -52,32 +55,32 @@ object MainForm: TMainForm
         object ToolButton17: TToolButton
           Left = 47
           Top = 2
-          Action = IDE.acDebugStepOver
+          Action = acDebugStepOver
         end
         object ToolButton18: TToolButton
           Left = 70
           Top = 2
-          Action = IDE.acDebugStepInto
+          Action = acDebugStepInto
         end
         object ToolButton19: TToolButton
           Left = 93
           Top = 2
-          Action = IDE.acDebugPause
+          Action = acDebugPause
         end
         object ToolButton20: TToolButton
           Left = 116
           Top = 2
-          Action = IDE.acDebugReset
+          Action = acDebugReset
         end
         object ToolButton21: TToolButton
           Left = 139
           Top = 2
-          Action = IDE.acDebugBreakPoint
+          Action = acDebugBreakPoint
         end
         object ToolButton22: TToolButton
           Left = 162
           Top = 2
-          Action = IDE.acDebugDecompile
+          Action = acDebugDecompile
         end
         object RadioGroup1: TRadioGroup
           Left = 1
@@ -102,7 +105,7 @@ object MainForm: TMainForm
         Top = 1
         Width = 293
         Caption = 'ToolBar3'
-        Images = IDE.ImageListClassic
+        Images = frmConsoleIDE.ImageListClassic
         TabOrder = 1
         object ToolButton23: TToolButton
           Left = 1
@@ -136,32 +139,32 @@ object MainForm: TMainForm
         Top = 53
         Width = 293
         Caption = 'ToolBar4'
-        Images = IDE.ImageListClassic
+        Images = frmConsoleIDE.ImageListClassic
         TabOrder = 2
         object ToolButton28: TToolButton
           Left = 1
           Top = 2
-          Action = IDE.acEditUndo
+          Action = frmConsoleIDE.acEditUndo
         end
         object ToolButton29: TToolButton
           Left = 24
           Top = 2
-          Action = IDE.acEditRedo
+          Action = frmConsoleIDE.acEditRedo
         end
         object ToolButton30: TToolButton
           Left = 47
           Top = 2
-          Action = IDE.acEditCopy
+          Action = frmConsoleIDE.acEditCopy
         end
         object ToolButton31: TToolButton
           Left = 70
           Top = 2
-          Action = IDE.acEditCut
+          Action = frmConsoleIDE.acEditCut
         end
         object ToolButton32: TToolButton
           Left = 93
           Top = 2
-          Action = IDE.acEditPaste
+          Action = frmConsoleIDE.acEditPaste
         end
         object ToolButton33: TToolButton
           Left = 116
@@ -184,12 +187,12 @@ object MainForm: TMainForm
       object tsStandard: TTabSheet
         Caption = 'Standard'
         ClientHeight = 44
-        ClientWidth = 664
+        ClientWidth = 658
         object tbarStandard: TToolBar
           Left = 0
           Height = 34
           Top = 0
-          Width = 664
+          Width = 658
           AutoSize = True
           ButtonHeight = 32
           ButtonWidth = 33
@@ -405,12 +408,12 @@ object MainForm: TMainForm
       object tsAdditional: TTabSheet
         Caption = 'Additional'
         ClientHeight = 44
-        ClientWidth = 664
+        ClientWidth = 658
         object tbarAdditional: TToolBar
           Left = 0
           Height = 34
           Top = 0
-          Width = 664
+          Width = 658
           Caption = 'tbarAdditional'
           Images = ImageList1
           TabOrder = 0
@@ -444,12 +447,12 @@ object MainForm: TMainForm
       object tsCommonControls: TTabSheet
         Caption = 'Common Controls'
         ClientHeight = 44
-        ClientWidth = 664
+        ClientWidth = 658
         object tbarCommonControls: TToolBar
           Left = 0
           Height = 26
           Top = 0
-          Width = 664
+          Width = 658
           Caption = 'tbarCommonControls'
           TabOrder = 0
           object SelectButton2: TToolButton
@@ -469,17 +472,17 @@ object MainForm: TMainForm
   end
   object Panel3: TPanel
     Left = 320
-    Height = 464
+    Height = 462
     Top = 80
     Width = 645
     Align = alClient
     Caption = 'Panel3'
-    ClientHeight = 464
+    ClientHeight = 462
     ClientWidth = 645
     TabOrder = 1
-    object PageControl3: TPageControl
+    object pgcCenter: TPageControl
       Left = 1
-      Height = 457
+      Height = 455
       Top = 1
       Width = 643
       ActivePage = tsDesign
@@ -489,13 +492,13 @@ object MainForm: TMainForm
       TabPosition = tpBottom
       object tsDesign: TTabSheet
         Caption = 'Designer'
-        ClientHeight = 423
-        ClientWidth = 639
+        ClientHeight = 421
+        ClientWidth = 633
         object JvDesignPanel1: TJvDesignPanel
           Left = 0
-          Height = 423
+          Height = 421
           Top = 0
-          Width = 639
+          Width = 633
           Align = alClient
           BevelOuter = bvNone
           ParentColor = False
@@ -514,7 +517,7 @@ object MainForm: TMainForm
       Cursor = crVSplit
       Left = 1
       Height = 5
-      Top = 458
+      Top = 456
       Width = 643
       Align = alBottom
       ResizeAnchor = akBottom
@@ -522,46 +525,56 @@ object MainForm: TMainForm
   end
   object Splitter2: TSplitter
     Left = 315
-    Height = 464
+    Height = 462
     Top = 80
     Width = 5
   end
   object Panel5: TPanel
     Left = 0
-    Height = 464
+    Height = 462
     Top = 80
     Width = 315
     Align = alLeft
     Caption = 'Panel5'
-    ClientHeight = 464
+    ClientHeight = 462
     ClientWidth = 315
     TabOrder = 3
-    object PageControl2: TPageControl
+    object pgcLeft: TPageControl
       Left = 1
-      Height = 412
+      Height = 410
       Top = 51
       Width = 313
-      ActivePage = TabSheet4
+      ActivePage = tsOInspector
       Align = alClient
       TabIndex = 0
       TabOrder = 0
-      object TabSheet4: TTabSheet
+      object tsOInspector: TTabSheet
         Caption = 'Objectinspector'
-        ClientHeight = 378
-        ClientWidth = 309
+        ClientHeight = 376
+        ClientWidth = 303
         object pnlInsp: TPanel
           Left = 0
-          Height = 378
+          Height = 376
           Top = 0
-          Width = 309
+          Width = 303
           Align = alClient
           Caption = 'pnlInsp'
           TabOrder = 0
         end
       end
-      object TabSheet5: TTabSheet
+      object tsCodeTree: TTabSheet
         Caption = 'Codetree'
-        OnContextPopup = TabSheet5ContextPopup
+        ClientHeight = 376
+        ClientWidth = 303
+        OnContextPopup = tsCodeTreeContextPopup
+        object pnlCodeTree: TPanel
+          Left = 0
+          Height = 376
+          Top = 0
+          Width = 303
+          Align = alClient
+          TabOrder = 0
+        end
       end
     end
     object Panel4: TPanel
@@ -583,7 +596,7 @@ object MainForm: TMainForm
       end
       object edtFormName: TEdit
         Left = 104
-        Height = 30
+        Height = 37
         Top = 8
         Width = 192
         OnChange = edtFormNameChange
@@ -7609,7 +7622,7 @@ object MainForm: TMainForm
   object ActionList1: TActionList
     Images = ImageListClassic
     Left = 176
-    Top = 448
+    Top = 447
     object acFileNew: TAction
       Category = 'File'
       AutoCheck = True
@@ -7636,6 +7649,7 @@ object MainForm: TMainForm
       AutoCheck = True
       Caption = 'S&ave As...'
       ImageIndex = 11
+      OnExecute = acFileSaveAsExecute
     end
     object acFileExit: TAction
       Category = 'File'
@@ -7695,6 +7709,7 @@ object MainForm: TMainForm
       GroupIndex = 1
       Hint = 'Step Over'
       ImageIndex = 18
+      OnExecute = acDebugStepOverExecute
     end
     object acDebugStepInto: TAction
       Category = 'Debug'
@@ -7702,6 +7717,7 @@ object MainForm: TMainForm
       GroupIndex = 1
       Hint = 'Step Into'
       ImageIndex = 19
+      OnExecute = acDebugStepIntoExecute
     end
     object acDebugPause: TAction
       Category = 'Debug'
@@ -7710,12 +7726,14 @@ object MainForm: TMainForm
       GroupIndex = 5
       Hint = 'Pause'
       ImageIndex = 17
+      OnExecute = acDebugPauseExecute
     end
     object acDebugReset: TAction
       Category = 'Debug'
       Caption = 'Reset'
       Hint = 'Reset'
       ImageIndex = 16
+      OnExecute = acDebugResetExecute
     end
     object acDebugSyntaxCheck: TAction
       Category = 'Debug'
@@ -7723,6 +7741,7 @@ object MainForm: TMainForm
       Caption = 'Syntax Check'
       Hint = 'Syntax Check'
       ImageIndex = 23
+      OnExecute = acDebugSyntaxCheckExecute
     end
     object acDebugDecompile: TAction
       Category = 'Debug'
@@ -7730,12 +7749,14 @@ object MainForm: TMainForm
       Caption = 'Decompile'
       Hint = 'Decompile'
       ImageIndex = 22
+      OnExecute = acDebugDecompileExecute
     end
     object acDebugBreakPoint: TAction
       Category = 'Debug'
       Caption = 'Break Point'
       Hint = 'Set/Clear Break Point'
       ImageIndex = 21
+      OnExecute = acDebugBreakPointExecute
     end
   end
 end

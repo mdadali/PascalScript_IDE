@@ -21,7 +21,7 @@ end;
 
 begin
   Application.Initialize;
-  Application.CreateForm(TfrmPSStudio, PSStudio);
+  Application.CreateForm(TfrmPSStudio, frmPSStudio);
   Application.Run;
 end.
 

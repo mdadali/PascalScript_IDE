@@ -1,6 +1,6 @@
 //Version: 31Jan2005
 
-unit ide_editor;
+unit ConsoleIDE;
 
 {$MODE Delphi}
 //{$mode ObjFPC}{$H+}
@@ -44,9 +44,9 @@ uses
 
 type
 
-  { TIDE }
+  { TfrmConsoleIDE }
 
-  TIDE = class(TForm)
+  TfrmConsoleIDE = class(TForm)
     acFileNew: TAction;
     acFileOpen: TAction;
     acFileSave: TAction;
@@ -223,8 +223,9 @@ type
     procedure AssignOnClick(Sender: TButton; const ScriptProcName: string);
   end;
 
+
 var
-  ConsoleIDE: TIDE;
+  ConsoleIDE: TfrmConsoleIDE;
 
 implementation
 
@@ -279,7 +280,7 @@ resourcestring
   STR_NOTSAVED = 'File has not been saved, save now?';
 
 
-procedure TIDE.AssignOnClick(Sender: TButton; const ScriptProcName: string);
+procedure TfrmConsoleIDE.AssignOnClick(Sender: TButton; const ScriptProcName: string);
 var
   Met: TMethod;
 begin
@@ -287,7 +288,7 @@ begin
   TButton(Sender).OnClick := TNotifyEvent(Met);
 end;
 
-procedure TIDE.edMyPaint(Sender: TObject; ACanvas: TCanvas);
+procedure TfrmConsoleIDE.edMyPaint(Sender: TObject; ACanvas: TCanvas);
 var
   Line, ImgIndex, Y: Integer;
   HasCode, HasBreakpoint, BreakpointUnknown: Boolean;
@@ -338,12 +339,12 @@ begin
   end;
 end;
 
-procedure TIDE.FormCreate(Sender: TObject);
+procedure TfrmConsoleIDE.FormCreate(Sender: TObject);
 begin
   ed.OnPaint := edMyPaint;
 end;
 
-procedure TIDE.DoSearchReplaceText(AReplace: boolean; ABackwards: boolean);
+procedure TfrmConsoleIDE.DoSearchReplaceText(AReplace: boolean; ABackwards: boolean);
 var Options: TSynSearchOptions;
 begin
   Statusbar.SimpleText := '';
@@ -381,7 +382,7 @@ begin
     //ConfirmReplaceDialog.Free;
 end;
 
-procedure TIDE.ShowSearchReplaceDialog(AReplace: boolean);
+procedure TfrmConsoleIDE.ShowSearchReplaceDialog(AReplace: boolean);
 //var
   //dlg: TTextSearchDialog;
 begin
@@ -456,7 +457,7 @@ begin
 end;
 
 
-procedure TIDE.edSpecialLineColors(Sender: TObject; Line: Integer;
+procedure TfrmConsoleIDE.edSpecialLineColors(Sender: TObject; Line: Integer;
   var Special: Boolean; var FG, BG: TColor);
 begin
   if ce.HasBreakPoint(ce.MainFileName, Line) then
@@ -480,7 +481,7 @@ begin
   end else Special := False;
 end;
 
-procedure TIDE.ceLineInfo(Sender: TObject; const FileName: String; APosition, Row,
+procedure TfrmConsoleIDE.ceLineInfo(Sender: TObject; const FileName: String; APosition, Row,
   Col: Cardinal);
 begin
   if ce.Exec.DebugMode <> dmRun then
@@ -499,12 +500,12 @@ begin
     Application.ProcessMessages;
 end;
 
-procedure TIDE.BreakPointMenuClick(Sender: TObject);
+procedure TfrmConsoleIDE.BreakPointMenuClick(Sender: TObject);
 begin
 
 end;
 
-procedure TIDE.acFileNewExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acFileNewExecute(Sender: TObject);
 begin
   if SaveCheck then //check if script changed and not yet saved
   begin
@@ -515,33 +516,33 @@ begin
   end;
 end;
 
-procedure TIDE.acFileExitExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acFileExitExecute(Sender: TObject);
 begin
   close;
 end;
 
-procedure TIDE.acEditUndoExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acEditUndoExecute(Sender: TObject);
 begin
   ed.Undo;
 end;
 
-procedure TIDE.acEditRedoExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acEditRedoExecute(Sender: TObject);
 begin
   ed.Redo;
 end;
 
-procedure TIDE.acEditCopyExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acEditCopyExecute(Sender: TObject);
 begin
   ed.CopyToClipboard;
 end;
 
-procedure TIDE.acDebugSyntaxCheckExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acDebugSyntaxCheckExecute(Sender: TObject);
 begin
   Compile;
   acDebugSyntaxCheck.Checked := false;
 end;
 
-procedure TIDE.acDebugDecompileExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acDebugDecompileExecute(Sender: TObject);
 var s: string;
 begin
   if Compile then
@@ -555,7 +556,7 @@ begin
   acDebugDecompile.Checked := false;
 end;
 
-procedure TIDE.acDebugBreakPointExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acDebugBreakPointExecute(Sender: TObject);
 var Line: Longint;
 begin
   Line := Ed.CaretY;
@@ -566,7 +567,7 @@ begin
   ed.Refresh;
 end;
 
-procedure TIDE.acDebugPauseExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acDebugPauseExecute(Sender: TObject);
 begin
   if not acDebugPause.Checked then
   begin
@@ -589,7 +590,7 @@ begin
   end;
 end;
 
-procedure TIDE.acDebugResetExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acDebugResetExecute(Sender: TObject);
 begin
   if ce.Exec.Status in isRunningOrPaused then
     ce.Stop;
@@ -597,7 +598,7 @@ begin
     acDebugPause.Checked := false;
 end;
 
-procedure TIDE.acDebugRunExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acDebugRunExecute(Sender: TObject);
 begin
   if acDebugPause.Checked then
     acDebugPause.Checked := false;
@@ -613,7 +614,7 @@ begin
   acDebugRun.Checked := false;
 end;
 
-procedure TIDE.acDebugStepIntoExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acDebugStepIntoExecute(Sender: TObject);
 begin
   if ce.Exec.Status in isRunningOrPaused then
     ce.StepInto
@@ -627,7 +628,7 @@ begin
   end;
 end;
 
-procedure TIDE.acDebugStepOverExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acDebugStepOverExecute(Sender: TObject);
 begin
   if ce.Exec.Status in isRunningOrPaused then
     ce.StepOver
@@ -641,17 +642,17 @@ begin
   end;
 end;
 
-procedure TIDE.acEditCutExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acEditCutExecute(Sender: TObject);
 begin
   ed.CutToClipboard;
 end;
 
-procedure TIDE.acEditPasteExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acEditPasteExecute(Sender: TObject);
 begin
   ed.PasteFromClipboard(false);
 end;
 
-procedure TIDE.acFileOpenExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acFileOpenExecute(Sender: TObject);
 begin
   if SaveCheck then //check if script changed and not yet saved
   begin
@@ -666,19 +667,19 @@ begin
   acFileOpen.Checked := false;
 end;
 
-procedure TIDE.acFilePrintExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acFilePrintExecute(Sender: TObject);
 begin
   //
   acFilePrint.Checked := false;
 end;
 
-procedure TIDE.acFileRecentExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acFileRecentExecute(Sender: TObject);
 begin
   //
   acFileRecent.Checked := false;
 end;
 
-procedure TIDE.acFileSaveExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acFileSaveExecute(Sender: TObject);
 begin
   if aFile <> '' then
   begin
@@ -689,7 +690,7 @@ begin
   acFileSave.Checked := false;
 end;
 
-procedure TIDE.acFileSaveAsExecute(Sender: TObject);
+procedure TfrmConsoleIDE.acFileSaveAsExecute(Sender: TObject);
 begin
   if SaveDialog1.Execute then
   begin
@@ -700,33 +701,33 @@ begin
   acFileSaveAs.Checked := false;
 end;
 
-procedure TIDE.ceCompile(Sender: TPSScript);
+procedure TfrmConsoleIDE.ceCompile(Sender: TPSScript);
 begin
-  Sender.AddMethod(Self, @TIDE.Writeln, 'procedure writeln(s: string)');
-  Sender.AddMethod(Self, @TIDE.Readln, 'procedure readln(var s: string)');
+  Sender.AddMethod(Self, @TfrmConsoleIDE.Writeln, 'procedure writeln(s: string)');
+  Sender.AddMethod(Self, @TfrmConsoleIDE.Readln, 'procedure readln(var s: string)');
   Sender.AddRegisteredVariable('Self', 'TForm');
   Sender.AddRegisteredVariable('Application', 'TApplication');
 end;
 
-procedure TIDE.ceCompImport(Sender: TObject; x: TPSPascalCompiler);
+procedure TfrmConsoleIDE.ceCompImport(Sender: TObject; x: TPSPascalCompiler);
 begin
   SIRegister_MainScriptInterface(x);
 end;
 
-procedure TIDE.ceExecImport(Sender: TObject; se: TPSExec;
+procedure TfrmConsoleIDE.ceExecImport(Sender: TObject; se: TPSExec;
   x: TPSRuntimeClassImporter);
 begin
   RIRegister_MainScriptInterface_Routines(se);
 end;
 
-procedure TIDE.edGutterClick(Sender: TObject; X, Y, Line: integer;
+procedure TfrmConsoleIDE.edGutterClick(Sender: TObject; X, Y, Line: integer;
   mark: TSynEditMark);
 begin
   ed.CaretXY := Point(1, Line);
   acDebugBreakPointExecute(nil);
 end;
 
-procedure TIDE.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+procedure TfrmConsoleIDE.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
  acDebugResetExecute(nil); //terminate any running script
  if SaveCheck then //check if script changed and not yet saved
@@ -738,7 +739,7 @@ begin
    CloseAction := caNone;
 end;
 
-procedure TIDE.RemoveComments(const SourceLines: TStrings; DestLines: TStringList );
+procedure TfrmConsoleIDE.RemoveComments(const SourceLines: TStrings; DestLines: TStringList );
 var
   i, j: Integer;
   line, tempLine: string;
@@ -814,7 +815,7 @@ begin
   end;
 end;
 
-function TIDE.Compile: Boolean;
+function TfrmConsoleIDE.Compile: Boolean;
 var
   tempLines: TStringList;
   i: Integer;
@@ -838,7 +839,7 @@ begin
   end;
 end;
 
-{function TIDE.Compile: Boolean;
+{function TfrmConsoleIDE.Compile: Boolean;
 var
   i: Longint;
 begin
@@ -854,7 +855,7 @@ begin
 end;
 }
 
-procedure TIDE.ceIdle(Sender: TObject);
+procedure TfrmConsoleIDE.ceIdle(Sender: TObject);
 begin
   Application.ProcessMessages; //Birb: don't use Application.HandleMessage here, else GUI will be unrensponsive if you have a tight loop and won't be able to use Run/Reset menu action
   if FResume then
@@ -866,21 +867,21 @@ begin
   end;
 end;
 
-procedure TIDE.ceExecute(Sender: TPSScript);
+procedure TfrmConsoleIDE.ceExecute(Sender: TPSScript);
 begin
   ce.SetVarToInstance('SELF', Self);
   ce.SetVarToInstance('APPLICATION', Application);
   Caption := STR_FORM_TITLE_RUNNING;
 end;
 
-procedure TIDE.ceAfterExecute(Sender: TPSScript);
+procedure TfrmConsoleIDE.ceAfterExecute(Sender: TPSScript);
 begin
   Caption := STR_FORM_TITLE;
   FActiveLine := 0;
   ed.Refresh;
 end;
 
-function TIDE.Execute: Boolean;
+function TfrmConsoleIDE.Execute: Boolean;
 begin
   //debugoutput.Output.Clear;
   if CE.Execute then
@@ -894,20 +895,20 @@ begin
   end;
 end;
 
-procedure TIDE.Writeln(const s: string);
+procedure TfrmConsoleIDE.Writeln(const s: string);
 begin
   //debugoutput.output.Lines.Add(S);
   //debugoutput.Visible := True;
   Messages.Items.Add(S);
 end;
 
-procedure TIDE.Readln(var s: string);
+procedure TfrmConsoleIDE.Readln(var s: string);
 begin
   s := InputBox(STR_INPUTBOX_TITLE, '', '');
 end;
 
 //check if script changed and not yet saved//
-function TIDE.SaveCheck: Boolean;
+function TfrmConsoleIDE.SaveCheck: Boolean;
 begin
   if ed.Modified then
   begin
@@ -924,19 +925,19 @@ begin
   end else Result := True;
 end;
 
-procedure TIDE.edStatusChange(Sender: TObject;
+procedure TfrmConsoleIDE.edStatusChange(Sender: TObject;
   Changes: TSynStatusChanges);
 begin
   StatusBar.Panels[0].Text := IntToStr(ed.CaretY)+':'+IntToStr(ed.CaretX)
 end;
 
-procedure TIDE.Decompile1Click(Sender: TObject);
+procedure TfrmConsoleIDE.Decompile1Click(Sender: TObject);
 begin
 
 end;
 
 
-function TIDE.ceNeedFile(Sender: TObject; const OrginFileName: String;
+function TfrmConsoleIDE.ceNeedFile(Sender: TObject; const OrginFileName: String;
   var FileName, Output: String): Boolean;
 var
   path: string;
@@ -962,7 +963,7 @@ begin
   Result := True;
 end;
 
-procedure TIDE.ceBreakpoint(Sender: TObject; const FileName: String; APosition, Row,
+procedure TfrmConsoleIDE.ceBreakpoint(Sender: TObject; const FileName: String; APosition, Row,
   Col: Cardinal);
 begin
   FActiveLine := Row;
@@ -976,7 +977,7 @@ begin
   ed.Refresh;
 end;
 
-procedure TIDE.SetActiveFile(const Value: string);
+procedure TfrmConsoleIDE.SetActiveFile(const Value: string);
 begin
   FActiveFile := Value;
   ce.MainFileName := ExtractFileName(FActiveFile);
@@ -1007,7 +1008,7 @@ begin
   end
 end;
 
-procedure TIDE.messagesDblClick(Sender: TObject);
+procedure TfrmConsoleIDE.messagesDblClick(Sender: TObject);
 begin
   //if Copy(messages.Items[messages.ItemIndex],1,7)= '[Error]' then
   //begin
@@ -1016,7 +1017,7 @@ begin
   //end;
 end;
 
-procedure TIDE.Gotolinenumber1Click(Sender: TObject);
+procedure TfrmConsoleIDE.Gotolinenumber1Click(Sender: TObject);
 begin
   with TfrmGotoLine.Create(self) do
   try
@@ -1031,37 +1032,37 @@ begin
   end;
 end;
 
-procedure TIDE.Find1Click(Sender: TObject);
+procedure TfrmConsoleIDE.Find1Click(Sender: TObject);
 begin
   ShowSearchReplaceDialog(FALSE);
 end;
 
-procedure TIDE.Searchagain1Click(Sender: TObject);
+procedure TfrmConsoleIDE.Searchagain1Click(Sender: TObject);
 begin
   DoSearchReplaceText(FALSE, FALSE);
 end;
 
-procedure TIDE.Replace1Click(Sender: TObject);
+procedure TfrmConsoleIDE.Replace1Click(Sender: TObject);
 begin
   ShowSearchReplaceDialog(TRUE);
 end;
 
-procedure TIDE.StepInto1Click(Sender: TObject);
+procedure TfrmConsoleIDE.StepInto1Click(Sender: TObject);
 begin
   acDebugStepIntoExecute(nil);
 end;
 
-procedure TIDE.StepOver1Click(Sender: TObject);
+procedure TfrmConsoleIDE.StepOver1Click(Sender: TObject);
 begin
 
 end;
 
-procedure TIDE.Syntaxcheck1Click(Sender: TObject);
+procedure TfrmConsoleIDE.Syntaxcheck1Click(Sender: TObject);
 begin
 
 end;
 
-procedure TIDE.edDropFiles(Sender: TObject; X, Y: Integer;
+procedure TfrmConsoleIDE.edDropFiles(Sender: TObject; X, Y: Integer;
   AFiles: TStrings);
 begin
  if AFiles.Count>=1 then

@@ -1,4 +1,4 @@
-unit designer;
+unit PSStudio;
 
 {$mode objfpc}{$H+}
 
@@ -19,12 +19,12 @@ SynGutterCodeFolding, SynEditMarkupSpecialLine, SynEditRegexSearch,
 SynEditMarks, PrintersDlgs,
 
   uCodeGenerator,
-  ide_editor, Types;
+  ConsoleIDE, Types;
 type
 
-  { TMainForm }
+  { TfrmPSStudio }
 
-  TMainForm = class(TForm)
+  TfrmPSStudio = class(TForm)
     acDebugBreakPoint: TAction;
     acDebugDecompile: TAction;
     acDebugPause: TAction;
@@ -205,10 +205,8 @@ const
                                           );
 
 
-
 var
-  MainForm: TMainForm;
-  PSSIDE: TIDE;
+  PSStudio: TfrmPSStudio;
 
 implementation
 
@@ -235,9 +233,9 @@ begin
   Result := True;
 end;
 
-{ TMainForm }
+{ TfrmPSStudio }
 
-procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+procedure TfrmPSStudio.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
   i: Integer;
   Comp: TPersistent;
@@ -272,7 +270,7 @@ begin
   end;
 end;
 
-procedure TMainForm.JvDesignSurface1SelectionChange(Sender: TObject);
+procedure TfrmPSStudio.JvDesignSurface1SelectionChange(Sender: TObject);
 var
   i: Integer;
   APersistent: TPersistent;
@@ -342,7 +340,7 @@ begin
   end;
 end;
 
-procedure TMainForm.csDesigning1Click(Sender: TObject);
+procedure TfrmPSStudio.csDesigning1Click(Sender: TObject);
 begin
   JvDesignPanel1.Active := false;
   if WindowProcHook1.Checked then
@@ -353,7 +351,7 @@ begin
   JvDesignPanel1.Invalidate;
 end;
 
-procedure TMainForm.edtFormNameChange(Sender: TObject);
+procedure TfrmPSStudio.edtFormNameChange(Sender: TObject);
 var
   TitlePanel: TPanel;
 begin
@@ -364,7 +362,7 @@ begin
     TitlePanel.Caption := edtFormName.Text;
 end;
 
-procedure TMainForm.edtFormNameExit(Sender: TObject);
+procedure TfrmPSStudio.edtFormNameExit(Sender: TObject);
 begin
   if (not IsValidFormName(edtFormName.Text)) then
   begin
@@ -373,7 +371,7 @@ begin
   end;
 end;
 
-procedure TMainForm.edtFormNameKeyPress(Sender: TObject; var Key: Char);
+procedure TfrmPSStudio.edtFormNameKeyPress(Sender: TObject; var Key: Char);
 begin
   // erlaubte Zeichen
   if not (Key in ['A'..'Z', 'a'..'z', '0'..'9', '_', #8]) then
@@ -384,7 +382,7 @@ begin
     Key := #0;
 end;
 
-procedure TMainForm.FormCreate(Sender: TObject);
+procedure TfrmPSStudio.FormCreate(Sender: TObject);
 var RootCtrl: TComponent;
 begin;
   JvDesignPanel1.Surface.OnSelectionChange := @JvDesignSurface1SelectionChange;
@@ -451,7 +449,7 @@ begin;
 end;
 
 
-procedure TMainForm.TIPropertyGrid1EditorFilter(Sender: TObject;
+procedure TfrmPSStudio.TIPropertyGrid1EditorFilter(Sender: TObject;
   aEditor: TPropertyEditor; var aShow: boolean);
 var
   Prop: PPropInfo;
@@ -468,7 +466,7 @@ begin
     //end;
 end;
 
-procedure TMainForm.TIPropertyGrid1EditingDone(Sender: TObject);
+procedure TfrmPSStudio.TIPropertyGrid1EditingDone(Sender: TObject);
 var
   Comp: TObject;
 begin
@@ -493,7 +491,7 @@ begin
     GenerateEvent(AControl, TStringList(Lines));
 end;
 
-{procedure TMainForm.OnControlDoubleClick(Sender: TObject; AControl: TControl);
+{procedure TfrmPSStudio.OnControlDoubleClick(Sender: TObject; AControl: TControl);
 var
   EventName: string;
   Lines: TStringList;
@@ -552,7 +550,7 @@ begin
   JumpToEventInEditor(PSSIDE.ed, EventName);
 end;}
 
-procedure TMainForm.OnControlDoubleClick(Sender: TObject; AControl: TControl);
+procedure TfrmPSStudio.OnControlDoubleClick(Sender: TObject; AControl: TControl);
 var
   EventName: string;
   Lines: TStringList;
@@ -623,7 +621,7 @@ begin
   end;
 end;
 
-procedure TMainForm.PropertyGridOnModified(Sender: TObject);
+procedure TfrmPSStudio.PropertyGridOnModified(Sender: TObject);
 begin
   try
     JvDesignPanel1.Repaint;
@@ -636,7 +634,7 @@ begin
   end;
 end;
 
-procedure TMainForm.FormDestroy(Sender: TObject);
+procedure TfrmPSStudio.FormDestroy(Sender: TObject);
 begin
   // PropertyEditorHook freigeben
   if Assigned(ThePropertyEditorHook) then
@@ -661,17 +659,17 @@ begin
 end;
 
 
-procedure TMainForm.JvDesignPanel1Change(Sender: TObject);
+procedure TfrmPSStudio.JvDesignPanel1Change(Sender: TObject);
 begin
 
 end;
 
-procedure TMainForm.JvDesignPanel1DblClick(Sender: TObject);
+procedure TfrmPSStudio.JvDesignPanel1DblClick(Sender: TObject);
 begin
   ShowMessage('DblClick');
 end;
 
-procedure TMainForm.JumpToControlEvent(AControl: TControl; Editor: TSynEdit);
+procedure TfrmPSStudio.JumpToControlEvent(AControl: TControl; Editor: TSynEdit);
 var
   EventName: string;
 begin
@@ -688,14 +686,14 @@ begin
   JumpToEventInEditor(PSSIDE.ed, EventName);
 end;
 
-function TMainForm.GetOwner: TPersistent;
+function TfrmPSStudio.GetOwner: TPersistent;
 begin
   // this Form1 is the LookupRoot => GetOwner must be nil
   // see GetLookupRootForComponent
   Result:=nil;
 end;
 
-procedure TMainForm.SetObjectInspectorRoot(AComponent: TComponent);
+procedure TfrmPSStudio.SetObjectInspectorRoot(AComponent: TComponent);
 begin
   Selection.Clear;
 
@@ -706,19 +704,19 @@ begin
   TheObjectInspector.RefreshSelection;
 end;
 
-procedure TMainForm.Active1Click(Sender: TObject);
+procedure TfrmPSStudio.Active1Click(Sender: TObject);
 begin
   JvDesignPanel1.Active := Active1.Checked;
   JvDesignPanel1.Invalidate;
 end;
 
-procedure TMainForm.acDebugRunExecute(Sender: TObject);
+procedure TfrmPSStudio.acDebugRunExecute(Sender: TObject);
 begin
   GenerateCodeFromDesigner(JvDesignPanel1, TStringList(PSSIDE.ed.Lines), Trim(edtFormName.Text));
   PSSIDE.acDebugRunExecute(self);
 end;
 
-procedure TMainForm.acFileNewExecute(Sender: TObject);
+procedure TfrmPSStudio.acFileNewExecute(Sender: TObject);
 begin
   JvDesignPanel1.Clear;
   PSSIDE.ed.Clear;
@@ -727,7 +725,7 @@ begin
   GenerateCodeFromDesigner(JvDesignPanel1, TStringList(PSSIDE.ed.Lines), Trim(edtFormName.Text));
 end;
 
-procedure TMainForm.OpenFileSilent(AFileName: string);
+procedure TfrmPSStudio.OpenFileSilent(AFileName: string);
 var
   BaseName, CfrmFile, RopsFile: string;
   SL: TStringList;
@@ -801,13 +799,13 @@ begin
     end;}
 end;
 
-procedure TMainForm.acFileOpenExecute(Sender: TObject);
+procedure TfrmPSStudio.acFileOpenExecute(Sender: TObject);
 begin
   if OpenDialog.Execute then
     OpenFileSilent(OpenDialog.FileName);
 end;
 
-procedure TMainForm.acFileSaveExecute(Sender: TObject);
+procedure TfrmPSStudio.acFileSaveExecute(Sender: TObject);
 var
   BaseName, CfrmFile, RopsFile: string;
 begin
@@ -828,7 +826,7 @@ begin
   end;
 end;
 
-procedure TMainForm.Rules1Click(Sender: TObject);
+procedure TfrmPSStudio.Rules1Click(Sender: TObject);
 begin
     if Rules1.Checked then
   begin
@@ -844,7 +842,7 @@ begin
   JvDesignPanel1.Invalidate;
 end;
 
-procedure TMainForm.JvDesignPanel1GetAddClass(Sender: TObject;
+procedure TfrmPSStudio.JvDesignPanel1GetAddClass(Sender: TObject;
   var ioClass: String);
 begin
   ioClass := DesignClass;
@@ -857,20 +855,20 @@ begin
   end;
 end;
 
-procedure TMainForm.JvDesignPanelPaint(Sender: TObject);
+procedure TfrmPSStudio.JvDesignPanelPaint(Sender: TObject);
 begin
   with JvDesignPanel1 do
      DesignPaintGrid(Canvas, ClientRect, Color);
 end;
 
-{procedure TMainForm.PaletteButtonClick(Sender: TObject);
+{procedure TfrmPSStudio.PaletteButtonClick(Sender: TObject);
 begin
 // StickyClass := (GetKeyState(VK_SHIFT) < 0);
     StickyClass := False;
    DesignClass := cClasses[TControl(Sender).Tag];
 end;}
 
-procedure TMainForm.PaletteButtonClick(Sender: TObject);
+procedure TfrmPSStudio.PaletteButtonClick(Sender: TObject);
 begin
   // StickyClass aktivieren, wenn Shift gedrückt gehalten wird
   StickyClass := (GetKeyState(VK_SHIFT) < 0);
@@ -879,13 +877,13 @@ begin
   DesignClass := cClasses[TControl(Sender).Tag];
 end;
 
-procedure TMainForm.TabSheet5ContextPopup(Sender: TObject; MousePos: TPoint;
+procedure TfrmPSStudio.TabSheet5ContextPopup(Sender: TObject; MousePos: TPoint;
   var Handled: Boolean);
 begin
 
 end;
 
-procedure TMainForm.TIPropertyGrid1Modified(Sender: TObject);
+procedure TfrmPSStudio.TIPropertyGrid1Modified(Sender: TObject);
 var ctrl: TControl;
 begin
   // Prüfen, ob eine Selection existiert
@@ -901,7 +899,7 @@ begin
   end;
 end;
 
-procedure TMainForm.ToolButton33Click(Sender: TObject);
+procedure TfrmPSStudio.ToolButton33Click(Sender: TObject);
 begin
   ShowMessage('JvDesignPanel1.Components[0].Name = ' + JvDesignPanel1.Components[0].Name);
   ShowMessage('JvDesignPanel1.ComponentCount = ' + IntToStr(JvDesignPanel1.ComponentCount));
@@ -909,7 +907,7 @@ begin
   ShowMessage('Selection.Count = ' + IntToStr(Selection.Count));
 end;
 
-procedure TMainForm.tsEditorShow(Sender: TObject);
+procedure TfrmPSStudio.tsEditorShow(Sender: TObject);
 begin
   GenerateCodeFromDesigner(JvDesignPanel1, TStringList(PSSIDE.ed.Lines), Trim(edtFormName.Text));
 end;

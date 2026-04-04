@@ -1,7 +1,7 @@
-object IDE: TIDE
-  Left = 240
+object frmConsoleIDE: TfrmConsoleIDE
+  Left = 280
   Height = 585
-  Top = 293
+  Top = 279
   Width = 996
   Caption = 'LazCAD IDE'
   ClientHeight = 585

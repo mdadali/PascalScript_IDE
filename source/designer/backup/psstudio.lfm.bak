@@ -1,9 +1,9 @@
-object MainForm: TMainForm
-  Left = 610
+object frmPSStudio: TfrmPSStudio
+  Left = 249
   Height = 570
-  Top = 424
+  Top = 278
   Width = 965
-  Caption = 'jvDesigner Demo'
+  Caption = 'PascalScript Studio'
   ClientHeight = 544
   ClientWidth = 965
   KeyPreview = True
@@ -37,12 +37,12 @@ object MainForm: TMainForm
         Top = 27
         Width = 293
         Caption = 'ToolBar2'
-        Images = IDE.ImageListClassic
+        Images = frmConsoleIDE.ImageListClassic
         TabOrder = 0
         object ToolButton15: TToolButton
           Left = 1
           Top = 2
-          Action = IDE.acDebugSyntaxCheck
+          Action = frmConsoleIDE.acDebugSyntaxCheck
         end
         object ToolButton16: TToolButton
           Left = 24
@@ -52,32 +52,32 @@ object MainForm: TMainForm
         object ToolButton17: TToolButton
           Left = 47
           Top = 2
-          Action = IDE.acDebugStepOver
+          Action = frmConsoleIDE.acDebugStepOver
         end
         object ToolButton18: TToolButton
           Left = 70
           Top = 2
-          Action = IDE.acDebugStepInto
+          Action = frmConsoleIDE.acDebugStepInto
         end
         object ToolButton19: TToolButton
           Left = 93
           Top = 2
-          Action = IDE.acDebugPause
+          Action = frmConsoleIDE.acDebugPause
         end
         object ToolButton20: TToolButton
           Left = 116
           Top = 2
-          Action = IDE.acDebugReset
+          Action = frmConsoleIDE.acDebugReset
         end
         object ToolButton21: TToolButton
           Left = 139
           Top = 2
-          Action = IDE.acDebugBreakPoint
+          Action = frmConsoleIDE.acDebugBreakPoint
         end
         object ToolButton22: TToolButton
           Left = 162
           Top = 2
-          Action = IDE.acDebugDecompile
+          Action = frmConsoleIDE.acDebugDecompile
         end
         object RadioGroup1: TRadioGroup
           Left = 1
@@ -102,7 +102,7 @@ object MainForm: TMainForm
         Top = 1
         Width = 293
         Caption = 'ToolBar3'
-        Images = IDE.ImageListClassic
+        Images = frmConsoleIDE.ImageListClassic
         TabOrder = 1
         object ToolButton23: TToolButton
           Left = 1
@@ -136,32 +136,32 @@ object MainForm: TMainForm
         Top = 53
         Width = 293
         Caption = 'ToolBar4'
-        Images = IDE.ImageListClassic
+        Images = frmConsoleIDE.ImageListClassic
         TabOrder = 2
         object ToolButton28: TToolButton
           Left = 1
           Top = 2
-          Action = IDE.acEditUndo
+          Action = frmConsoleIDE.acEditUndo
         end
         object ToolButton29: TToolButton
           Left = 24
           Top = 2
-          Action = IDE.acEditRedo
+          Action = frmConsoleIDE.acEditRedo
         end
         object ToolButton30: TToolButton
           Left = 47
           Top = 2
-          Action = IDE.acEditCopy
+          Action = frmConsoleIDE.acEditCopy
         end
         object ToolButton31: TToolButton
           Left = 70
           Top = 2
-          Action = IDE.acEditCut
+          Action = frmConsoleIDE.acEditCut
         end
         object ToolButton32: TToolButton
           Left = 93
           Top = 2
-          Action = IDE.acEditPaste
+          Action = frmConsoleIDE.acEditPaste
         end
         object ToolButton33: TToolButton
           Left = 116
