@@ -8,9 +8,9 @@ code implementing the class wrapper is taken from Carlo Kok''s conv unility
 }
 
 {$IFDEF MSWINDOWS}
-{$I ..\PascalScript.inc}
+{$I ..\..\components\PascalScript\Source\PascalScript.inc}
 {$ELSE}
-{$I ../PascalScript.inc}
+{$I ../../components/PascalScript/Source/PascalScript.inc}
 {$ENDIF}
 
 interface

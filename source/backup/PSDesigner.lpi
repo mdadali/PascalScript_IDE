@@ -254,9 +254,8 @@
       <Unit0>
         <Filename Value="PSDesigner.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="2"/>
-        <CursorPos X="3" Y="26"/>
+        <CursorPos X="16" Y="14"/>
         <UsageCount Value="195"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -557,9 +556,10 @@
       <Unit39>
         <Filename Value="..\..\components\jvdesign\jvdesignsurface.pas"/>
         <UnitName Value="JvDesignSurface"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <TopLine Value="205"/>
-        <CursorPos X="30" Y="216"/>
+        <CursorPos X="14" Y="220"/>
         <UsageCount Value="47"/>
         <Loaded Value="True"/>
       </Unit39>

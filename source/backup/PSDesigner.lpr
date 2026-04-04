@@ -21,9 +21,9 @@ end;
 
 begin
   Application.Initialize;
-  //PSStudio := TfrmPSStudio.Create(nil);
-  //PSStudio.Visible := true;
-  Application.CreateForm(TfrmPSStudio, PSStudio);
+  PSStudio := TfrmPSStudio.Create(nil);
+  PSStudio.Visible := true;
+  //Application.CreateForm(TfrmPSStudio, PSStudio);
   Application.Run;
 end.
 
