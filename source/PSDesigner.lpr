@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, runtimetypeinfocontrols, printer4lazarus, pascalscript,
+  Forms, abbrevia, runtimetypeinfocontrols, printer4lazarus, pascalscript,
   pascalscriptfcl, jvRuntimeDesign, u_psstudio, u_consoleide;
 
 {$R *.res}

@@ -13,7 +13,7 @@ uses
 
 
 
-ComCtrls, ActnList, Buttons, SynEdit, SynEditTypes, SynHighlighterPas,
+ComCtrls, ActnList, Buttons, AbUnzper, AbZipTyp, AbArcTyp, SynEdit, SynEditTypes, SynHighlighterPas,
 SynEditSearch, SynEditMiscClasses, SynEditHighlighter, SynGutterBase,
 SynGutterMarks, SynGutterLineNumber, SynGutterChanges, SynGutter,
 SynGutterCodeFolding, SynEditMarkupSpecialLine, SynEditRegexSearch,
@@ -419,15 +419,54 @@ begin
     CloseAction := caNone;
 end;
 
+procedure ExtractDataDirectory;
+var
+  DataStream: TResourceStream;
+  MemoryStream: TMemoryStream;
+  DataDir: string;
+  AbUnZipper: TAbUnZipper;
+begin
+  AbUnZipper := TAbUnZipper.Create(nil);
+  DataDir := ExtractFilePath(Application.ExeName) + Pathdelim + 'data';
+  if not DirectoryExists(DataDir) then
+  begin
+    DataStream := TResourceStream.Create(HInstance, 'DATA', RT_RCDATA);
+    MemoryStream := TMemoryStream.Create;
+    try
+      // Load the ZIP file from the resource into memory
+      MemoryStream.LoadFromStream(DataStream);
+      MemoryStream.Position := 0;
+
+      // Extract the contents of the ZIP file to the target directory.
+      AbUnZipper.Stream := MemoryStream;
+      AbUnZipper.ExtractOptions := [eoCreateDirs, eoRestorePath]; // Create directories
+      AbUnZipper.BaseDirectory := ExtractFilePath(Application.ExeName);
+      AbUnZipper.ExtractFiles('*.*');
+    finally
+      MemoryStream.Free;
+      DataStream.Free;
+      AbUnZipper.Free;
+    end;
+  end;
+end;
+
+function FirstRun: boolean;
+begin
+  result := not DirectoryExists(ExtractFilePath(Application.ExeName) + Pathdelim + 'data');
+end;
+
 procedure TfrmPSStudio.FormCreate(Sender: TObject);
 var RootCtrl: TComponent;
 begin;
+  if FirstRun then
+    ExtractDataDirectory;
+
   FFileName := '';
 
   JvDesignPanel1.Surface.OnSelectionChange := @JvDesignSurface1SelectionChange;
 
   FStdFormTemplateFile := ExtractFilePath(Application.ExeName) +
-       PathDelim + 'data' + PathDelim + 'FormTemplates' + PathDelim + 'StdTemplate.cfrm';
+       'data' + PathDelim + 'PSStudio' + PathDelim + 'FormTemplates' + PathDelim + 'StdTemplate.cfrm';
 
   // create the PropertyEditorHook (the interface to the properties)
   ThePropertyEditorHook:=TPropertyEditorHook.Create(nil);

@@ -1,7 +1,7 @@
 object frmPSStudio: TfrmPSStudio
-  Left = 660
+  Left = 355
   Height = 570
-  Top = 206
+  Top = 158
   Width = 965
   Caption = 'PascalScript Studio'
   ClientHeight = 542
