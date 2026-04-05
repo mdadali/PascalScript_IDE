@@ -29,7 +29,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="editor\Imports;common;designer;editor;components\PascalScript\Source\ThirdParty"/>
+            <OtherUnitFiles Value="editor\Imports;common;designer;editor"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS).release"/>
           </SearchPaths>
           <CodeGeneration>
@@ -52,7 +52,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="editor\Imports;common;designer;editor;components\PascalScript\Source\ThirdParty"/>
+            <OtherUnitFiles Value="editor\Imports;common;designer;editor"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)-debug"/>
           </SearchPaths>
           <CodeGeneration>
@@ -75,7 +75,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="editor\Imports;common;designer;editor;components\PascalScript\Source\ThirdParty"/>
+            <OtherUnitFiles Value="editor\Imports;common;designer;editor"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)-release"/>
           </SearchPaths>
           <CodeGeneration>
@@ -98,7 +98,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="editor\Imports;common;designer;editor;components\PascalScript\Source\ThirdParty"/>
+            <OtherUnitFiles Value="editor\Imports;common;designer;editor"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)-debug"/>
           </SearchPaths>
           <CodeGeneration>
@@ -126,7 +126,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="editor\Imports;common;designer;editor;components\PascalScript\Source\ThirdParty"/>
+            <OtherUnitFiles Value="editor\Imports;common;designer;editor"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)-release"/>
           </SearchPaths>
           <CodeGeneration>
@@ -154,7 +154,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="editor\Imports;common;designer;editor;components\PascalScript\Source\ThirdParty"/>
+            <OtherUnitFiles Value="editor\Imports;common;designer;editor"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)-debug"/>
           </SearchPaths>
           <CodeGeneration>
@@ -191,7 +191,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="editor\Imports;common;designer;editor;components\PascalScript\Source\ThirdParty"/>
+            <OtherUnitFiles Value="editor\Imports;common;designer;editor"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)-release"/>
           </SearchPaths>
           <CodeGeneration>
@@ -256,7 +256,7 @@
         <PackageName Value="LCL"/>
       </Item9>
     </RequiredPackages>
-    <Units Count="54">
+    <Units Count="53">
       <Unit0>
         <Filename Value="PSDesigner.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -629,6 +629,7 @@
         <ComponentName Value="frmPSStudio"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <TopLine Value="442"/>
         <CursorPos X="10" Y="447"/>
@@ -658,10 +659,9 @@
       </Unit50>
       <Unit51>
         <Filename Value="editor\Imports\mainscriptinterface.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="3"/>
-        <CursorPos X="12" Y="18"/>
+        <TopLine Value="4"/>
+        <CursorPos X="3" Y="17"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit51>
@@ -671,136 +671,127 @@
         <CursorPos X="2" Y="13"/>
         <UsageCount Value="10"/>
       </Unit52>
-      <Unit53>
-        <Filename Value="components\PascalScript\Source\ThirdParty\uPSI_Dialogs.pas"/>
-        <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <WindowIndex Value="-1"/>
-        <TopLine Value="-1"/>
-        <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="20"/>
-      </Unit53>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="..\..\components\jvdesign\jvdesignsurface.pas"/>
-        <Caret Line="220" Column="14" TopLine="205"/>
+        <Filename Value="editor\Imports\mainscriptinterface.pas"/>
+        <Caret Line="17" Column="23" TopLine="3"/>
       </Position1>
       <Position2>
-        <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="103" Column="89" TopLine="96"/>
+        <Filename Value="..\..\components\jvdesign\jvdesignsurface.pas"/>
+        <Caret Line="220" Column="14" TopLine="205"/>
       </Position2>
       <Position3>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="187" Column="25" TopLine="166"/>
+        <Caret Line="103" Column="89" TopLine="96"/>
       </Position3>
       <Position4>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="277" Column="46" TopLine="255"/>
+        <Caret Line="187" Column="25" TopLine="166"/>
       </Position4>
       <Position5>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="294" Column="38" TopLine="272"/>
+        <Caret Line="277" Column="46" TopLine="255"/>
       </Position5>
       <Position6>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="429" Column="23" TopLine="407"/>
+        <Caret Line="294" Column="38" TopLine="272"/>
       </Position6>
       <Position7>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="464" Column="40" TopLine="443"/>
+        <Caret Line="429" Column="23" TopLine="407"/>
       </Position7>
       <Position8>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="735" Column="38" TopLine="713"/>
+        <Caret Line="464" Column="40" TopLine="443"/>
       </Position8>
       <Position9>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="187" Column="25" TopLine="175"/>
+        <Caret Line="735" Column="38" TopLine="713"/>
       </Position9>
       <Position10>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="277" Column="46" TopLine="255"/>
+        <Caret Line="187" Column="25" TopLine="175"/>
       </Position10>
       <Position11>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="294" Column="38" TopLine="272"/>
+        <Caret Line="277" Column="46" TopLine="255"/>
       </Position11>
       <Position12>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="429" Column="23" TopLine="407"/>
+        <Caret Line="294" Column="38" TopLine="272"/>
       </Position12>
       <Position13>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="464" Column="40" TopLine="443"/>
+        <Caret Line="429" Column="23" TopLine="407"/>
       </Position13>
       <Position14>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="735" Column="38" TopLine="713"/>
+        <Caret Line="464" Column="40" TopLine="443"/>
       </Position14>
       <Position15>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="187" Column="25" TopLine="175"/>
+        <Caret Line="735" Column="38" TopLine="713"/>
       </Position15>
       <Position16>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="277" Column="46" TopLine="255"/>
+        <Caret Line="187" Column="25" TopLine="175"/>
       </Position16>
       <Position17>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="294" Column="38" TopLine="272"/>
+        <Caret Line="277" Column="46" TopLine="255"/>
       </Position17>
       <Position18>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="429" TopLine="407"/>
+        <Caret Line="294" Column="38" TopLine="272"/>
       </Position18>
       <Position19>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="430" Column="8" TopLine="414"/>
+        <Caret Line="429" TopLine="407"/>
       </Position19>
       <Position20>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="433" TopLine="417"/>
+        <Caret Line="430" Column="8" TopLine="414"/>
       </Position20>
       <Position21>
-        <Filename Value="editor\Imports\mainscriptinterface.pas"/>
-        <Caret Line="17" Column="3" TopLine="3"/>
+        <Filename Value="designer\u_psstudio.pas"/>
+        <Caret Line="433" TopLine="417"/>
       </Position21>
       <Position22>
-        <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="461" Column="3" TopLine="444"/>
+        <Filename Value="editor\Imports\mainscriptinterface.pas"/>
+        <Caret Line="17" Column="3" TopLine="3"/>
       </Position22>
       <Position23>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="426" Column="15" TopLine="413"/>
+        <Caret Line="461" Column="3" TopLine="444"/>
       </Position23>
       <Position24>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="447" Column="9" TopLine="430"/>
+        <Caret Line="426" Column="15" TopLine="413"/>
       </Position24>
       <Position25>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="430" Column="83" TopLine="416"/>
+        <Caret Line="447" Column="9" TopLine="430"/>
       </Position25>
       <Position26>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="447" Column="7" TopLine="425"/>
+        <Caret Line="430" Column="83" TopLine="416"/>
       </Position26>
       <Position27>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="446" Column="7" TopLine="424"/>
+        <Caret Line="447" Column="7" TopLine="425"/>
       </Position27>
       <Position28>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="435" Column="16" TopLine="432"/>
+        <Caret Line="446" Column="7" TopLine="424"/>
       </Position28>
       <Position29>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="16" Column="60"/>
+        <Caret Line="435" Column="16" TopLine="432"/>
       </Position29>
       <Position30>
         <Filename Value="designer\u_psstudio.pas"/>
-        <Caret Line="447" Column="10" TopLine="442"/>
+        <Caret Line="16" Column="60"/>
       </Position30>
     </JumpHistory>
   </ProjectOptions>
