@@ -1,16 +1,19 @@
+//<HEADER_COMMENTS-BEGIN>
+{
+  This script shows how to use Lazarus dialogs in PascalScript Studio.
+}
+//<HEADER_COMMENTS-END>
+
+//<USER-GLOBALS-BEGIN>
+//<USER-GLOBALS-END>
+
 //<DESIGNER-VARS-BEGIN>
 var
   Form1: TForm;
   Panel6: TPanel;
 //<DESIGNER-VARS-END>
 
-//<USER-GLOBAL-VARS-BEGIN>
-//<USER-GLOBAL-VARS-END>
-
 //<USERCODE-BEGIN>
-
-
-
 //CreateMessageDialog, 'CreateMessageDialog', cdRegister);
 //MessageDlg, 'MessageDlg', cdRegister);
 //MessageDlgPos, 'MessageDlgPos', cdRegister);
@@ -22,7 +25,7 @@ var
 
 procedure ShowMessageDlg;
 begin
-  if MessageDlg('Msg', mtConfirmation, [mbOK, mbCancel], 0) = mrOK then
+  if MessageDlg('MessageDlg', mtConfirmation, [mbOK, mbCancel], 0) = mrOK then
     WriteLn('OK Clicked')
   else
     WriteLn('Cancel Clicked')
@@ -140,9 +143,9 @@ begin
   Panel6 := TPanel.Create(Form1);
   Panel6.Parent := Form1;
 
-  Panel6.Left := 203;
-  Panel6.Top := 95;
-  Panel6.Width := 362;
+  Panel6.Left := 19;
+  Panel6.Top := 15;
+  Panel6.Width := 150;
   Panel6.Height := 146;
   Panel6.Visible := True;
   Panel6.Enabled := True;

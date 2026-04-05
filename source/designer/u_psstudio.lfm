@@ -1,7 +1,7 @@
 object frmPSStudio: TfrmPSStudio
-  Left = 355
+  Left = 397
   Height = 570
-  Top = 158
+  Top = 219
   Width = 965
   Caption = 'PascalScript Studio'
   ClientHeight = 542
@@ -7758,5 +7758,9 @@ object frmPSStudio: TfrmPSStudio
       ImageIndex = 21
       OnExecute = acDebugBreakPointExecute
     end
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 360
+    Top = 168
   end
 end

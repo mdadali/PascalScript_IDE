@@ -62,6 +62,7 @@ type
     pnlCodeTree: TPanel;
     pashighlighter: TSynPasSyn;
     pnlInsp: TPanel;
+    PopupMenu1: TPopupMenu;
     PropertyGrid: TOIPropertyGrid;
     Active1: TMenuItem;
     RadioGroup1: TRadioGroup;
@@ -868,6 +869,7 @@ begin
     // Pascal-Code-Datei (.ROPS)
     RopsFile := BaseName + '.ROPS';
     LocalConsoleIDE.ed.Lines.SaveToFile(RopsFile); // SynEdit Lines speichern
+    LocalConsoleIDE.ed.Modified := false;
 
     Caption := 'PascalScript Studio' + ExtractFileName(BaseName);
 
@@ -897,6 +899,7 @@ begin
   // Pascal-Code-Datei (.ROPS) speichern
   RopsFile := BaseName + '.ROPS';
   LocalConsoleIDE.ed.Lines.SaveToFile(RopsFile);
+  LocalConsoleIDE.ed.Modified := false;
 
   // Caption aktualisieren
   Caption := 'PSStudio - ' + ExtractFileName(BaseName);

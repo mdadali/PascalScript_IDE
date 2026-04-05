@@ -1,11 +1,11 @@
 object JvDesignPanel1: TJvDesignPanel
   Left = 0
-  Height = 564
+  Height = 601
   Top = 0
   Width = 1034
   Align = alClient
   BevelOuter = bvNone
-  ClientHeight = 564
+  ClientHeight = 601
   ClientWidth = 1034
   Color = clBtnFace
   ParentColor = False
@@ -82,10 +82,10 @@ object JvDesignPanel1: TJvDesignPanel
       end
     end
     object Panel6: TPanel
-      Left = 203
+      Left = 19
       Height = 146
-      Top = 125
-      Width = 362
+      Top = 45
+      Width = 150
       Caption = 'Font'
       TabOrder = 1
     end

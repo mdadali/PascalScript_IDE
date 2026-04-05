@@ -1,20 +1,27 @@
+//<HEADER_COMMENTS-BEGIN>
+{
+  Add your header comments here
+}
+//<HEADER_COMMENTS-END>
+
+//<USER-GLOBALS-BEGIN>
+  // Add your global variables and types here
+//<USER-GLOBALS-END>
+
 //<DESIGNER-VARS-BEGIN>
 var
   Form1: TForm;
 //<DESIGNER-VARS-END>
 
-//<USER-GLOBAL-VARS-BEGIN>
-//<USER-GLOBAL-VARS-END>
-
 //<USERCODE-BEGIN>
-
+  // Add your code here (procedures, functions, types, variables)
 //<USERCODE-END>
 
 //<DESIGNER-BEGIN>
 procedure CreateNewForm;
 begin
   Form1 := TForm.Create(nil);
-  Form1.SetBounds(95, 85, 790, 386);
+  Form1.SetBounds(63, 65, 850, 446);
   Form1.Color := -2147483643;
   Form1.Position := poDesigned;
   Form1.Caption := 'Form1';
