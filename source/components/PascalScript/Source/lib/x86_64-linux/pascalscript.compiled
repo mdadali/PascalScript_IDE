@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CONFIG>
-  <Lazarus Version="4.2"/>
-  <Compiler Value="/home/maurog/Programme/Lazarus_stabile/fpc/bin/x86_64-linux/fpc.sh" Date="1775431852"/>
-  <Params Value="-MObjFPC -Scghi -Cg -O1 -g -gl -l -vewnibq -vh- -Fu/home/maurog/daten/mustafa/entwicklung/linux/lazarus/PascalScript_IDE/source/components/PascalScript/Source/ -Fu/home/maurog/Programme/Lazarus_stabile/lazarus/packager/units/x86_64-linux -Fu/home/maurog/Programme/Lazarus_stabile/lazarus/components/lazutils/lib/x86_64-linux -Fu/home/maurog/Programme/Lazarus_stabile/lazarus/components/freetype/lib/x86_64-linux -Fu/home/maurog/Programme/Lazarus_stabile/lazarus/lcl/units/x86_64-linux -Fu/home/maurog/Programme/Lazarus_stabile/lazarus/lcl/units/x86_64-linux/gtk2 -FU/home/maurog/daten/mustafa/entwicklung/linux/lazarus/PascalScript_IDE/source/components/PascalScript/Source/lib/x86_64-linux/ -dLCL -dLCLgtk2 pascalscript.pas"/>
-</CONFIG>

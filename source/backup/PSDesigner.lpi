@@ -636,8 +636,8 @@
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="1252"/>
-        <CursorPos X="17" Y="1256"/>
+        <TopLine Value="304"/>
+        <CursorPos X="25" Y="304"/>
         <UsageCount Value="39"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -757,7 +757,7 @@
         <Loaded Value="True"/>
       </Unit61>
     </Units>
-    <JumpHistory Count="29" HistoryIndex="28">
+    <JumpHistory Count="30" HistoryIndex="23">
       <Position1>
         <Filename Value="..\..\components\PascalScript\Source\uPSDebugger.pas"/>
         <Caret Line="564" TopLine="547"/>
@@ -874,6 +874,10 @@
         <Filename Value="editor\u_consoleide.pas"/>
         <Caret Line="1184" Column="31" TopLine="1165"/>
       </Position29>
+      <Position30>
+        <Filename Value="editor\u_consoleide.pas"/>
+        <Caret Line="1256" Column="17" TopLine="1252"/>
+      </Position30>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>
