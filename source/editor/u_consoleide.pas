@@ -369,7 +369,7 @@ procedure TfrmConsoleIDE.btnAddWatchClick(Sender: TObject);
 var
   s: string;
 begin
-  s := InputBox('Watch hinzufügen', 'Ausdruck (z.B. i oder Form1.Caption):', '');
+  s := InputBox('Add Watch', 'Expression (e.g. i or Form1.Caption):', '');
 
   s := Trim(s);
   if s = '' then Exit;

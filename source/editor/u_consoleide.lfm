@@ -1,7 +1,7 @@
 object frmConsoleIDE: TfrmConsoleIDE
-  Left = 418
+  Left = 463
   Height = 585
-  Top = 341
+  Top = 103
   Width = 996
   AllowDropFiles = True
   Caption = 'LazCAD ConsoleIDE'
@@ -758,6 +758,7 @@ object frmConsoleIDE: TfrmConsoleIDE
         Top = 0
         Width = 864
         Align = alClient
+        Enabled = False
         FixedCols = 0
         RowCount = 2
         TabOrder = 0
