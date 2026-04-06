@@ -10,10 +10,11 @@ interface
 uses
   {$IFDEF Windows} Windows, {$ENDIF} LCLType, LCLIntf, LMessages, SysUtils,
   Classes, Graphics, Controls, Forms, Dialogs, Menus, ExtCtrls, StdCtrls,
-  ComCtrls, ActnList, SynEdit, SynEditTypes, SynHighlighterPas, SynEditSearch,
-  SynEditMiscClasses, SynEditHighlighter, SynGutterBase, SynGutterMarks,
-  SynGutterLineNumber, SynGutterChanges, SynGutter, SynGutterCodeFolding,
-  SynEditMarkupSpecialLine, SynEditRegexSearch, SynEditMarks, PrintersDlgs,
+  ComCtrls, ActnList, ValEdit, SynEdit, SynEditTypes, SynHighlighterPas,
+  SynEditSearch, SynEditMiscClasses, SynEditHighlighter, SynGutterBase,
+  SynGutterMarks, SynGutterLineNumber, SynGutterChanges, SynGutter,
+  SynGutterCodeFolding, SynEditMarkupSpecialLine, SynEditRegexSearch,
+  SynEditMarks, PrintersDlgs,
 
   uPSComponent_COM,
   uPSComponent_StdCtrls,
@@ -68,10 +69,15 @@ type
     acDebugRun: TAction;
     acDebugBreakPoint: TAction;
     ActionList1: TActionList;
+    btnAddWatch: TButton;
+    btnDeleteWatch: TButton;
     ce: TPSScriptDebugger;
     edtFormName: TEdit;
     IFPS3DllPlugin1: TPSDllPlugin;
     ImageListClassic: TImageList;
+    messages: TListBox;
+    pnlAddDeleteWatch: TPanel;
+    pgcDebug: TPageControl;
     pnlDebug: TPanel;
     pnlEdit: TPanel;
     pnlFile: TPanel;
@@ -94,7 +100,6 @@ type
     N2: TMenuItem;
     Run2: TMenuItem;
     Exit1: TMenuItem;
-    messages: TListBox;
     Splitter1: TSplitter;
     SaveDialog1: TSaveDialog;
     OpenDialog1: TOpenDialog;
@@ -128,6 +133,8 @@ type
     SynGutterSeparator1: TSynGutterSeparator;
     SynLeftGutterPartList1: TSynGutterPartList;
     Syntaxcheck1: TMenuItem;
+    tsMessages: TTabSheet;
+    tsWatches: TTabSheet;
     ToolBar2: TToolBar;
     ToolBar3: TToolBar;
     ToolBar4: TToolBar;
@@ -150,6 +157,7 @@ type
     ToolButton31: TToolButton;
     ToolButton32: TToolButton;
     ToolButton33: TToolButton;
+    vleWatches: TValueListEditor;
 
     procedure acDebugBreakPointExecute(Sender: TObject);
     procedure acDebugDecompileExecute(Sender: TObject);
@@ -171,9 +179,12 @@ type
     procedure acFileRecentExecute(Sender: TObject);
     procedure acFileSaveExecute(Sender: TObject);
     procedure acFileSaveAsExecute(Sender: TObject);
+    procedure btnAddWatchClick(Sender: TObject);
+    procedure btnDeleteWatchClick(Sender: TObject);
     procedure ceCompImport(Sender: TObject; x: TPSPascalCompiler);
     procedure ceExecImport(Sender: TObject; se: TPSExec;
       x: TPSRuntimeClassImporter);
+    procedure ceLine(Sender: TObject);
     procedure edChange(Sender: TObject);
     procedure edGutterClick(Sender: TObject; X, Y, Line: integer;
       mark: TSynEditMark);
@@ -190,6 +201,7 @@ type
     procedure Decompile1Click(Sender: TObject);
     function  ceNeedFile(Sender: TObject; const OrginFileName: String; var FileName, Output: String): Boolean;
     procedure ceBreakpoint(Sender: TObject; const FileName: String; APosition, Row, Col: Cardinal);
+    procedure FormDestroy(Sender: TObject);
     procedure messagesDblClick(Sender: TObject);
     procedure Gotolinenumber1Click(Sender: TObject);
     procedure Find1Click(Sender: TObject);
@@ -201,6 +213,8 @@ type
     procedure edDropFiles(Sender: TObject; X, Y: Integer;
       AFiles: TStrings);
   private
+    FWatchList: TStringList;
+
     FSearchFromCaret: boolean;
     FActiveLine: Longint;
     FResume: Boolean;
@@ -226,6 +240,10 @@ type
     function SaveCheck: Boolean;
 
     procedure AssignOnClick(Sender: TButton; const ScriptProcName: string);
+
+    procedure AddWatch(const Expr: string);
+    procedure UpdateWatches;
+    function  HasExecuted: Boolean;
   end;
 
 
@@ -284,6 +302,96 @@ resourcestring
   STR_DEFAULT_PROGRAM = 'Program test;'#13#10'begin'#13#10'end.';
   STR_NOTSAVED = 'File has not been saved, save now?';
 
+
+function TfrmConsoleIDE.HasExecuted: Boolean;
+begin
+  Result :=
+      (ce <> nil) and
+      (ce.Exec <> nil) and
+      (ce.Exec.Status in isRunningOrPaused);
+end;
+
+procedure TfrmConsoleIDE.AddWatch(const Expr: string);
+begin
+  if Trim(Expr) = '' then Exit;
+
+  if FWatchList.IndexOf(Expr) = -1 then
+    FWatchList.Add(Expr);
+
+  UpdateWatches;
+end;
+
+procedure TfrmConsoleIDE.UpdateWatches;
+var
+  i: Integer;
+  Expr, Value: string;
+begin
+  vleWatches.Strings.BeginUpdate;
+  try
+    vleWatches.Strings.Clear;
+
+    if ce.Exec = nil then Exit;
+
+    for i := 0 to FWatchList.Count - 1 do
+    begin
+      Expr := FWatchList[i];
+
+      try
+        if not HasExecuted then
+        begin
+          vleWatches.Values[Expr] := '<not available>';
+          Continue;
+        end;
+
+        if ce.Exec.CurrentProcVars = nil then
+          Continue;
+
+        if ce.Exec.CurrentProcParams = nil then
+          Continue;
+
+        if ce.Exec.GlobalVarNames = nil then
+          Continue;
+
+        Value := ce.GetVarContents(Expr);
+      except
+        Value := '<error>';
+      end;
+
+      vleWatches.Values[Expr] := Value;
+    end;
+
+  finally
+    vleWatches.Strings.EndUpdate;
+  end;
+end;
+
+procedure TfrmConsoleIDE.btnAddWatchClick(Sender: TObject);
+var
+  s: string;
+begin
+  s := InputBox('Watch hinzufügen', 'Ausdruck (z.B. i oder Form1.Caption):', '');
+
+  s := Trim(s);
+  if s = '' then Exit;
+
+  AddWatch(s);
+end;
+
+procedure TfrmConsoleIDE.btnDeleteWatchClick(Sender: TObject);
+var
+  Key: string;
+  idx: Integer;
+begin
+  if vleWatches.Row < 1 then Exit; // 0 = Header
+
+  Key := vleWatches.Keys[vleWatches.Row];
+
+  idx := FWatchList.IndexOf(Key);
+  if idx <> -1 then
+    FWatchList.Delete(idx);
+
+  UpdateWatches;
+end;
 
 procedure TfrmConsoleIDE.AssignOnClick(Sender: TButton; const ScriptProcName: string);
 var
@@ -346,6 +454,7 @@ end;
 
 procedure TfrmConsoleIDE.FormCreate(Sender: TObject);
 begin
+  FWatchList := TStringList.Create;
   FErrorLine := -1;
   ed.OnPaint := edMyPaint;
 end;
@@ -587,7 +696,9 @@ end;
 
 procedure TfrmConsoleIDE.acDebugSyntaxCheckExecute(Sender: TObject);
 begin
-  Compile;
+  if Compile then
+    UpdateWatches;
+
   acDebugSyntaxCheck.Checked := false;
 end;
 
@@ -605,7 +716,7 @@ begin
 
     List := TStringList.Create;
     List.Text := S;
-    List.SaveToFile('/home/maurog/decompiled.txt');
+    //List.SaveToFile('/home/maurog/decompiled.txt');
     List.Free;
   end;
   acDebugDecompile.Checked := false;
@@ -653,7 +764,7 @@ begin
     acDebugPause.Checked := false;
 end;
 
-procedure TfrmConsoleIDE.acDebugRunExecute(Sender: TObject);
+{procedure TfrmConsoleIDE.acDebugRunExecute(Sender: TObject);
 begin
   if acDebugPause.Checked then
     acDebugPause.Checked := false;
@@ -667,18 +778,42 @@ begin
       Execute;
   end;
   acDebugRun.Checked := false;
+end;}
+
+procedure TfrmConsoleIDE.acDebugRunExecute(Sender: TObject);
+begin
+  if acDebugPause.Checked then
+    acDebugPause.Checked := false;
+
+  if CE.Running then
+  begin
+    FResume := True;
+    //UpdateWatches;
+  end else
+  begin
+    if Compile then
+    begin
+      Execute;
+      //UpdateWatches;
+    end;
+  end;
+  acDebugRun.Checked := false;
 end;
 
 procedure TfrmConsoleIDE.acDebugStepIntoExecute(Sender: TObject);
 begin
   if ce.Exec.Status in isRunningOrPaused then
-    ce.StepInto
+  begin
+    ce.StepInto;
+    //UpdateWatches;
+  end
   else
   begin
     if Compile then
     begin
       ce.StepInto;
       Execute;
+      //UpdateWatches;
     end;
   end;
 end;
@@ -686,7 +821,9 @@ end;
 procedure TfrmConsoleIDE.acDebugStepOverExecute(Sender: TObject);
 begin
   if ce.Exec.Status in isRunningOrPaused then
-    ce.StepOver
+  begin
+    ce.StepOver;
+  end
   else
   begin
     if Compile then
@@ -696,6 +833,7 @@ begin
     end;
   end;
 end;
+
 
 procedure TfrmConsoleIDE.acEditCutExecute(Sender: TObject);
 begin
@@ -774,6 +912,11 @@ procedure TfrmConsoleIDE.ceExecImport(Sender: TObject; se: TPSExec;
   x: TPSRuntimeClassImporter);
 begin
   RIRegister_MainScriptInterface_Routines(se, x);
+end;
+
+procedure TfrmConsoleIDE.ceLine(Sender: TObject);
+begin
+  UpdateWatches;
 end;
 
 procedure TfrmConsoleIDE.edChange(Sender: TObject);
@@ -1127,6 +1270,8 @@ end;
 procedure TfrmConsoleIDE.ceBreakpoint(Sender: TObject; const FileName: String; APosition, Row,
   Col: Cardinal);
 begin
+  pgcDebug.ActivePage := tsWatches;
+
   FActiveLine := Row;
   if (FActiveLine < ed.TopLine +2) or (FActiveLine > Ed.TopLine + Ed.LinesInWindow -2) then
   begin
@@ -1136,6 +1281,11 @@ begin
   ed.CaretX := 1;
 
   ed.Refresh;
+end;
+
+procedure TfrmConsoleIDE.FormDestroy(Sender: TObject);
+begin
+  FWatchList.Free;
 end;
 
 procedure TfrmConsoleIDE.SetActiveFile(const Value: string);

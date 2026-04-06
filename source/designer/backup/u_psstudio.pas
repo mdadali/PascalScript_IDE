@@ -291,7 +291,7 @@ end;
 procedure TfrmPSStudio.FormShow(Sender: TObject);
 begin
   pgcLeft.ActivePage := tsOInspector;
-  pgcCenter.ActivePage := tsDesign;
+  //pgcCenter.ActivePage := tsDesign;
   //OpenFileSilent(FStdFormTemplateFile);
   //LocalConsoleIDE.ed.Modified := false;
 end;
