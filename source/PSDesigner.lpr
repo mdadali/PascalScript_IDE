@@ -8,12 +8,10 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, abbrevia, runtimetypeinfocontrols, printer4lazarus,
-  uPSDisassembly, pascalscript,
+  pascalscript, uPSI_IBXConnection, uPSI_uibconst,
   {pascalscriptfcl,}
   jvRuntimeDesign,
-  u_psstudio,
-  u_consoleide,
-  uPSI_Dialogs;
+  u_psstudio, u_consoleide;
 
 {$R *.res}
 

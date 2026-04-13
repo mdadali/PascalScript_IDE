@@ -22,7 +22,13 @@ SynEditMarks, PrintersDlgs,
   uPSDisassembly,
 
   uCodeGenerator,
-  u_consoleide;
+  u_consoleide,
+
+
+  DBCtrls,
+  DBGrids,
+
+  uPSI_IBXConnection;
 
 type
 
@@ -68,6 +74,17 @@ type
     RadioGroup1: TRadioGroup;
     SelectButton1: TToolButton;
     SelectButton2: TToolButton;
+    SelectButton3: TToolButton;
+    SelectButton4: TToolButton;
+    tbarDataControls1: TToolBar;
+    tbarStandard1: TToolBar;
+    tbarDataControls: TToolBar;
+    tbtnDBNavigator: TToolButton;
+    tbtnDBGrid: TToolButton;
+    tbtnDBNavigator1: TToolButton;
+    tsDataAccess: TTabSheet;
+    tsDataControls: TTabSheet;
+    tsDialogs: TTabSheet;
     tbtnMainMenu: TToolButton;
     csDesigning1: TMenuItem;
     DelphiSelector1: TMenuItem;
@@ -94,7 +111,6 @@ type
     SelectButton: TToolButton;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
-    tbarCommonControls: TToolBar;
     ToolButton1: TToolButton;
     ToolButton2: TToolButton;
     tsStandard: TTabSheet;
@@ -211,14 +227,39 @@ type
   end;
 
 const
-  cClasses: array[0..30] of string = ( '', 'TMainMenu', 'TPopupMenu', 'TButton',
-                                          'TLabel', 'TEdit', 'TMemo', 'TToggleBox',
-                                          'TCheckBox', 'TRadioButton', 'TListBox',
-                                          'TComboBox', 'TScrollBar', 'TGroupBox',
-                                          'TRadioGroup', 'TCheckGroup', 'TPanel',
+  cClasses: array[0..155] of string = ( '',
+                                          'TMainMenu', 'TPopupMenu', 'TButton', 'TLabel',
+                                          'TEdit', 'TMemo', 'TToggleBox', 'TCheckBox',
+                                          'TRadioButton', 'TListBox', 'TComboBox', 'TScrollBar',
+                                          'TGroupBox', 'TRadioGroup', 'TCheckGroup', 'TPanel',
                                           'TFrame', 'ActionList', '', '', '', '',
-                                          '', '', '', '', '', '', '',
-                                          'TBitBtn' //Tag=30 //Register additional
+                                          '', '', '', '', '', '', '', '', '', '', '',
+
+                                          //Additional
+                                          'TBitBtn', 'TSeedButton', 'TStaticText', 'TImage',
+                                          'TShape', 'TBevel', 'TPaintBox',
+                                          '', '', '', '', '', '', '', '', '', '',
+                                          '', '', '', '', '', '', '', '', '', '',
+                                          '', '', '',
+
+                                          //Common Controls
+                                          '', '', '', '', '', '', '', '', '', '',
+                                          '', '', '', '', '', '', '', '', '', '',
+                                          '', '', '', '', '', '', '', '', '', '',
+
+                                          //Dialogs
+                                          'TOpenDialog', '', '', '', '', '', '', '', '', '',
+                                          '', '', '', '', '', '', '', '', '', '',
+                                          '', '', '', '', '', '', '', '', '', '',
+
+                                          //Data Controls  Tag-begin = 124
+                                          'TDBNavigator', '', '', '', '', '', '', '', '', '',
+                                          '', '', '', '', '', '', '', '', '', '',
+                                          '', '', '', '', '', '', '', '', 'TDBGrid', '',
+
+                                          //
+                                          'TBitBtn', //Tag=30 //Register additional
+                                          'TIBXConnection'
                                           );
 
 
@@ -348,12 +389,16 @@ begin
   if JvDesignPanel1.Surface.Count > 0 then
   begin
     Selection.Clear;
-
     ThePropertyEditorHook.LookupRoot :=
       JvDesignPanel1.Surface.Selection[0];
 
     for i := 0 to JvDesignPanel1.Surface.Count - 1 do
-      Selection.Add(JvDesignPanel1.Surface.Selection[i]);
+      if not (IsNonVisualComponent(JvDesignPanel1.Surface.Selection[i].ClassName)) then
+        Selection.Add(JvDesignPanel1.Surface.Selection[i])
+      else begin
+        if (TComponent(JvDesignPanel1.Surface.Selection[i]) is TIBXConnection) then
+          Selection.Add((JvDesignPanel1.Surface.Selection[i] as TIBXConnection).PSIBXConnection)
+      end;
 
     TheObjectInspector.Selection := Selection;
     TheObjectInspector.RefreshSelection;
@@ -826,7 +871,7 @@ begin
                 FormName := Trim(Copy(Line, 1, Pos(': TForm;', Line)-1));
                 Break;
               end;
-              Inc(i); // Schleife selbst hochzählen
+              Inc(i);
             end;
           end;
 
@@ -924,8 +969,7 @@ begin
   JvDesignPanel1.Invalidate;
 end;
 
-procedure TfrmPSStudio.JvDesignPanel1GetAddClass(Sender: TObject;
-  var ioClass: String);
+procedure TfrmPSStudio.JvDesignPanel1GetAddClass(Sender: TObject; var ioClass: String);
 begin
   ioClass := DesignClass;
   if not StickyClass then
@@ -933,7 +977,7 @@ begin
     DesignClass := '';
     SelectButton.Down  := true;
     SelectButton1.Down  := true;
-    SelectButton2.Down  := true;
+    //SelectButton2.Down  := true;
   end;
   LocalConsoleIDE.ed.Modified := true;
 end;
@@ -952,12 +996,18 @@ begin
 end;}
 
 procedure TfrmPSStudio.PaletteButtonClick(Sender: TObject);
+var NonVisual: boolean;
+    CompName: string;
 begin
   // StickyClass aktivieren, wenn Shift gedrückt gehalten wird
   StickyClass := (GetKeyState(VK_SHIFT) < 0);
 
   // DesignClass anhand des Tags des Buttons setzen
   DesignClass := cClasses[TControl(Sender).Tag];
+
+  NonVisual := IsNonVisualComponent(DesignClass);
+
+  CompName := JvDesignPanel1.Components[JvDesignPanel1.ComponentCount - 1].Name;
 end;
 
 procedure TfrmPSStudio.tsCodeTreeContextPopup(Sender: TObject; MousePos: TPoint;
@@ -996,6 +1046,8 @@ begin
 end;
 
 initialization
+
+  //Standard
   RegisterClass(TMainMenu);
   RegisterClass(TPopupMenu);
   RegisterClass(TButton);
@@ -1015,6 +1067,19 @@ initialization
   RegisterClass(TFrame);
   RegisterClass(TActionList);
 
+  //Additional
   RegisterClass(TBitBtn);
+
+  //Common Controls
+
+  //Dialogs
+  RegisterClass(TOpenDialog);
+
+  //Data Controls
+  RegisterClass(TDBNavigator);
+  RegisterClass(TDBGrid);
+
+  RegisterClass(TPSIBXConnection);
+  RegisterClass(TIBXConnection);
 end.
 

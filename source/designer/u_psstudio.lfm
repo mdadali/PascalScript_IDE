@@ -1,11 +1,11 @@
 object frmPSStudio: TfrmPSStudio
-  Left = 444
+  Left = 417
   Height = 572
-  Top = 380
-  Width = 918
+  Top = 250
+  Width = 980
   Caption = 'PascalScript Studio'
   ClientHeight = 544
-  ClientWidth = 918
+  ClientWidth = 980
   KeyPreview = True
   Menu = MainMenu1
   OnClose = FormClose
@@ -20,10 +20,10 @@ object frmPSStudio: TfrmPSStudio
     Left = 0
     Height = 80
     Top = 0
-    Width = 918
+    Width = 980
     Align = alTop
     ClientHeight = 80
-    ClientWidth = 918
+    ClientWidth = 980
     TabOrder = 0
     object Panel2: TPanel
       Left = 1
@@ -37,7 +37,7 @@ object frmPSStudio: TfrmPSStudio
       object ToolBar2: TToolBar
         Left = 1
         Height = 26
-        Top = 27
+        Top = 53
         Width = 293
         Caption = 'ToolBar2'
         Images = frmConsoleIDE.ImageListClassic
@@ -102,7 +102,7 @@ object frmPSStudio: TfrmPSStudio
       object ToolBar3: TToolBar
         Left = 1
         Height = 26
-        Top = 1
+        Top = 27
         Width = 293
         Caption = 'ToolBar3'
         Images = frmConsoleIDE.ImageListClassic
@@ -136,7 +136,7 @@ object frmPSStudio: TfrmPSStudio
       object ToolBar4: TToolBar
         Left = 1
         Height = 26
-        Top = 53
+        Top = 1
         Width = 293
         Caption = 'ToolBar4'
         Images = frmConsoleIDE.ImageListClassic
@@ -178,21 +178,21 @@ object frmPSStudio: TfrmPSStudio
       Left = 296
       Height = 78
       Top = 1
-      Width = 621
-      ActivePage = tsStandard
+      Width = 683
+      ActivePage = tsDialogs
       Align = alClient
       Images = ImageList1
-      TabIndex = 0
+      TabIndex = 3
       TabOrder = 1
       object tsStandard: TTabSheet
         Caption = 'Standard'
         ClientHeight = 44
-        ClientWidth = 611
+        ClientWidth = 673
         object tbarStandard: TToolBar
           Left = 0
           Height = 34
           Top = 0
-          Width = 611
+          Width = 673
           AutoSize = True
           ButtonHeight = 32
           ButtonWidth = 33
@@ -408,12 +408,12 @@ object frmPSStudio: TfrmPSStudio
       object tsAdditional: TTabSheet
         Caption = 'Additional'
         ClientHeight = 44
-        ClientWidth = 611
+        ClientWidth = 673
         object tbarAdditional: TToolBar
           Left = 0
           Height = 34
           Top = 0
-          Width = 611
+          Width = 673
           Caption = 'tbarAdditional'
           Images = ImageList1
           TabOrder = 0
@@ -426,11 +426,6 @@ object frmPSStudio: TfrmPSStudio
             ImageIndex = 16
             OnClick = PaletteButtonClick
           end
-          object ToolButton2: TToolButton
-            Left = 61
-            Top = 2
-            Caption = 'ToolButton2'
-          end
           object SelectButton1: TToolButton
             Left = 1
             Top = 2
@@ -442,22 +437,137 @@ object frmPSStudio: TfrmPSStudio
             OnClick = PaletteButtonClick
             Style = tbsCheck
           end
+          object ToolButton2: TToolButton
+            Tag = 31
+            Left = 61
+            Top = 2
+            Caption = 'ToolButton2'
+            Grouped = True
+            ImageIndex = 16
+            OnClick = PaletteButtonClick
+          end
         end
       end
       object tsCommonControls: TTabSheet
         Caption = 'Common Controls'
+      end
+      object tsDialogs: TTabSheet
+        Caption = 'Dialogs'
         ClientHeight = 44
-        ClientWidth = 611
-        object tbarCommonControls: TToolBar
+        ClientWidth = 673
+        object tbarDataControls1: TToolBar
           Left = 0
-          Height = 26
+          Height = 34
           Top = 0
-          Width = 611
-          Caption = 'tbarCommonControls'
+          Width = 673
+          AutoSize = True
+          ButtonHeight = 32
+          ButtonWidth = 33
+          Caption = 'tbarDataControls1'
+          Color = clBtnFace
+          EdgeBorders = [ebBottom]
+          Images = ImageList1
+          List = True
+          ParentColor = False
           TabOrder = 0
+          Wrapable = False
+          object SelectButton4: TToolButton
+            Left = 1
+            Top = 0
+            AutoSize = True
+            Caption = 'Select'
+            Down = True
+            Grouped = True
+            ImageIndex = 0
+            OnClick = PaletteButtonClick
+            Style = tbsCheck
+          end
+          object tbtnDBNavigator1: TToolButton
+            Tag = 94
+            Left = 34
+            Top = 0
+            Caption = 'tbtnOpenDialog'
+            Grouped = True
+            ImageIndex = 232
+            OnClick = PaletteButtonClick
+            Style = tbsCheck
+          end
+        end
+      end
+      object tsDataControls: TTabSheet
+        Caption = 'Data Controls'
+        ClientHeight = 44
+        ClientWidth = 673
+        object tbarDataControls: TToolBar
+          Left = 0
+          Height = 34
+          Top = 0
+          Width = 673
+          AutoSize = True
+          ButtonHeight = 32
+          ButtonWidth = 33
+          Caption = 'tbarDataControls'
+          Color = clBtnFace
+          EdgeBorders = [ebBottom]
+          Images = ImageList1
+          List = True
+          ParentColor = False
+          TabOrder = 0
+          Wrapable = False
           object SelectButton2: TToolButton
             Left = 1
-            Top = 2
+            Top = 0
+            AutoSize = True
+            Caption = 'Select'
+            Down = True
+            Grouped = True
+            ImageIndex = 0
+            OnClick = PaletteButtonClick
+            Style = tbsCheck
+          end
+          object tbtnDBNavigator: TToolButton
+            Tag = 124
+            Left = 34
+            Top = 0
+            Caption = 'tbtnButton'
+            Grouped = True
+            ImageIndex = 122
+            OnClick = PaletteButtonClick
+            Style = tbsCheck
+          end
+          object tbtnDBGrid: TToolButton
+            Tag = 152
+            Left = 67
+            Top = 0
+            Caption = 'tbtnDBGrid'
+            ImageIndex = 101
+            OnClick = PaletteButtonClick
+          end
+        end
+      end
+      object tsDataAccess: TTabSheet
+        Caption = 'Data Access'
+        ClientHeight = 44
+        ClientWidth = 673
+        object tbarStandard1: TToolBar
+          Left = 0
+          Height = 34
+          Top = 0
+          Width = 673
+          AutoSize = True
+          ButtonHeight = 32
+          ButtonWidth = 33
+          Caption = 'tbarStandard1'
+          Color = clBtnFace
+          EdgeBorders = [ebBottom]
+          Images = ImageList1
+          List = True
+          ParentColor = False
+          TabOrder = 0
+          Wrapable = False
+          object SelectButton3: TToolButton
+            Left = 1
+            Top = 0
             AutoSize = True
             Caption = 'Select'
             Down = True
@@ -474,17 +584,17 @@ object frmPSStudio: TfrmPSStudio
     Left = 320
     Height = 464
     Top = 80
-    Width = 598
+    Width = 660
     Align = alClient
     Caption = 'Panel3'
     ClientHeight = 464
-    ClientWidth = 598
+    ClientWidth = 660
     TabOrder = 1
     object pgcCenter: TPageControl
       Left = 1
       Height = 457
       Top = 1
-      Width = 596
+      Width = 658
       ActivePage = tsDesign
       Align = alClient
       TabIndex = 0
@@ -493,17 +603,16 @@ object frmPSStudio: TfrmPSStudio
       object tsDesign: TTabSheet
         Caption = 'Designer'
         ClientHeight = 423
-        ClientWidth = 586
+        ClientWidth = 648
         object JvDesignPanel1: TJvDesignPanel
           Left = 0
           Height = 423
           Top = 0
-          Width = 586
+          Width = 648
           Align = alClient
           BevelOuter = bvNone
           ParentColor = False
           TabOrder = 0
-          OnClick = PaletteButtonClick
           OnChange = JvDesignPanel1Change
           OnGetAddClass = JvDesignPanel1GetAddClass
         end
@@ -518,7 +627,7 @@ object frmPSStudio: TfrmPSStudio
       Left = 1
       Height = 5
       Top = 458
-      Width = 596
+      Width = 658
       Align = alBottom
       ResizeAnchor = akBottom
     end
@@ -597,7 +706,7 @@ object frmPSStudio: TfrmPSStudio
       object edtFormName: TEdit
         Left = 104
         Height = 37
-        Top = 8
+        Top = 5
         Width = 192
         OnChange = edtFormNameChange
         OnExit = edtFormNameExit
@@ -610,8 +719,8 @@ object frmPSStudio: TfrmPSStudio
   object ImageList1: TImageList
     Height = 26
     Width = 26
-    Left = 208
-    Top = 136
+    Left = 216
+    Top = 184
     Bitmap = {
       4C7A730100001A0000001A0000008C3503000000000078DAEC9D055C1559FFFF
       8FB1B6AEB9F6BA6BD7DAADEBDA607777EBDAAD88DD22082A7681282192022228
@@ -7291,15 +7400,15 @@ object frmPSStudio: TfrmPSStudio
   object SaveDialog: TSaveDialog
     DefaultExt = '.cfrm'
     Filter = 'Custom Designed Forms (.cfrm)|*.cfrm'
-    Left = 208
-    Top = 208
+    Left = 216
+    Top = 248
   end
   object pashighlighter: TSynPasSyn
     Enabled = False
     CompilerMode = pcmDelphi
     NestedComments = False
     TypeHelpers = True
-    Left = 200
+    Left = 208
     Top = 368
   end
   object ImageListClassic: TImageList
@@ -7307,8 +7416,8 @@ object frmPSStudio: TfrmPSStudio
     BlendColor = clBlack
     BkColor = clBlack
     DrawingStyle = dsTransparent
-    Left = 72
-    Top = 424
+    Left = 71
+    Top = 416
     Bitmap = {
       4C7A210000001000000010000000382600000000000078DAED5B07541567D3BE
       74504154A457511444405091DE51A477B14B554045AA80280AA258D0C458632C
@@ -7621,8 +7730,8 @@ object frmPSStudio: TfrmPSStudio
   end
   object ActionList1: TActionList
     Images = ImageListClassic
-    Left = 176
-    Top = 447
+    Left = 208
+    Top = 448
     object acFileNew: TAction
       Category = 'File'
       AutoCheck = True
@@ -7760,7 +7869,7 @@ object frmPSStudio: TfrmPSStudio
     end
   end
   object PopupMenu1: TPopupMenu
-    Left = 360
-    Top = 168
+    Left = 376
+    Top = 144
   end
 end

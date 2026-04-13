@@ -6,8 +6,14 @@ interface
 
 uses
   Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Types, Graphics,
-  SynEdit, JvDesignSurface, JvDesignUtils;
+  SynEdit,
+  JvDesignSurface,
+  JvDesignUtils,
 
+  uPSI_IBXConnection;
+
+function  IsNonVisualComponent(AClassName: string): boolean;
+function IsVisualControl(Ctrl: TControl): Boolean;
 procedure AssignSpecialEvent(AStringList: TStringList; const Line, FormName: string);
 procedure GenerateSpecialEvent(AStringList: TStringList; const EventName, Signature: string);
 procedure GenerateFormCreate(AStringList: TStringList);
@@ -30,6 +36,20 @@ procedure InsertIntoUserCode(ALines: TStrings; ACode: TStrings);
 function HasEvent(const SL: TStringList; const EventName: string): Boolean;
 
 implementation
+
+function IsNonVisualComponent(AClassName: string): boolean;
+begin
+  result := false;
+  if (Trim(AClassName) = 'TPSIBXConnection') or
+     (Trim(AClassName) = 'TIBXConnection')
+  then
+    result := true;
+end;
+
+function IsVisualControl(Ctrl: TControl): Boolean;
+begin
+  Result := not IsNonVisualComponent(Ctrl.ClassName);
+end;
 
 procedure GenerateSpecialEvent(AStringList: TStringList;
   const EventName, Signature: string);
@@ -321,6 +341,17 @@ begin
 
 end;
 
+procedure WriteNonVisualProps(Ctrl: TControl; SL: TStringList);
+begin
+  if Ctrl is TIBXConnection then
+  begin
+    SL.Add('  ' + Ctrl.Name + '.DatabaseName := ''' + Escape(TIBXConnection(Ctrl).PSIBXConnection.DatabaseName) + ''';');
+    SL.Add('  ' + Ctrl.Name + '.UserName := ''' + Escape(TIBXConnection(Ctrl).PSIBXConnection.UserName) + ''';');
+    SL.Add('  ' + Ctrl.Name + '.Password := ''' + Escape(TIBXConnection(Ctrl).PSIBXConnection.Password) + ''';');
+    SL.Add('  ' + Ctrl.Name + '.Connected := ' + BoolToStr(TIBXConnection(Ctrl).PSIBXConnection.Connected, True) + ';');
+  end;
+end;
+
 function IsTemplateControl(Ctrl: TControl): Boolean;
 begin
   Result :=
@@ -484,6 +515,8 @@ var
       begin
         Child := TWinControl(ParentCtrl).Controls[i];
         if IsTemplateControl(Child) then Continue;
+        //if IsTemplateControl(Child) or (IsNonVisualComponent(Child.ClassName)) then Continue;
+
         List.Add(Child);
         CollectControls(Child, List);
       end;
@@ -501,6 +534,14 @@ var
     for i := 0 to List.Count - 1 do
     begin
       Ctrl := TControl(List[i]);
+
+      if IsNonVisualComponent(Ctrl.ClassName) then
+      begin
+        Add('  ' + Ctrl.Name + ' := ' + Ctrl.ClassName + '.Create(nil);');
+        Add('');
+        Continue;
+      end;
+
       if Ctrl.Parent = RootPanel then
         ParentName := AFormName
       else
@@ -592,7 +633,12 @@ begin
       // PROPS – immer frisch setzen
       // -------------------------
       for i := 0 to CtrlList.Count - 1 do
-        WriteAllProps(TControl(CtrlList[i]), AStringList);
+      begin
+        if IsNonVisualComponent(TControl(CtrlList[i]).ClassName) then
+          WriteNonVisualProps(TControl(CtrlList[i]), AStringList)
+        else
+          WriteAllProps(TControl(CtrlList[i]), AStringList);
+      end;
 
       // -------------------------
       //NEUER EVENTS-BLOCK (geschützt)
